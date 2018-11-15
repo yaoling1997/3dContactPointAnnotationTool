@@ -61,10 +61,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\scripts\ButtonClearAllOnClick.cs" />
     <Compile Include="Assets\scripts\ButtonGCPOnClick.cs" />
     <Compile Include="Assets\scripts\ButtonOkOnClick.cs" />
     <Compile Include="Assets\scripts\CameraController.cs" />
-    <Compile Include="Assets\scripts\CubeCollision.cs" />
+    <Compile Include="Assets\scripts\ContentSelectedItem.cs" />
     <Compile Include="Assets\scripts\ImportObj\ObjFormatAnalyzer.cs" />
     <Compile Include="Assets\scripts\ImportObj\ObjFormatAnalyzerFactory.cs" />
     <Compile Include="Assets\scripts\Macro.cs" />

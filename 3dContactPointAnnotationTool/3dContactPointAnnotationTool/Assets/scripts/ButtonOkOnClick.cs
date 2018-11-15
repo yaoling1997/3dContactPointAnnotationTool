@@ -8,7 +8,7 @@ using Hont;
 public class ButtonOkOnClick : MonoBehaviour {
     public InputField inputFieldImagePath;
     public InputField inputField3dModel;
-    public GameObject scrollViewContent;
+    public GameObject scrollViewContent;//scrollViewModels的content
     public Image referenceImage;  
     public GameObject model3d;
     public GameObject prefabScrollViewItem;
@@ -52,7 +52,7 @@ public class ButtonOkOnClick : MonoBehaviour {
                 item.tag = Macro.UNSELECTED;//将tag设置为未选中
                 var scrollViewItem=PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
                 scrollViewItem.GetComponentInChildren<Text>().text=item.name;
-                scrollViewItem.GetComponent<ScrollViewItemOnClick>().model3d = item;//将模型赋值给item的脚本
+                scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = item;//将模型赋值给item的脚本
                 scrollViewItem.transform.SetParent(scrollViewContent.transform);//将scrollViewItem添加到scrollView里                                
             }
             toggleWireframe.interactable = true;

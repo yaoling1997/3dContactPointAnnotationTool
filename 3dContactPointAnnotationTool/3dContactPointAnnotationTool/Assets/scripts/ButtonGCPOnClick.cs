@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class ButtonGCPOnClick : MonoBehaviour {
     public GameObject model3d;//整个场景对象
+    public GameObject contactPoints;//所有接触点
     public Button buttonGCP;
+    public GameObject scrollViewContent;//scrollViewContactPoints的content
+    public GameObject prefabScrollViewItem;
+
     private const float oo = 1e18f;
 	// Use this for initialization
 	void Start () {
@@ -102,6 +107,13 @@ public class ButtonGCPOnClick : MonoBehaviour {
         go.transform.position = center;//设置球的中心位置
         go.transform.localScale = new Vector3(radius, radius, radius);//设置球的半径大小
         go.GetComponent<MeshRenderer>().material.color = Color.red;
+        go.transform.SetParent(contactPoints.transform);
+        go.tag = Macro.UNSELECTED;
+        var scrollViewItem = PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
+        scrollViewItem.GetComponentInChildren<Text>().text = go.name;
+        scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = go;//将模型赋值给item的脚本
+        scrollViewItem.transform.SetParent(scrollViewContent.transform);//将scrollViewItem添加到scrollView里                                
+
     }
     public void Click()//按钮点击会调用
     {
