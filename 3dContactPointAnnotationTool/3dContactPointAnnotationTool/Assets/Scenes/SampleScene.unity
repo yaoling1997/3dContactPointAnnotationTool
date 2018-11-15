@@ -840,7 +840,7 @@ MonoBehaviour:
   model3d: {fileID: 1050585549}
   scrollSpeed: 2
   rotateSpeed: 1
-  minDist: 1
+  minDist: 0.1
   maxDist: 3000
 --- !u!1 &657349539
 GameObject:

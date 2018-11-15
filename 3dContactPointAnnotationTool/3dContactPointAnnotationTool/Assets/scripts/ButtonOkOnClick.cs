@@ -47,10 +47,9 @@ public class ButtonOkOnClick : MonoBehaviour {
         if (www != null && string.IsNullOrEmpty(www.error))
         {
             var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);            
-            foreach (var item in re) {//将解析出来的obj的父亲设置为model3d，并在scrollView添加对应的item
-                item.transform.SetParent(model3d.transform);
-                //item.AddComponent<Collider>();
-                //item.AddComponent<Rigidbody>();
+            foreach (var item in re) {
+                item.transform.SetParent(model3d.transform);//将解析出来的obj的父亲设置为model3d
+                item.tag = Macro.UNSELECTED;//将tag设置为未选中
                 var scrollViewItem=PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
                 scrollViewItem.GetComponentInChildren<Text>().text=item.name;
                 scrollViewItem.GetComponent<ScrollViewItemOnClick>().model3d = item;//将模型赋值给item的脚本

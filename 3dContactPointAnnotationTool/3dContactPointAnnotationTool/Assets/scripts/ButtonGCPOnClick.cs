@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ButtonGCPOnClick : MonoBehaviour {
     public GameObject model3d;//整个场景对象
     public Button buttonGCP;
-
+    private const float oo = 1e18f;
 	// Use this for initialization
 	void Start () {
     }
@@ -56,6 +56,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
             //break;
             for (int i = 0; i < len; i += 3)
             {
+                Debug.Log(i/3+"/"+len/3);
                 float[] weight = { 1, 1, 1 };
                 float totalWeight = 0;
                 bool xj = false;
@@ -68,7 +69,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
                             xj = true;
                             //weight[j] += 2;
                         }
-                        yield return new WaitForSeconds(0);
+                        //yield return new WaitForSeconds(0);
                     }
                 }
                 if (xj)
@@ -106,25 +107,35 @@ public class ButtonGCPOnClick : MonoBehaviour {
     {
         StartCoroutine(SolveContactPoints());
     }
-    private bool ifTriXj(Vector3 a, Vector3 b, Vector3 Vc,Vector3 O,Vector3 sx) {//从O处
-        return false;
-    }
     private bool isPointInMesh(Vector3 p,Mesh mesh)//判断一个点是否在一个mesh内部
     {
+        if (!mesh.bounds.Contains(p))//包围盒不含该点
+            return false;
         var triangles = mesh.triangles;
         var vertices = mesh.vertices;
         var normals = mesh.normals;
         var len = triangles.Length;
-        bool re = false;
-        var sx = new Vector3(0,1,0);
         for (int i = 0; i < len; i += 3)
         {
-            var a = vertices[triangles[i]];
-            var b = vertices[triangles[i+1]];
-            var c = vertices[triangles[i+2]];
-            if (ifTriXj(a, b, c, p,sx))
-                re = !re;
+            var vMin = new Vector3(oo, oo, oo);
+            var vMax = new Vector3(-oo, -oo, -oo);
+            for (int j = i; j < i + 3; j++)
+            {
+                var v = vertices[triangles[j]];
+                vMin.x = Mathf.Min(vMin.x, v.x);
+                vMin.y = Mathf.Min(vMin.y, v.y);
+                vMin.z = Mathf.Min(vMin.z, v.z);
+                vMax.x = Mathf.Max(vMax.x, v.x);
+                vMax.y = Mathf.Max(vMax.y, v.y);
+                vMax.z = Mathf.Max(vMax.z, v.z);
+            }
+            if (Vector3xydy(vMin, p) && Vector3xydy(p, vMax))
+                return true;
         }
-        return re;
+        return false;
+    }
+    private bool Vector3xydy(Vector3 a,Vector3 b)//a<=b
+    {
+        return a.x <= b.x && a.y <= b.y && a.z <= b.z;
     }
 }

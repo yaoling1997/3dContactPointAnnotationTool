@@ -23,10 +23,12 @@ public class ScrollViewItemOnClick : MonoBehaviour {
         if (status == 1) { 
             scrollViewItem.GetComponent<Image>().color = Color.cyan;
             model3d.GetComponent<MeshRenderer>().material.color = Color.cyan;
+            model3d.tag = Macro.SELECTED;//设置为已选中
         }
         else { 
             scrollViewItem.GetComponent<Image>().color = Color.white;
             model3d.GetComponent<MeshRenderer>().material.color = Color.white;
+            model3d.tag = Macro.UNSELECTED;//设置为未选中
         }
     }
 }
