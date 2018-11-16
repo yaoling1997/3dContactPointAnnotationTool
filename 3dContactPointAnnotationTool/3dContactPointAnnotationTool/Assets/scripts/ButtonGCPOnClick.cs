@@ -10,10 +10,12 @@ public class ButtonGCPOnClick : MonoBehaviour {
     public Button buttonGCP;
     public GameObject scrollViewContent;//scrollViewContactPoints的content
     public GameObject prefabScrollViewItem;
+    private int contactPointId;//生成到第几个接触点了
 
     private const float oo = 1e18f;
 	// Use this for initialization
 	void Start () {
+        contactPointId = 0;
     }
 	
 	// Update is called once per frame
@@ -84,7 +86,6 @@ public class ButtonGCPOnClick : MonoBehaviour {
                     float radius = 0;
                     for (int j = 0; j < 3; j++)
                     {
-                        CreateContactPointSphere(mesh.vertices[mesh.triangles[i + j]], 0.01f);
                         center += weight[j] * mesh.vertices[mesh.triangles[i + j]];
                         totalWeight += weight[j];
                     }
@@ -103,17 +104,19 @@ public class ButtonGCPOnClick : MonoBehaviour {
         buttonGCP.interactable = true;//计算完成可以点击按钮
     }
     private void CreateContactPointSphere(Vector3 center,float radius) {//创建球状接触点
+        contactPointId++;
         var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         go.transform.position = center;//设置球的中心位置
         go.transform.localScale = new Vector3(radius, radius, radius);//设置球的半径大小
         go.GetComponent<MeshRenderer>().material.color = Color.red;
         go.transform.SetParent(contactPoints.transform);
+        go.name = go.name + contactPointId;
         go.tag = Macro.UNSELECTED;
         var scrollViewItem = PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
         scrollViewItem.GetComponentInChildren<Text>().text = go.name;
         scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = go;//将模型赋值给item的脚本
-        scrollViewItem.transform.SetParent(scrollViewContent.transform);//将scrollViewItem添加到scrollView里                                
-
+        scrollViewItem.GetComponent<ScrollViewItemOnClick>().unselectedColor = Color.red;//把未选中接触点颜色设置为红色
+        scrollViewItem.transform.SetParent(scrollViewContent.transform);//将scrollViewItem添加到scrollView里           
     }
     public void Click()//按钮点击会调用
     {

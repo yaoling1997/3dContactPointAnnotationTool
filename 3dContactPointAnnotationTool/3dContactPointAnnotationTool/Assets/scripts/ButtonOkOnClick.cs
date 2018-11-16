@@ -39,8 +39,8 @@ public class ButtonOkOnClick : MonoBehaviour {
         }
     }
     private IEnumerator GetObj(string path) {
-        path = @"C:\Users\acer-pc\Desktop\sample.obj";//
-        //path = @"C:\Users\A\Desktop\sample.obj";//
+        //path = @"C:\Users\acer-pc\Desktop\sample.obj";//
+        path = @"C:\Users\A\Desktop\sample.obj";//
 
         WWW www = new WWW("file://" + path);
         yield return new WaitForSeconds(1);

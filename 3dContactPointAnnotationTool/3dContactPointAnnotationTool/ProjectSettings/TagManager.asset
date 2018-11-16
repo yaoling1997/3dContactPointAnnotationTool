@@ -6,6 +6,7 @@ TagManager:
   tags:
   - selected
   - unselected
+  - StatusPanel
   layers:
   - Default
   - TransparentFX

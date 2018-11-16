@@ -5,6 +5,7 @@ using UnityEngine;
 public class Macro : MonoBehaviour {
     public static string SELECTED = "selected";
     public static string UNSELECTED = "unselected";
+    public static string STATUS_PANEL = "StatusPanel";
     // Use this for initialization
     void Start () {
 		

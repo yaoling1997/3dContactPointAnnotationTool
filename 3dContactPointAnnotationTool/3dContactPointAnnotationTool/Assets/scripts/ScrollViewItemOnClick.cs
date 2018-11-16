@@ -7,10 +7,15 @@ public class ScrollViewItemOnClick : MonoBehaviour {
     private int status;//0表示未选中，1表示选中
     private Button scrollViewItem;
     public GameObject model;//按钮对应的模型或接触点
-	// Use this for initialization
-	void Start () {
+    public Color selectedColor;//选中时模型的颜色
+    public Color unselectedColor;//未选中时模型的颜色
+
+    // Use this for initialization
+    void Awake () {
         status = 0;
-        scrollViewItem = transform.gameObject.GetComponent<Button>();
+        selectedColor = Color.cyan;
+        unselectedColor = Color.white;
+        scrollViewItem = gameObject.GetComponent<Button>();
         scrollViewItem.onClick.AddListener(Click);
 	}
 	
@@ -26,17 +31,18 @@ public class ScrollViewItemOnClick : MonoBehaviour {
         {
             s.selectedItem = scrollViewItem;
             scrollViewItem.GetComponent<Image>().color = Color.cyan;
-            model.GetComponent<MeshRenderer>().material.color = Color.cyan;
+            model.GetComponent<MeshRenderer>().material.color = selectedColor;
             model.tag = Macro.SELECTED;//设置为已选中
         }
         else
         {
             scrollViewItem.GetComponent<Image>().color = Color.white;
-            model.GetComponent<MeshRenderer>().material.color = Color.white;
+            model.GetComponent<MeshRenderer>().material.color = unselectedColor;
             model.tag = Macro.UNSELECTED;//设置为未选中
         }
     }
     public void Click() {
+        GameObject.FindWithTag(Macro.STATUS_PANEL).GetComponent<StatusPanelController>().selectedObj=model;
         var s = scrollViewItem.transform.parent.GetComponent<ContentSelectedItem>();//获得当前item绑定content的脚本
         if (s.selectedItem!=null&&s.selectedItem!= scrollViewItem)
             s.selectedItem.GetComponent<ScrollViewItemOnClick>().ChangeStatus();
