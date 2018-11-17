@@ -19,12 +19,10 @@ public class ButtonOkOnClick : MonoBehaviour {
         Debug.Log("onClick");
         StartCoroutine(GetImage(inputFieldImagePath.text));
         StartCoroutine(GetObj(inputField3dModel.text));
-        //Debug.Log("s off :"+"s off".Contains("f "));
     }
     private IEnumerator GetImage(string path) {
         //Debug.Log(path);
         WWW www = new WWW("file://" + path);
-        //Debug.Log(www.url);
         yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
         {

@@ -61,11 +61,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\scripts\ButtonClearAllOnClick.cs" />
+    <Compile Include="Assets\ObjManager.cs" />
     <Compile Include="Assets\scripts\ButtonGCPOnClick.cs" />
     <Compile Include="Assets\scripts\ButtonOkOnClick.cs" />
+    <Compile Include="Assets\scripts\ButtonPanelControllerOnClick.cs" />
+    <Compile Include="Assets\scripts\ButtonResetOnClick.cs" />
     <Compile Include="Assets\scripts\CameraController.cs" />
-    <Compile Include="Assets\scripts\ContentSelectedItem.cs" />
+    <Compile Include="Assets\scripts\ContentController.cs" />
+    <Compile Include="Assets\scripts\DragPanel.cs" />
     <Compile Include="Assets\scripts\ImportObj\ObjFormatAnalyzer.cs" />
     <Compile Include="Assets\scripts\ImportObj\ObjFormatAnalyzerFactory.cs" />
     <Compile Include="Assets\scripts\InputFieldOnEndEdit.cs" />
@@ -79,16 +82,16 @@
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Double-Sided Wireframe.shader" />
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Double-Sided Cutout Wireframe.shader" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/acer-pc/Desktop/git_3dContactPointAnnotationTool/3dContactPointAnnotationTool/3dContactPointAnnotationTool/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

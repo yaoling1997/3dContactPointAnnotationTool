@@ -54,3 +54,6 @@ https://blog.csdn.net/thinbug/article/details/51850777
 
 射线和三角形的相交检测（ray triangle intersection test）
 https://www.cnblogs.com/samen168/p/5162337.html
+
+unity3D中GameObject.Find()、Transform.Find查找隐藏对象分析
+https://blog.csdn.net/gcs6564157/article/details/54773415

@@ -9,7 +9,7 @@ public class ScrollViewItemOnClick : MonoBehaviour {
     public GameObject model;//按钮对应的模型或接触点
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
-
+    private GameObject panelStatus;
     // Use this for initialization
     void Awake () {
         status = 0;
@@ -18,14 +18,17 @@ public class ScrollViewItemOnClick : MonoBehaviour {
         scrollViewItem = gameObject.GetComponent<Button>();
         scrollViewItem.onClick.AddListener(Click);
 	}
-	
-	// Update is called once per frame
-	void Update () {
+    private void Start()
+    {
+        panelStatus = GameObject.Find("ObjManager").GetComponent<ObjManager>().panelStatus;
+    }
+    // Update is called once per frame
+    void Update () {
 		
 	}
     public void ChangeStatus()//反转状态
     {
-        var s = scrollViewItem.transform.parent.GetComponent<ContentSelectedItem>();
+        var s = scrollViewItem.transform.parent.GetComponent<ContentController>();
         status ^= 1;
         if (status == 1)
         {
@@ -42,8 +45,8 @@ public class ScrollViewItemOnClick : MonoBehaviour {
         }
     }
     public void Click() {
-        GameObject.FindWithTag(Macro.PANEL_STATUS).GetComponent<PanelStatusController>().SetSelectedObj(model);
-        var s = scrollViewItem.transform.parent.GetComponent<ContentSelectedItem>();//获得当前item绑定content的脚本
+        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(model);
+        var s = scrollViewItem.transform.parent.GetComponent<ContentController>();//获得当前item绑定content的脚本
         if (s.selectedItem!=null&&s.selectedItem!= scrollViewItem)
             s.selectedItem.GetComponent<ScrollViewItemOnClick>().ChangeStatus();
         else
