@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 
 public class ButtonOverlayOnClick : MonoBehaviour {
     public GameObject contactPoints;
@@ -50,7 +49,7 @@ public class ButtonOverlayOnClick : MonoBehaviour {
             var lp = new Vector2();
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, sp, null, out lp);
             Debug.Log("lp: " + lp);
-            var cp2 = PrefabUtility.InstantiatePrefab(sphere2d) as GameObject;
+            var cp2 = Instantiate(sphere2d);
             cp2.transform.SetParent(image.transform);
             var rectTransformCp2 = cp2.GetComponent<RectTransform>();//2维接触点的rectTransform
             rectTransformCp2.sizeDelta = new Vector2(2*radius,2*radius);

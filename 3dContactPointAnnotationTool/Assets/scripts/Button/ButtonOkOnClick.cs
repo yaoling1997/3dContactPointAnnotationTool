@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 using Hont;
 
 public class ButtonOkOnClick : MonoBehaviour {
@@ -21,7 +20,7 @@ public class ButtonOkOnClick : MonoBehaviour {
         StartCoroutine(GetObj(inputField3dModel.text));
     }
     private IEnumerator GetImage(string path) {
-        path = @"C:\Users\acer-pc\Desktop\2.jpg";//
+        //path = @"C:\Users\acer-pc\Desktop\2.jpg";//
         //Debug.Log(path);
         WWW www = new WWW("file://" + path);
         yield return new WaitForSeconds(1);
@@ -38,7 +37,7 @@ public class ButtonOkOnClick : MonoBehaviour {
         }
     }
     private IEnumerator GetObj(string path) {
-        path = @"C:\Users\acer-pc\Desktop\sample.obj";//
+        //path = @"C:\Users\acer-pc\Desktop\sample.obj";//
         //path = @"C:\Users\A\Desktop\sample.obj";//
 
         WWW www = new WWW("file://" + path);
@@ -49,7 +48,8 @@ public class ButtonOkOnClick : MonoBehaviour {
             foreach (var item in re) {
                 item.transform.SetParent(model3d.transform);//将解析出来的obj的父亲设置为model3d
                 item.tag = Macro.UNSELECTED;//将tag设置为未选中
-                var scrollViewItem=PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
+                //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
+                var scrollViewItem = Instantiate(prefabScrollViewItem,new Vector3(0,0,0),Quaternion.identity);
                 scrollViewItem.GetComponentInChildren<Text>().text=item.name;
                 scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = item;//将模型赋值给item的脚本
                 scrollViewModelsContent.GetComponent<ContentController>().add(scrollViewItem);//将scrollViewItem添加到scrollView里                                

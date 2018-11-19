@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
-
+//using UnityEditor;
 public class ButtonGCPOnClick : MonoBehaviour {
     public GameObject model3d;//整个场景对象
     public GameObject contactPoints;//所有接触点
@@ -99,7 +98,8 @@ public class ButtonGCPOnClick : MonoBehaviour {
         go.transform.SetParent(contactPoints.transform);
         go.name = go.name + contactPointId;
         go.tag = Macro.UNSELECTED;
-        var scrollViewItem = PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
+        //var scrollViewItem = UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
+        var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
         scrollViewItem.GetComponentInChildren<Text>().text = go.name;
         scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = go;//将模型赋值给item的脚本
         scrollViewItem.GetComponent<ScrollViewItemOnClick>().unselectedColor = Color.red;//把未选中接触点颜色设置为红色
@@ -115,7 +115,6 @@ public class ButtonGCPOnClick : MonoBehaviour {
             return false;
         var triangles = mesh.triangles;
         var vertices = mesh.vertices;
-        var normals = mesh.normals;
         var len = triangles.Length;
         for (int i = 0; i < len; i += 3)
         {
@@ -131,9 +130,10 @@ public class ButtonGCPOnClick : MonoBehaviour {
                 vMax.y = Mathf.Max(vMax.y, v.y);
                 vMax.z = Mathf.Max(vMax.z, v.z);
             }
-            if (Vector3xydy(vMin, p) && Vector3xydy(p, vMax))
+            if (Vector3xydy(vMin, p) && Vector3xydy(p, vMax))//在某个三角形的包围盒中
                 return true;
         }
+
         return false;
     }
     private bool Vector3xydy(Vector3 a,Vector3 b)//a<=b
