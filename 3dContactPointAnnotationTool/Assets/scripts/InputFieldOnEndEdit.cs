@@ -19,7 +19,7 @@ public class InputFieldOnEndEdit : MonoBehaviour {
         Debug.Log("OnEndEdit");
         Debug.Log(gameObject.GetComponent<InputField>().text);
         float v = float.Parse(gameObject.GetComponent<InputField>().text);
-        var obj= GameObject.FindWithTag(Macro.PANEL_STATUS).GetComponent<PanelStatusController>().selectedObj;
+        var obj= GameObject.Find("ObjManager").GetComponent<ObjManager>().panelStatus.GetComponent<PanelStatusController>().selectedObj;
         if (obj == null)//对象为空
             return;
         var p = obj.transform.position;

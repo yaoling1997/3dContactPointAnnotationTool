@@ -9,8 +9,7 @@ public class ButtonOkOnClick : MonoBehaviour {
     public InputField inputField3dModel;
     public GameObject scrollViewModelsContent;//scrollViewModels的content
     public GameObject image;//panelImage的image
-    public GameObject model3d;
-    public GameObject prefabScrollViewItem;
+    public GameObject model3d;    
     public Toggle toggleWireframe;
     public Button buttonGCP;
 
@@ -44,16 +43,14 @@ public class ButtonOkOnClick : MonoBehaviour {
         yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
         {
-            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);            
+            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);
+            var prefabScrollViewItem = GameObject.Find("ObjManager").GetComponent<ObjManager>().prefabScrollViewItem;
             foreach (var item in re) {
                 item.transform.SetParent(model3d.transform);//将解析出来的obj的父亲设置为model3d
                 item.tag = Macro.UNSELECTED;//将tag设置为未选中
                 //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
                 var scrollViewItem = Instantiate(prefabScrollViewItem,new Vector3(0,0,0),Quaternion.identity);
-                scrollViewItem.GetComponentInChildren<Text>().text=item.name;
-                scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = item;//将模型赋值给item的脚本
-                scrollViewModelsContent.GetComponent<ContentController>().add(scrollViewItem);//将scrollViewItem添加到scrollView里                                
-                //scrollViewItem.transform.SetParent(scrollViewModelsContent.transform);
+                scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
             }
             toggleWireframe.interactable = true;
             buttonGCP.interactable = true;

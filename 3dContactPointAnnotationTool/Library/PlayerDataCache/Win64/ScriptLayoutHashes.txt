@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-C:/Users/acer-pc/Desktop/3dContactPointAnnotationTool.exe
+C:/Users/acer-pc/Desktop/h/3dContactPointAnnotationTool.exe
 SceneListBegin?
 Assets/Scenes/SampleScene.unity
 SceneListEnd?
@@ -117,7 +117,7 @@ fc061f3ae8a876c0687e86378d4a447c UnityEngine.Networking.dll:UnityEngine.Networki
 7ca56e063bd071986fff4f513cc4f477 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 0a006f3734181ba8b26758f0866152c0 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.InputFieldOnEndEdit
-492748fa167b31fc1970a7a12c9c697a Assembly-CSharp.dll:.ScrollViewItemOnClick
+ba9ede896b0c97dc2822d558f306b3ef Assembly-CSharp.dll:.ButtonModelOnClick
 382b8ef512fa8d6108723a01b57af65b UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
 d22c788799ee45d8676254eccf20e8b8 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.Macro
@@ -127,7 +127,7 @@ e1ea12ca952c81d81a9a21fdf34446ed UnityEngine.HoloLens.dll:UnityEngine.EventSyste
 98d69a140ec0084cde3b6a5e09aea295 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 dfd33ff9ae3ce8d7ca1f22b475ec2387 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 96f3ea9f23b6f08e60710ebb4af49174 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
-2bfa3380e6fcf5a26936c4af5cae2e1f Assembly-CSharp.dll:.ButtonGCPOnClick
+8bdb661cc44e2e9302ec6f7cf62d4c96 Assembly-CSharp.dll:.ButtonGCPOnClick
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.DragPanel
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.PanelImageController
 f16835701e71dd5d6fb1fed4b7aff1d8 Unity.TextMeshPro.dll:TMPro.TMP_Asset
@@ -162,7 +162,7 @@ e033f131358cea5a0eabf9561e781deb UnityEngine.TestRunner.dll:UnityEngine.TestTool
 70f7dc248db3379548a88e8d4fa049f8 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 28a95668dd28649297d595834fe8417e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 28a95668dd28649297d595834fe8417e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-901734bf80905a5214cf9625b501cefe Assembly-CSharp.dll:.ObjManager
+881866920e08d12f0dc2e7152a336d14 Assembly-CSharp.dll:.ObjManager
 a45ba27d3d3422fa1d05e473ab6864ea Assembly-CSharp.dll:.ContentController
 d75dc834c5dec688db75a55a1724c90f UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 486cd95c82d8305219c352c06b776e1f UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -180,4 +180,7 @@ e04611b8715e6833d2bd7010fc6be10b Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 df277cd39096fd6e01689115839bcca2 Assembly-CSharp.dll:.ButtonPanelControllerOnClick
 93307bd34e39d73fd24e00ec39c25a91 Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 9ac2479e07fc5e5b90a6908b337bf94d Assembly-CSharp.dll:.ToggleWireframeOnValueChanged
-3c61565dd5a874d377f98f4a8011daad Assembly-CSharp.dll:.ButtonOkOnClick
+6b7f8777d23289eff57c6a03ff25d2ce Assembly-CSharp.dll:.ButtonOkOnClick
+486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.ButtonDeleteOnClick
+2a1ee686fcf2c5dd9ff0d4d5a58737f0 Assembly-CSharp.dll:.ScrollViewItemController
+486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.ButtonAddSphereOnClick

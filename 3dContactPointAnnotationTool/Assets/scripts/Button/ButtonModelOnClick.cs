@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScrollViewItemOnClick : MonoBehaviour {
+public class ButtonModelOnClick : MonoBehaviour {
     private int status;//0表示未选中，1表示选中
-    private Button scrollViewItem;
-    public GameObject model;//按钮对应的模型或接触点
+    private Button buttonModel;
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
     private GameObject panelStatus;
@@ -15,8 +14,8 @@ public class ScrollViewItemOnClick : MonoBehaviour {
         status = 0;
         selectedColor = Color.cyan;//默认选中颜色
         unselectedColor = Color.white;//默认未选中颜色
-        scrollViewItem = gameObject.GetComponent<Button>();
-        scrollViewItem.onClick.AddListener(Click);
+        buttonModel = gameObject.GetComponent<Button>();
+        buttonModel.onClick.AddListener(Click);
 	}
     private void Start()
     {
@@ -28,27 +27,28 @@ public class ScrollViewItemOnClick : MonoBehaviour {
 	}
     public void ChangeStatus()//反转状态
     {
-        var s = scrollViewItem.transform.parent.GetComponent<ContentController>();
+        var model= GetComponentInParent<ScrollViewItemController>().model; 
+        var s = buttonModel.transform.parent.parent.GetComponent<ContentController>();
         status ^= 1;
         if (status == 1)
         {
-            s.selectedItem = scrollViewItem;
-            scrollViewItem.GetComponent<Image>().color = Color.cyan;
+            s.selectedItem = buttonModel;
+            buttonModel.GetComponent<Image>().color = Color.cyan;
             model.GetComponent<MeshRenderer>().material.color = selectedColor;
             model.tag = Macro.SELECTED;//设置为已选中
         }
         else
         {
-            scrollViewItem.GetComponent<Image>().color = Color.white;
+            buttonModel.GetComponent<Image>().color = Color.white;
             model.GetComponent<MeshRenderer>().material.color = unselectedColor;
             model.tag = Macro.UNSELECTED;//设置为未选中
         }
     }
     public void Click() {
-        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(model);
-        var s = scrollViewItem.transform.parent.GetComponent<ContentController>();//获得当前item绑定content的脚本
-        if (s.selectedItem!=null&&s.selectedItem!= scrollViewItem)
-            s.selectedItem.GetComponent<ScrollViewItemOnClick>().ChangeStatus();
+        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(GetComponentInParent<ScrollViewItemController>().model);
+        var s = buttonModel.transform.parent.parent.GetComponent<ContentController>();//获得当前item绑定content的脚本
+        if (s.selectedItem!=null&&s.selectedItem!= buttonModel)
+            s.selectedItem.GetComponent<ButtonModelOnClick>().ChangeStatus();
         else
             s.selectedItem = null;
         ChangeStatus();

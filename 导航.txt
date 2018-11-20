@@ -66,3 +66,6 @@ https://blog.csdn.net/aa20274270/article/details/52529075?locationNum=3&fps=1
 
 Unity3D里的各种坐标系
 https://www.cnblogs.com/xyptechnology/p/7614370.html
+
+unity UI 加入image图片
+https://blog.csdn.net/xjrlitterbai/article/details/81535631

@@ -21,10 +21,10 @@ public class ToggleWireframeOnValueChanged : MonoBehaviour {
         foreach (var item in model3d.GetComponentsInChildren<MeshRenderer>()) {
             var color = item.material.color;
             if (isOn) {
-                item.material = new Material(Shader.Find("UCLA Game Lab/Wireframe/Single-Sided"));
+                item.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderWireframe);
             }
             else {
-                item.material = new Material(Shader.Find("Standard"));
+                item.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderStandard);
             }
             item.material.color = color;
         }

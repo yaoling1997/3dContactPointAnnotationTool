@@ -112,8 +112,7 @@ namespace Hont
                 mesh.triangles = triangles;
 
                 meshFilter.mesh = mesh;
-                meshRenderer.material = new Material(Shader.Find("Standard"));
-                //meshRenderer.material = new Material(Shader.Find("UCLA Game Lab/Wireframe/Single-Sided"));                
+                meshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderStandard);
                 re.Add(go);
             }
             return re;

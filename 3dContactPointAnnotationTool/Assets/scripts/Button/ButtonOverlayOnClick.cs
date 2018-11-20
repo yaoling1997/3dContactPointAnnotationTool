@@ -39,7 +39,7 @@ public class ButtonOverlayOnClick : MonoBehaviour {
             cnt++;
             Debug.Log(cnt);
             var p = item.position;
-            var q = item.localScale;
+            var q = item.localScale/2;//半径
             Debug.Log("p: "+p);
             var sp = mainCamera.WorldToScreenPoint(p);
             var radius = mainCamera.WorldToScreenPoint(new Vector3(p.x+q.x,p.y,p.z)).x-sp.x;

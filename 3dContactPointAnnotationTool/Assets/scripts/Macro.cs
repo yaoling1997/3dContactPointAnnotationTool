@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Macro : MonoBehaviour {
     public static string SELECTED = "selected";
-    public static string UNSELECTED = "unselected";
-    public static string PANEL_STATUS = "PanelStatus";
+    public static string UNSELECTED = "unselected";    
     // Use this for initialization
     void Start () {
 		

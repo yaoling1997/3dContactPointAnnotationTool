@@ -33,6 +33,8 @@ public class ImageController : MonoBehaviour {
         sliderAlpha.value = 1;
         var sliderScale = panelController.transform.Find("SliderScale").GetComponent<Slider>();//开启sliderScale
         sliderScale.interactable = true;
+        var buttonOverlay= panelController.transform.Find("ButtonOverlay").GetComponent<Button>();//开启buttonOverlay
+        buttonOverlay.interactable = true;
         GetComponentInParent<PanelImageController>().updateSize();
     }
     public void SetScale(float scale)

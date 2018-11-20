@@ -7,14 +7,13 @@ public class ButtonGCPOnClick : MonoBehaviour {
     public GameObject model3d;//整个场景对象
     public GameObject contactPoints;//所有接触点
     public Button buttonGCP;
-    public GameObject scrollViewContent;//scrollViewContactPoints的content
-    public GameObject prefabScrollViewItem;
-    private int contactPointId;//生成到第几个接触点了
+    public GameObject scrollViewContent;//scrollViewContactPoints的content    
+    private GameObject objManager;
 
     private const float oo = 1e18f;
 	// Use this for initialization
 	void Start () {
-        contactPointId = 0;
+        objManager = GameObject.Find("ObjManager");        
     }
 	
 	// Update is called once per frame
@@ -81,29 +80,13 @@ public class ButtonGCPOnClick : MonoBehaviour {
                         radius += weight[j] * (mesh.vertices[mesh.triangles[i + j]] - center).magnitude;
                     }
                     radius /= totalWeight;
-                    CreateContactPointSphere(center, radius);
+                    objManager.GetComponent<ObjManager>().CreateContactPointSphere(center, radius);
                     yield return new WaitForSeconds(0.1f);//求出一个接触点就显示一下
                 }
             }
         }
         Debug.Log("contactPointNum: "+ contactPointNum);        
         buttonGCP.interactable = true;//计算完成可以点击按钮
-    }
-    private void CreateContactPointSphere(Vector3 center,float radius) {//创建球状接触点
-        contactPointId++;
-        var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        go.transform.position = center;//设置球的中心位置
-        go.transform.localScale = new Vector3(radius, radius, radius);//设置球的半径大小
-        go.GetComponent<MeshRenderer>().material.color = Color.red;
-        go.transform.SetParent(contactPoints.transform);
-        go.name = go.name + contactPointId;
-        go.tag = Macro.UNSELECTED;
-        //var scrollViewItem = UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
-        var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
-        scrollViewItem.GetComponentInChildren<Text>().text = go.name;
-        scrollViewItem.GetComponent<ScrollViewItemOnClick>().model = go;//将模型赋值给item的脚本
-        scrollViewItem.GetComponent<ScrollViewItemOnClick>().unselectedColor = Color.red;//把未选中接触点颜色设置为红色
-        scrollViewContent.GetComponent<ContentController>().add(scrollViewItem);//将scrollViewItem添加到scrollView里           
     }
     public void Click()//按钮点击会调用
     {
