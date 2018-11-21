@@ -69,3 +69,9 @@ https://www.cnblogs.com/xyptechnology/p/7614370.html
 
 unity UI 加入image图片
 https://blog.csdn.net/xjrlitterbai/article/details/81535631
+
+unity 打开文件夹并选择文件
+https://blog.csdn.net/weixin_38472903/article/details/78204366
+
+Unity 实用教程 之 调用系统窗口选择文件或路径
+https://jingyan.baidu.com/article/380abd0a265fb71d90192c83.html
