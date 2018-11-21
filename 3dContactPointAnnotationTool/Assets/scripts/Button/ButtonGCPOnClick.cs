@@ -26,6 +26,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
         buttonGCP.interactable = false;//计算的时候不能再点击按钮
         var selectedObjList = new List<MeshFilter>();
         var unselectedObjList = new List<MeshFilter>();
+        var unselectedObjRealVerticesList = new List<Vector3[]>();
         foreach (var item in model3d.GetComponentsInChildren<MeshFilter>())
         {
             if (item.tag.Equals(Macro.SELECTED))
@@ -35,6 +36,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
             else if (item.tag.Equals(Macro.UNSELECTED))
             {
                 unselectedObjList.Add(item);
+                unselectedObjRealVerticesList.Add(GetRealVertices(item));
             }
         }
         yield return new WaitForSeconds(0);
@@ -45,6 +47,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
         {
             var mesh = so.mesh;
             var len = mesh.triangles.Length;
+            var vertices = GetRealVertices(so);
 
             for (int i = 0; i < len; i += 3)
             {
@@ -54,9 +57,10 @@ public class ButtonGCPOnClick : MonoBehaviour {
                 bool xj = false;
                 for (int j = 0; j < 3; j++)
                 {
-                    foreach (var uso in unselectedObjList)
-                    {                        
-                        if (isPointInMesh(mesh.vertices[mesh.triangles[i+j]],uso.mesh))
+                    for (int k = 0; k < unselectedObjList.Count; k++) {
+                        var uso = unselectedObjList[k];
+                        var usoVertices = unselectedObjRealVerticesList[k];//获取真实点
+                        if (isPointInMesh(vertices[mesh.triangles[i+j]],uso, usoVertices))
                         {
                             xj = true;
                             //weight[j] += 2;
@@ -71,13 +75,13 @@ public class ButtonGCPOnClick : MonoBehaviour {
                     float radius = 0;
                     for (int j = 0; j < 3; j++)
                     {
-                        center += weight[j] * mesh.vertices[mesh.triangles[i + j]];
+                        center += weight[j] * vertices[mesh.triangles[i + j]];
                         totalWeight += weight[j];
                     }
                     center /= totalWeight;
                     for (int j = 0; j < 3; j++)
                     {
-                        radius += weight[j] * (mesh.vertices[mesh.triangles[i + j]] - center).magnitude;
+                        radius += weight[j] * (vertices[mesh.triangles[i + j]] - center).magnitude;
                     }
                     radius /= totalWeight;
                     objManager.GetComponent<ObjManager>().CreateContactPointSphere(center, radius);
@@ -88,16 +92,29 @@ public class ButtonGCPOnClick : MonoBehaviour {
         Debug.Log("contactPointNum: "+ contactPointNum);        
         buttonGCP.interactable = true;//计算完成可以点击按钮
     }
+    private Vector3[] GetRealVertices(MeshFilter meshFilter)//将点变换到真实的点（应用位移、旋转、缩放变换）
+    {
+        var len = meshFilter.mesh.vertices.Length;
+        var vertices = new Vector3[len];
+        var transform = meshFilter.transform;
+        Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
+        Matrix4x4 m = Matrix4x4.TRS(transform.position,rotation,transform.localScale);
+        for (int i = 0; i < len; i++)
+        {
+            vertices[i] = m.MultiplyPoint3x4(meshFilter.mesh.vertices[i]);
+        }
+        return vertices;
+    }
     public void Click()//按钮点击会调用
     {
         StartCoroutine(SolveContactPoints());
     }
-    private bool isPointInMesh(Vector3 p,Mesh mesh)//判断一个点是否在一个mesh内部
+    private bool isPointInMesh(Vector3 p,MeshFilter meshFilter,Vector3 []vertices)//判断一个点是否在一个mesh内部
     {
+        var mesh = meshFilter.mesh;
         if (!mesh.bounds.Contains(p))//包围盒不含该点
             return false;
         var triangles = mesh.triangles;
-        var vertices = mesh.vertices;
         var len = triangles.Length;
         for (int i = 0; i < len; i += 3)
         {
