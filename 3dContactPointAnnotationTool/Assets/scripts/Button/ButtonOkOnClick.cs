@@ -48,6 +48,7 @@ public class ButtonOkOnClick : MonoBehaviour {
             foreach (var item in re) {
                 item.transform.SetParent(model3d.transform);//将解析出来的obj的父亲设置为model3d
                 item.tag = Macro.UNSELECTED;//将tag设置为未选中
+                item.AddComponent<Model3dItemController>();//添加该脚本
                 //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
                 var scrollViewItem = Instantiate(prefabScrollViewItem,new Vector3(0,0,0),Quaternion.identity);
                 scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PanelStatusController : MonoBehaviour {
     public GameObject selectedObj;//当前选中的对象
+    public Slider sliderTriangles;//控制三角形数量的slider
     // Use this for initialization
     void Awake () {
         selectedObj = null;
@@ -16,6 +17,16 @@ public class PanelStatusController : MonoBehaviour {
     public void SetSelectedObj(GameObject obj)
     {
         selectedObj = obj;
+        if (obj.transform.parent.name.Equals("Model3d"))//该obj是model
+        {
+            sliderTriangles.interactable = true;
+            sliderTriangles.value = sliderTriangles.GetComponent<SliderTrianglesController>().TriangleNumToValue(obj.GetComponent<Model3dItemController>().GetTriangleMultiNum());//三角面片倍数to slider的value
+        }
+        else//该obj是接触点
+        {
+            sliderTriangles.value = 0;
+            sliderTriangles.interactable = false;
+        }        
         foreach(var item in gameObject.GetComponentsInChildren<InputField>())
         {
             item.interactable = true;

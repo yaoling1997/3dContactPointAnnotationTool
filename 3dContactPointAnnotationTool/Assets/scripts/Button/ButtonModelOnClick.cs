@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ButtonModelOnClick : MonoBehaviour {
     private int status;//0表示未选中，1表示选中
-    private Button buttonModel;
+    private Button buttonModel;//选中模型的按钮
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
     private GameObject panelStatus;
@@ -45,7 +45,7 @@ public class ButtonModelOnClick : MonoBehaviour {
         }
     }
     public void Click() {
-        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(GetComponentInParent<ScrollViewItemController>().model);
+        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(GetComponentInParent<ScrollViewItemController>().model);//将该scrollVIew项的model赋值给panelStatus，显示该model信息
         var s = buttonModel.transform.parent.parent.GetComponent<ContentController>();//获得当前item绑定content的脚本
         if (s.selectedItem!=null&&s.selectedItem!= buttonModel)
             s.selectedItem.GetComponent<ButtonModelOnClick>().ChangeStatus();

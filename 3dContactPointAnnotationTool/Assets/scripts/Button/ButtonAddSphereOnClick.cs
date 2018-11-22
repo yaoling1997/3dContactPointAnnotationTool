@@ -16,6 +16,6 @@ public class ButtonAddSphereOnClick : MonoBehaviour {
 
     public void OnClick()
     {
-        objManager.GetComponent<ObjManager>().CreateContactPointSphere(new Vector3(0,0,0),0.5f);        
+        objManager.GetComponent<ObjManager>().CreateContactPointSphere(new Vector3(0,0,0),0.5f);//创建一个原点为中心，半径0.5的球        
     }
 }

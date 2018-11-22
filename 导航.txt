@@ -78,3 +78,6 @@ https://jingyan.baidu.com/article/380abd0a265fb71d90192c83.html
 
 Matrix4x4.TRS Creates a translation, rotation and scaling matrix
 https://docs.unity3d.com/ScriptReference/Matrix4x4.TRS.html
+
+c#中数组赋值方法
+https://blog.csdn.net/lltaoyy/article/details/6720778
