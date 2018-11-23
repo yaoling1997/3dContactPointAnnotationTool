@@ -42,6 +42,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
 	}
     private void MeshACopyToMeshB(Mesh a,Mesh b)//把mesh a赋值给 mesh b
     {
+        b.Clear();
         b.vertices = (Vector3[])a.vertices.Clone();
         b.normals = (Vector3[])a.normals.Clone();
         b.uv = (Vector2[])a.uv.Clone();
@@ -53,6 +54,8 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
     }
     public void SetTriangleMultiNum(float v)
     {
+        if (triangleMultiNum == v)
+            return;
         triangleMultiNum = v;
         UpdateTriangles();
     }
@@ -71,7 +74,9 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         var uvList = new List<Vector2>();
         int triangleNum = (int)(oldMesh.triangles.Length * triangleMultiNum);
         triangleNum += 3-triangleNum % 3;
-        var triangles = new int[triangleNum];        
+        Debug.Log("triangleNum: " + triangleNum);
+        //var triangles = new int[triangleNum];        
+        var trianglesList = new List<int>();
         foreach (var item in oldMesh.vertices)
         {
             verticesList.Add(item);
@@ -88,7 +93,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         }
 
 
-        var sd = new SortedDictionary<Cost,int[]>(new CostComparer());
+        var sd = new SortedDictionary<Cost,int[]>(new CostComparer());        
         int id = 0;//新加入sd的cost的id
         for (int i = 0; i < oldMesh.triangles.Length; i+=3)
         {
@@ -96,8 +101,8 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
             int[] triangle = new int[] { oldMesh.triangles[i], oldMesh.triangles[i + 1], oldMesh.triangles[i + 2] };
             float len = DivideTriangle(triangle,out outTriangle,verticesList);
             sd.Add(new Cost(len,++id),triangle);
-            
         }
+
         while (sd.Count * 3 < triangleNum)
         {
             var e = sd.GetEnumerator();
@@ -106,38 +111,46 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
             int[] triangle = ec.Value;//取最长边最长的三角形进行划分      
             sd.Remove(ec.Key);//从sd中删掉该三角形
             int[] outTriangle;
-            DivideTriangle(triangle,out outTriangle,verticesList);
+            DivideTriangle(triangle, out outTriangle, verticesList);
             int tot = verticesList.Count;//新加的点的index
-            verticesList.Add((verticesList[outTriangle[0]]+verticesList[outTriangle[1]])/2);//加入最长边中点
+            verticesList.Add((verticesList[outTriangle[0]] + verticesList[outTriangle[1]]) / 2);//加入最长边中点
             var normal = new Vector3(0, 0, 0);
             var uv = new Vector2(0, 0);
-            foreach(var i in triangles)
+            foreach (var i in triangle)
             {
                 normal += normalsList[i];
                 uv += uvList[i];
             }
-            normal /= triangles.Length;
-            uv/= triangles.Length;
+            normal /= triangle.Length;
+            uv /= triangle.Length;
             normalsList.Add(normal);
             uvList.Add(uv);
-            var len = DivideTriangle(new int[] {tot,outTriangle[0],outTriangle[2] }, out triangle,verticesList);
-            sd.Add(new Cost(len,++id), outTriangle);
-            len = DivideTriangle(new int[] { tot, outTriangle[1], outTriangle[2] }, out triangle, verticesList);
-            sd.Add(new Cost(len, ++id), outTriangle);
+            var t1 = new int[] { outTriangle[0], tot, outTriangle[2] };
+            var t2 = new int[] { outTriangle[1], outTriangle[2], tot };
+
+            var len = DivideTriangle(t1, out outTriangle, verticesList);
+            sd.Add(new Cost(len, ++id), t1);
+            len = DivideTriangle(t2, out outTriangle, verticesList);
+            sd.Add(new Cost(len, ++id), t2);
         }
+
+        int cc = 0;
         var enumerator = sd.GetEnumerator();
-        if (enumerator.MoveNext()) { 
-            for (int i = 0; enumerator.MoveNext(); i++)
-            {
-                int[] triangle = enumerator.Current.Value;
-                for (int j = 0; j < 3; j++)
-                    triangles[i * 3 + j] = triangle[j];
+        for (int i = 0; enumerator.MoveNext(); i++)
+        {
+            //Debug.Log("length: "+enumerator.Current.Key.cost);
+            int[] triangle = enumerator.Current.Value;
+            for (int j = 0; j < 3; j++) {
+                //triangles[i * 3 + j] = triangle[j];
+                trianglesList.Add(triangle[j]);
+                cc++;
             }
         }
+        mesh.Clear();
         mesh.vertices = verticesList.ToArray();
         mesh.normals = normalsList.ToArray();
         mesh.uv = uvList.ToArray();
-        mesh.triangles = triangles;
+        mesh.triangles = trianglesList.ToArray();
     }
     private float DivideTriangle(int []triangle,out int []outTriangle,List<Vector3> vertices)//切割三角形
     {
@@ -154,7 +167,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
                 re = len;
             }
         }
-        outTriangle = new int[] { p,(p+1)%3,3-p- (p + 1) % 3 };//最长边的两个点以及该边所对的点的标号
+        outTriangle = new int[] { triangle[p],triangle[(p+1)%3],triangle[3-p- (p + 1) % 3] };//最长边的两个点以及该边所对的点的标号
         return re;
     }
 }

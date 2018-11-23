@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\scripts\AxisController.cs" />
     <Compile Include="Assets\scripts\Button\ButtonAddSphereOnClick.cs" />
+    <Compile Include="Assets\scripts\Button\ButtonClearContactPointsOnClick.cs" />
     <Compile Include="Assets\scripts\Button\ButtonDeleteOnClick.cs" />
     <Compile Include="Assets\scripts\Button\ButtonGCPOnClick.cs" />
     <Compile Include="Assets\scripts\Button\ButtonModelOnClick.cs" />
