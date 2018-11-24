@@ -79,6 +79,7 @@ var t2 = new int[] { outTriangle[1], outTriangle[2], tot};
 <img src="https://i.loli.net/2018/11/23/5bf7dd8bebe48.png" alt="9.png" title="9.png" style="zoom:80%"/>
 <img src="https://i.loli.net/2018/11/23/5bf7dd8e03317.png" alt="10.png" title="10.png" style="zoom:80%"/>
 &emsp;&emsp;还是很好玩的。
+<img src="https://i.loli.net/2018/11/24/5bf8e719bdf68.gif" alt="11.gif" title="11.gif" />
 &emsp;&emsp;突然想测一测这玩意的极限，首先拿人的模型来试试，先是1倍三角形：
 <img src="https://i.loli.net/2018/11/23/5bf7e47876fc1.png" alt="10_.png" title="10_.png" style="zoom:80%"/>
 &emsp;&emsp;2.5倍：
