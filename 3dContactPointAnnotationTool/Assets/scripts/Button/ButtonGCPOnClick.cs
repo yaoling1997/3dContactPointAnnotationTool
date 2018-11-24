@@ -14,15 +14,34 @@ public class ButtonGCPOnClick : MonoBehaviour {
             objBounds = bounds;
         }
     }
+    public class BoundsComparer : IComparer<Bounds>
+    {
+        public int Compare(Bounds x, Bounds y)
+        {
+            var X = x.center;
+            var Y = y.center;
+            if (X.Equals(Y))
+                return 0;
+            if (X.x < Y.x)
+                return -1;
+            else if (X.x == Y.x && X.y < Y.y)
+                return -1;
+            else if (X.x == Y.x && X.y == Y.y && X.z < Y.z)
+                return -1;
+            else return 1;
+        }
+    }
     private const float oo = 1e18f;
+    private const float eps = 1e-7f;
     public GameObject model3d;//整个场景对象
     public GameObject contactPoints;//所有接触点
     public Button buttonGCP;
     public GameObject scrollViewContent;//scrollViewContactPoints的content    
     public Slider sliderGCP;//显示GCP进度的slider
     public Text textTimeCost;//显示计算过程最终花费的时间
-    private GameObject objManager;    
-    
+    private GameObject objManager;
+    private List<Bounds> xjBoundsList;//不同物体相交的区域
+
 	// Use this for initialization
 	void Start () {
         objManager = GameObject.Find("ObjManager");
@@ -31,6 +50,12 @@ public class ButtonGCPOnClick : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	}
+    private int Dcmp(float x)
+    {
+        if (Mathf.Abs(x) < eps)
+            return 0;
+        return x < 0 ? -1 : 1;
+    }
     private Vector3 GetMinVector3(Vector3 a,Vector3 b)//每一维取最小的
     {
         var re = new Vector3(0, 0, 0);
@@ -66,7 +91,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
         textTimeCost.text = "";//重新显示时间
         sliderGCP.value = 0;//进度条归零
         var selectedObjList = new List<ListNode>();//选中对象们
-        var unselectedObjList = new List<ListNode>();//未选中对象们
+        var unselectedObjList = new List<ListNode>();//未选中对象们        
         int totalSelectedObjTriangleNum = 0;//总的选中物体三角面片数,用来控制进度条显示
         yield return new WaitForSeconds(0);
         foreach (var item in model3d.GetComponentsInChildren<MeshFilter>())//获得所有物体每个三角面片包围盒
@@ -97,13 +122,14 @@ public class ButtonGCPOnClick : MonoBehaviour {
         }
         yield return new WaitForSeconds(0);
         Debug.Log("selectedObjNum: " + selectedObjList.Count);
-        Debug.Log("unselectedObjNum: " + unselectedObjList.Count);
-        int contactPointNum = 0;
+        Debug.Log("unselectedObjNum: " + unselectedObjList.Count);        
         float sliderValueFz=0;//slider value的分子
-        foreach (var so in selectedObjList)
+        xjBoundsList = new List<Bounds>();
+
+        foreach (var so in selectedObjList)//求交
         {
             foreach (var uso in unselectedObjList) {
-                if (!dealBoundsIntersection(so.objBounds, uso.objBounds,false))//两物体的包围盒不相交
+                if (!DealBoundsIntersection(so.objBounds, uso.objBounds,false))//两物体的包围盒不相交
                 {
                     sliderValueFz += so.triangleBoundsList.Count;
                     continue;
@@ -111,13 +137,13 @@ public class ButtonGCPOnClick : MonoBehaviour {
                 foreach(var sotb in so.triangleBoundsList)
                 {
                     sliderValueFz++;
-                    if (!dealBoundsIntersection(sotb, uso.objBounds,false))//选中物体三角面片包围盒不与未选中物体包围盒相交
+                    if (!DealBoundsIntersection(sotb, uso.objBounds,false))//选中物体三角面片包围盒不与未选中物体包围盒相交
                         continue;
                     foreach(var usotb in uso.triangleBoundsList)
                     {
-                        if (dealBoundsIntersection(sotb, usotb,true))
+                        if (DealBoundsIntersection(sotb, usotb,true))
                         {
-                            contactPointNum++;
+                            
                         }
                     }
                     var tmpV = sliderValueFz / (unselectedObjList.Count * totalSelectedObjTriangleNum);
@@ -128,6 +154,8 @@ public class ButtonGCPOnClick : MonoBehaviour {
                 }
             }
         }
+
+        var contactPointNum= CreateContactPoints();//显示接触点
         sliderGCP.value = 1;//计算完毕，进度条的值置为1
         Debug.Log("contactPointNum: "+ contactPointNum);        
         buttonGCP.interactable = true;//计算完成可以点击按钮        
@@ -160,17 +188,53 @@ public class ButtonGCPOnClick : MonoBehaviour {
     {
         StartCoroutine(SolveContactPoints());
     }
-    private bool dealBoundsIntersection(Bounds a,Bounds b,bool ifCreatePoint)//是否创建对应接触点
+    private bool DealBoundsIntersection(Bounds a,Bounds b,bool ifCreateXjBounds)//是否创建对应相交长方体
     {
         var minP = GetMaxVector3(a.min, b.min);
         var maxP = GetMinVector3(a.max, b.max);
         if (!Vector3xydy(minP, maxP))
             return false;
-        if (ifCreatePoint)
-            objManager.GetComponent<ObjManager>().CreateContactPointSphere((minP+maxP)/2,(maxP-minP)/2);
+        if (ifCreateXjBounds)
+        {
+            xjBoundsList.Add(new Bounds((minP + maxP) / 2, maxP - minP));//往xjBoundsList添加一个相交长方体
+        }
         return true;
     }
-    private bool Vector3xydy(Vector3 a,Vector3 b)//a<=b
+    private int CreateContactPoints()//创建接触点，把中心相同的接触点合并
+    {
+        xjBoundsList.Sort(new BoundsComparer());
+        bool isFirst = true;//第一个是初始bounds不要生成接触点
+        var bounds = new Bounds(new Vector3(-oo, -oo, -oo), new Vector3(0, 0, 0));
+        var om = objManager.GetComponent<ObjManager>();//获得objManager
+        int cnt = 0;//接触点数量
+        foreach (var item in xjBoundsList)
+        {
+            Debug.Log("center:"+item.center.x+ ","+item.center.y + "," + item.center.z);
+            var tmp = item.center - bounds.center;
+            if (Dcmp(tmp.x)==0&& Dcmp(tmp.y) == 0&&Dcmp(tmp.z) == 0)
+            {
+                bounds.extents = GetMaxVector3(bounds.extents, item.extents);
+            }
+            else
+            {
+                if (!isFirst) {
+                   om.CreateContactPointSphere(bounds.center, bounds.extents);
+                   cnt++;
+                }
+                isFirst = false;
+                bounds = item;
+            }
+        }
+        if (!isFirst)
+        {
+           om.CreateContactPointSphere(bounds.center,bounds.extents);
+           cnt++;
+        }
+        Debug.Log("old length: " + xjBoundsList.Count);
+        Debug.Log("new length: " + cnt);
+        return cnt;
+    }
+    public static bool Vector3xydy(Vector3 a,Vector3 b)//a<=b,x,y,z都小于等于
     {
         return a.x <= b.x && a.y <= b.y && a.z <= b.z;
     }
