@@ -37,18 +37,18 @@ public class ButtonOverlayOnClick : MonoBehaviour {
             if (item.name.Equals(contactPoints.name))
                 continue;
             cnt++;
-            Debug.Log(cnt);
+            //Debug.Log(cnt);
             var p = item.position;
             var q = item.localScale/2;//半径
-            Debug.Log("p: "+p);
+            //Debug.Log("localScale: "+item.localScale);
             var sp = mainCamera.WorldToScreenPoint(p);
-            var radius = mainCamera.WorldToScreenPoint(new Vector3(p.x+q.x,p.y,p.z)).x-sp.x;
-            Debug.Log("radius: " + radius);
-            Debug.Log("sp: "+sp);
-            Debug.Log("rectTransform: " + rectTransform.position);
+            var radius = Mathf.Abs(mainCamera.WorldToScreenPoint(new Vector3(p.x+q.x,p.y,p.z)).x-sp.x);
+            //Debug.Log("radius: " + radius);
+            //Debug.Log("sp: "+sp);
+            //Debug.Log("rectTransform: " + rectTransform.position);
             var lp = new Vector2();
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, sp, null, out lp);
-            Debug.Log("lp: " + lp);
+            //Debug.Log("lp: " + lp);
             var cp2 = Instantiate(sphere2d);
             cp2.transform.SetParent(image.transform);
             var rectTransformCp2 = cp2.GetComponent<RectTransform>();//2维接触点的rectTransform
