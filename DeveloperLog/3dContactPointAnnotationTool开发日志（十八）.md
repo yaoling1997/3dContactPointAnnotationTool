@@ -1,0 +1,2 @@
+&emsp;&emsp;今天实现了tab效果，按tab键可以在status面板的各个输入框内来回切换，参考[Unity3D - UGUI实现Tab键切换输入框、按钮（按Tab键切换高亮显示的UI）](https://www.cnblogs.com/kao-la-bao-bei/p/9157475.html)
+<img src="https://i.loli.net/2018/11/26/5bfbdbbed5b66.png" alt="1.png" title="1.png" style="zoom:80%"/>

@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class InputFieldOnEndEdit : MonoBehaviour {
     //public Text text;
-	// Use this for initialization
+    // Use this for initialization
+    private ObjManager objManager;
 	void Start () {
+        objManager= GameObject.Find("ObjManager").GetComponent<ObjManager>();
         gameObject.GetComponent<InputField>().onEndEdit.AddListener(delegate { OnEndEdit(); });
 	}
 	
@@ -19,14 +21,12 @@ public class InputFieldOnEndEdit : MonoBehaviour {
         Debug.Log("OnEndEdit");
         Debug.Log(gameObject.GetComponent<InputField>().text);
         float v = float.Parse(gameObject.GetComponent<InputField>().text);
-        var obj= GameObject.Find("ObjManager").GetComponent<ObjManager>().panelStatus.GetComponent<PanelStatusController>().selectedObj;
+        var obj = objManager.panelStatus.GetComponent<PanelStatusController>().selectedObj;//获得选中对象
         if (obj == null)//对象为空
             return;
         var p = obj.transform.position;
         var r = obj.transform.eulerAngles;
         var s = obj.transform.localScale;
-        Debug.Log("gameObject.transform.name: "+gameObject.transform.name);
-        Debug.Log("transform.name: " + transform.name);
         if (transform.parent.name.Equals("PanelStatusItemPosX"))
         {
             p.x = v;

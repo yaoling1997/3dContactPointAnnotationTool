@@ -2,17 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class PanelStatusController : MonoBehaviour {
     public GameObject selectedObj;//当前选中的对象
     public Slider sliderTriangles;//控制三角形数量的slider
+    private EventSystem eventSystem;
+    private Dictionary<int, GameObject> dicInputFields;//面板上所有inputFields
+    private int dicId;//选中字典中第几个对象
+
     // Use this for initialization
     void Awake () {
         selectedObj = null;
     }
-	
-	// Update is called once per frame
-	void Update () {
+    private void Start()
+    {
+        eventSystem = EventSystem.current;//获取当前EventSystem
+        dicInputFields = new Dictionary<int, GameObject>();
+        dicId = 0;
+        foreach(var item in GetComponentsInChildren<InputField>())
+        {
+            dicInputFields.Add(dicId,item.gameObject);//把组件的对象加入字典
+            dicId++;
+        }
+        dicId = 0;
+        GameObject obj;
+        dicInputFields.TryGetValue(dicId, out obj);
+        eventSystem.SetSelectedGameObject(obj, new BaseEventData(eventSystem));//设置第一个可交互的UI为高亮状态
+    }
+    // Update is called once per frame
+    void Update () {
+        //选中对象不为空且按下tab
+        if (eventSystem.currentSelectedGameObject != null && Input.GetKeyDown(KeyCode.Tab))
+        {
+            var selectedObj = eventSystem.currentSelectedGameObject;
+            dicId = 0;
+            foreach(var item in dicInputFields)
+            {
+                if (item.Value == selectedObj)
+                {
+                    dicId = item.Key + 1;
+                    if (dicId == dicInputFields.Count)
+                        dicId = 0;
+                    break;
+                }
+            }
+            GameObject obj;
+            dicInputFields.TryGetValue(dicId, out obj);
+            eventSystem.SetSelectedGameObject(obj, new BaseEventData(eventSystem));
+        }
     }
     public void SetSelectedObj(GameObject obj)
     {
