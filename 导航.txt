@@ -85,6 +85,7 @@ https://blog.csdn.net/lltaoyy/article/details/6720778
 Unity3D - UGUI实现Tab键切换输入框、按钮（按Tab键切换高亮显示的UI）
 https://www.cnblogs.com/kao-la-bao-bei/p/9157475.html
 
-
 C#脚本 [System.Serializable]的作用
 https://blog.csdn.net/qq_36946274/article/details/82054023
+
+自定义的public类和list结合，若自定义类的第一个元素为string类型，则element0,element2...的名字会变成第一个元素的内容
