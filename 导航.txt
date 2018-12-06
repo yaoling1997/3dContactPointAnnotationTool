@@ -89,3 +89,9 @@ C#脚本 [System.Serializable]的作用
 https://blog.csdn.net/qq_36946274/article/details/82054023
 
 自定义的public类和list结合，若自定义类的第一个元素为string类型，则element0,element2...的名字会变成第一个元素的内容
+
+C# using 三种使用方式
+https://www.cnblogs.com/dachengxiaomeng/p/7452021.html
+
+在Unity中调用Python
+https://segmentfault.com/q/1010000011943735
