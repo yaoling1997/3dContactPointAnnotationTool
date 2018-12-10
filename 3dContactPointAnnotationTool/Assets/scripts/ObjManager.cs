@@ -11,6 +11,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Shader shaderStandard;
     public Shader shaderWireframe;
     public int contactPointId;
+    public GameObject contactPoints2d;
     // Use this for initialization
     void Start () {
         contactPointId = 0;

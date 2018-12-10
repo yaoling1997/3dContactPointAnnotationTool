@@ -66,11 +66,11 @@ var t2 = new int[] { outTriangle[1], outTriangle[2], tot};
 &emsp;&emsp;三倍的，稍微精确一点，只有11445个点，少了3000多个冗余点。
 <img src="https://i.loli.net/2018/11/23/5bf7a1d7c00a6.png" alt="8.png" title="8.png" style="zoom:80%"/>
 &emsp;&emsp;记录一下椅子和人的位置信息，以后也按这个数据测下：
-椅子：
+人：
 -0.25 -0.25 -0.1
 90    0     0
 1     1     1
-人：
+椅子：
 0     0     0
 0     60    0
 1     1     1

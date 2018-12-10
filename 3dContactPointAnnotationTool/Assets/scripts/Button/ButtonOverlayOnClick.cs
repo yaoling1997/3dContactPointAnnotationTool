@@ -8,9 +8,10 @@ public class ButtonOverlayOnClick : MonoBehaviour {
     public Camera mainCamera;
     public GameObject image;
     public GameObject sphere2d;
+    //private ObjManager objManager;
 	// Use this for initialization
 	void Start () {
-		
+        //objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
 	}
 	
 	// Update is called once per frame
@@ -42,7 +43,12 @@ public class ButtonOverlayOnClick : MonoBehaviour {
             var q = item.localScale/2;//半径
             //Debug.Log("localScale: "+item.localScale);
             var sp = mainCamera.WorldToScreenPoint(p);
-            var radius = Mathf.Abs(mainCamera.WorldToScreenPoint(new Vector3(p.x+q.x,p.y,p.z)).x-sp.x);
+            var rx = Mathf.Abs(mainCamera.WorldToScreenPoint(new Vector3(p.x + q.x, p.y, p.z)).x - sp.x);
+            var ry = Mathf.Abs(mainCamera.WorldToScreenPoint(new Vector3(p.x, p.y+q.y, p.z)).x - sp.x);
+            var rz = Mathf.Abs(mainCamera.WorldToScreenPoint(new Vector3(p.x, p.y, p.z+q.z)).x - sp.x);
+            var radius = Mathf.Max(rx,ry,rz);
+            if (radius == 0)
+                continue;
             //Debug.Log("radius: " + radius);
             //Debug.Log("sp: "+sp);
             //Debug.Log("rectTransform: " + rectTransform.position);
@@ -53,7 +59,7 @@ public class ButtonOverlayOnClick : MonoBehaviour {
             cp2.transform.SetParent(image.transform);
             var rectTransformCp2 = cp2.GetComponent<RectTransform>();//2维接触点的rectTransform
             rectTransformCp2.sizeDelta = new Vector2(2*radius,2*radius);
-            rectTransformCp2.localPosition = new Vector2(lp.x+radius,lp.y+radius);
+            rectTransformCp2.localPosition = new Vector2(lp.x+radius,lp.y+radius);            
         }
         GetComponent<Button>().interactable = true;
     }

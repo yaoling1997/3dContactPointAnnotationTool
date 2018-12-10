@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-C:/Users/A/Desktop/x64/3dContactPointAnnotationTool.exe
+C:/Users/acer-pc/Desktop/win/3dContactPointAnnotationTool.exe
 SceneListBegin?
 Assets/Scenes/SampleScene.unity
 SceneListEnd?
@@ -167,7 +167,7 @@ f24bb97e6f4ab08d8f4336ab9243b120 Assembly-CSharp.dll:.ButtonClearContactPointsOn
 70f7dc248db3379548a88e8d4fa049f8 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 28a95668dd28649297d595834fe8417e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 28a95668dd28649297d595834fe8417e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-881866920e08d12f0dc2e7152a336d14 Assembly-CSharp.dll:.ObjManager
+95f3ef7166e86a04aa7b0c1f070a7940 Assembly-CSharp.dll:.ObjManager
 2a1ee686fcf2c5dd9ff0d4d5a58737f0 Assembly-CSharp.dll:.ScrollViewItemController
 a45ba27d3d3422fa1d05e473ab6864ea Assembly-CSharp.dll:.ContentController
 d75dc834c5dec688db75a55a1724c90f UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
@@ -184,9 +184,11 @@ aac9c55ae7ba4b95b852a7d9c191acd1 Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 e04611b8715e6833d2bd7010fc6be10b Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 2f9af06a78208a67db480e9bfed4a076 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 9318334b30e9f195f573b2ce00154b95 Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
-5108973ed1113a15a569f5cde8d59f5c Assembly-CSharp.dll:.ButtonOpenImageOnClick
+5108973ed1113a15a569f5cde8d59f5c Assembly-CSharp.dll:.ButtonOpenExportOnClick
 df277cd39096fd6e01689115839bcca2 Assembly-CSharp.dll:.ButtonPanelControllerOnClick
 93307bd34e39d73fd24e00ec39c25a91 Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.ButtonAddSphereOnClick
 9ac2479e07fc5e5b90a6908b337bf94d Assembly-CSharp.dll:.ToggleWireframeOnValueChanged
 6b7f8777d23289eff57c6a03ff25d2ce Assembly-CSharp.dll:.ButtonOkOnClick
+5108973ed1113a15a569f5cde8d59f5c Assembly-CSharp.dll:.ButtonOpenImageOnClick
+2bc864b312fd8040f4d462a7f67d5194 Assembly-CSharp.dll:.ButtonExportOnClick
