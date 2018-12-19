@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class ButtonIncDecController : MonoBehaviour {
     public InputField inputField;
     public float speed = 0.1f;
+    private bool ifPointerDown;//鼠标是否按下
     void Awake()
     {
+        ifPointerDown = false;
     }
 
     // Use this for initialization
@@ -17,14 +19,22 @@ public class ButtonIncDecController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	}
-    public void OnClick()
+        if (ifPointerDown)//鼠标按在按钮上
+        {
+            float delta = speed;
+            //Debug.Log("name:"+transform.name);
+            if (transform.name.Equals("ButtonDec"))
+                delta = -speed;
+            if (inputField.interactable)
+                inputField.text = (float.Parse(inputField.text) + delta).ToString();
+        }
+    }
+    public void PointerDown()
     {
-        float delta = speed;
-        //Debug.Log("name:"+transform.name);
-        if (transform.name.Equals("ButtonDec"))
-            delta = -speed;
-        if (inputField.interactable)
-            inputField.text = (float.Parse(inputField.text) + delta).ToString();
+        ifPointerDown = true;
+    }
+    public void PointerUp()
+    {
+        ifPointerDown = false;
     }
 }
