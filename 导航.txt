@@ -95,3 +95,23 @@ https://www.cnblogs.com/dachengxiaomeng/p/7452021.html
 
 在Unity中调用Python
 https://segmentfault.com/q/1010000011943735
+
+【Unity3D自学记录】实现地球仪般拖拽旋转的效果
+https://blog.csdn.net/daijinghui512/article/details/36875691
+
+Unity 3D input.GetAxis用法
+http://blog.sina.com.cn/s/blog_bfa00a970102viu2.html
+
+C# 几种数据类型转换方式
+https://www.cnblogs.com/yi-ye/p/5610823.html
+
+unity中锁定鼠标移动&&隐藏鼠标&&强制是鼠标移动到某一位置
+https://www.cnblogs.com/GouBin/p/5853644.html
+
+C# 鼠标光标到达屏幕边缘后从另一边缘出现
+https://blog.csdn.net/e295166319/article/details/80939714
+
+把vector3直接赋值给vector2，会取x和y的值
+
+在unity中添加System.Windows.Forms引用和注意事项
+https://blog.csdn.net/zxy13826134783/article/details/79660950

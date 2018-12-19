@@ -279,6 +279,11 @@ Prefab:
       propertyPath: m_Text
       value: RotZ
       objectReference: {fileID: 0}
+    - target: {fileID: 114715862843316222, guid: 2120efc722eb2b348b683a17c989cbf9,
+        type: 2}
+      propertyPath: speed
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2120efc722eb2b348b683a17c989cbf9, type: 2}
   m_IsPrefabAsset: 0
@@ -983,20 +988,6 @@ Prefab:
         type: 2}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114637631345006044, guid: 2120efc722eb2b348b683a17c989cbf9,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114414497887512786, guid: 2120efc722eb2b348b683a17c989cbf9,
-        type: 2}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1325086174071572, guid: 2120efc722eb2b348b683a17c989cbf9, type: 2}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2120efc722eb2b348b683a17c989cbf9, type: 2}
@@ -2628,6 +2619,11 @@ Prefab:
       propertyPath: m_Text
       value: RotY
       objectReference: {fileID: 0}
+    - target: {fileID: 114715862843316222, guid: 2120efc722eb2b348b683a17c989cbf9,
+        type: 2}
+      propertyPath: speed
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2120efc722eb2b348b683a17c989cbf9, type: 2}
   m_IsPrefabAsset: 0
@@ -2826,7 +2822,7 @@ Prefab:
     - target: {fileID: 224289474587925378, guid: cc0cb68362162dc4884c1bd28a77cbe5,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -91.49999
+      value: -91.49993
       objectReference: {fileID: 0}
     - target: {fileID: 224289474587925378, guid: cc0cb68362162dc4884c1bd28a77cbe5,
         type: 2}
@@ -8985,6 +8981,11 @@ Prefab:
         type: 2}
       propertyPath: m_Text
       value: RotX
+      objectReference: {fileID: 0}
+    - target: {fileID: 114715862843316222, guid: 2120efc722eb2b348b683a17c989cbf9,
+        type: 2}
+      propertyPath: speed
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2120efc722eb2b348b683a17c989cbf9, type: 2}
