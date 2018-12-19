@@ -12,3 +12,29 @@
 <img src="https://i.loli.net/2018/12/19/5c1a0361559d2.gif" alt="Unity 2018_clip.gif" title="Unity 2018_clip.gif" />
 &emsp;&emsp;不过可能很少有人会发现这个功能，所以我又加了按钮可以让用户通过点击按钮来改变值，不过必须点击一次才能改变一下所以显得很蠢。长按按钮来改变的方式貌似有点难，不会。
 <img src="https://i.loli.net/2018/12/19/5c1a39ef10e80.png" alt="3.png" title="3.png" style="zoom:80%"/>
+&emsp;&emsp;刚刚闲来无事看unity关于eventSystem的视频教程的时候无意中看到了一个叫作Event Trigger的东西，利用它提供的PointerDown和PointerUp就能够轻松响应鼠标长按按钮事件：
+<img src="https://i.loli.net/2018/12/19/5c1a47ce730be.png" alt="4.png" title="4.png" style="zoom:80%"/>
+&emsp;&emsp;给要实现长按功能的组件添加一个EventTrigger，添加这两个Event然后把组件丢进去，调用组件绑定的自己写的脚本里的方法。我的脚本写的关键代码如下：
+```
+void Update () {
+    if (ifPointerDown)//鼠标按在按钮上
+    {
+        float delta = speed;
+        //Debug.Log("name:"+transform.name);
+        if (transform.name.Equals("ButtonDec"))
+            delta = -speed;
+        if (inputField.interactable)
+            inputField.text = (float.Parse(inputField.text) + delta).ToString();
+    }
+}
+public void PointerDown()
+{
+    ifPointerDown = true;
+}
+public void PointerUp()
+{
+    ifPointerDown = false;
+}
+```
+&emsp;&emsp;这样就能实现长按按钮改变输入框的值功能了！按钮也不一定得是按钮，可以是别的UI组件。
+<img src="https://i.loli.net/2018/12/19/5c1a491cf2488.gif" alt="Unity 2018_clip.gif" title="Unity 2018_clip.gif" />
