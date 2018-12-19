@@ -10,3 +10,5 @@
 <img src="https://i.loli.net/2018/12/19/5c1a02074433f.png" alt="2.png" title="2.png" style="zoom:80%"/>
 &emsp;&emsp;效果如下：
 <img src="https://i.loli.net/2018/12/19/5c1a0361559d2.gif" alt="Unity 2018_clip.gif" title="Unity 2018_clip.gif" />
+&emsp;&emsp;不过可能很少有人会发现这个功能，所以我又加了按钮可以让用户通过点击按钮来改变值，不过必须点击一次才能改变一下所以显得很蠢。长按按钮来改变的方式貌似有点难，不会。
+<img src="https://i.loli.net/2018/12/19/5c1a39ef10e80.png" alt="3.png" title="3.png" style="zoom:80%"/>

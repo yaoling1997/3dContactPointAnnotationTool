@@ -17,7 +17,7 @@ public class DragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler
     public void OnPointerDown(PointerEventData data)
     {
         rectTransformPanel.SetAsLastSibling();//把该组件放到UI最前面
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransformPanel,data.position,data.pressEventCamera,out pointerOffset);        
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransformPanel,data.position,data.pressEventCamera,out pointerOffset);
     }
 
     public void OnDrag(PointerEventData data)
