@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ButtonDeleteOnClick : MonoBehaviour {    
-        
+public class ButtonDeleteOnClick : MonoBehaviour {
+    
     // Use this for initialization
-    void Start () {
+    void Start () {        
         GetComponent<Button>().onClick.AddListener(OnClick);
     }
 	
@@ -16,7 +16,6 @@ public class ButtonDeleteOnClick : MonoBehaviour {
 	}
     public void OnClick()
     {
-        Destroy(GetComponentInParent<ScrollViewItemController>().model);//删除item对应模型
-        Destroy(transform.parent.gameObject);//删除ScrollViewItem
+        GetComponentInParent<ScrollViewItemController>().Delete();//删除一系列的scrollView及model
     }
 }

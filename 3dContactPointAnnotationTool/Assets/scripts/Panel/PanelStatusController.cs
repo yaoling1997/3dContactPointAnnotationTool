@@ -51,6 +51,14 @@ public class PanelStatusController : MonoBehaviour {
             dicInputFields.TryGetValue(dicId, out obj);
             eventSystem.SetSelectedGameObject(obj, new BaseEventData(eventSystem));
         }
+        if (selectedObj == null)//未选中物体
+        {
+            sliderTriangles.interactable = false;
+            foreach (var item in GetComponentsInChildren<InputField>())
+            {
+                item.interactable = false;                
+            }
+        }
     }
     public void SetSelectedObj(GameObject obj)
     {

@@ -94,10 +94,10 @@ public class ButtonGCPOnClick : MonoBehaviour {
         var unselectedObjList = new List<ListNode>();//未选中对象们        
         int totalSelectedObjTriangleNum = 0;//总的选中物体三角面片数,用来控制进度条显示
         yield return new WaitForSeconds(0);
-        foreach (var item in model3d.GetComponentsInChildren<MeshFilter>())//获得所有物体每个三角面片包围盒
+        foreach (var item in model3d.GetComponentsInChildren<SkinnedMeshRenderer>())//获得所有物体每个三角面片包围盒
         {
             var vertices = GetRealVertices(item);
-            var triangles = item.mesh.triangles;
+            var triangles = item.sharedMesh.triangles;
             var boundsList = new List<Bounds>();
             var objBounds = GetBoundsOfVector3Array(vertices);
             if (item.tag.Equals(Macro.SELECTED))
@@ -171,16 +171,16 @@ public class ButtonGCPOnClick : MonoBehaviour {
             textTimeCost.text += minuteCost + "′";
         textTimeCost.text +=  secondCost + "″";
     }
-    private Vector3[] GetRealVertices(MeshFilter meshFilter)//将点变换到真实的点（应用位移、旋转、缩放变换）
+    private Vector3[] GetRealVertices(SkinnedMeshRenderer skinnedMeshRenderer)//将点变换到真实的点（应用位移、旋转、缩放变换）
     {
-        var len = meshFilter.mesh.vertices.Length;
+        var len = skinnedMeshRenderer.sharedMesh.vertices.Length;
         var vertices = new Vector3[len];
-        var transform = meshFilter.transform;
+        var transform = skinnedMeshRenderer.transform;
         Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
         Matrix4x4 m = Matrix4x4.TRS(transform.position,rotation,transform.localScale);
         for (int i = 0; i < len; i++)
         {
-            vertices[i] = m.MultiplyPoint3x4(meshFilter.mesh.vertices[i]);
+            vertices[i] = m.MultiplyPoint3x4(skinnedMeshRenderer.sharedMesh.vertices[i]);
         }
         return vertices;
     }

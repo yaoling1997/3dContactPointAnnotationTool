@@ -9,6 +9,7 @@ public class ButtonModelOnClick : MonoBehaviour {
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
     private GameObject panelStatus;
+    private ObjManager objManager;
     // Use this for initialization
     void Awake () {
         status = 0;
@@ -19,7 +20,8 @@ public class ButtonModelOnClick : MonoBehaviour {
 	}
     private void Start()
     {
-        panelStatus = GameObject.Find("ObjManager").GetComponent<ObjManager>().panelStatus;
+        objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        panelStatus = objManager.panelStatus;
     }
     // Update is called once per frame
     void Update () {
@@ -34,13 +36,13 @@ public class ButtonModelOnClick : MonoBehaviour {
         {
             s.selectedItem = buttonModel;
             buttonModel.GetComponent<Image>().color = Color.cyan;
-            model.GetComponent<MeshRenderer>().material.color = selectedColor;
+            model.GetComponent<SkinnedMeshRenderer>().material.color = selectedColor;
             model.tag = Macro.SELECTED;//设置为已选中
         }
         else
         {
             buttonModel.GetComponent<Image>().color = Color.white;
-            model.GetComponent<MeshRenderer>().material.color = unselectedColor;
+            model.GetComponent<SkinnedMeshRenderer>().material.color = unselectedColor;
             model.tag = Macro.UNSELECTED;//设置为未选中
         }
     }

@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ToggleWireframeOnValueChanged : MonoBehaviour {
-    public GameObject model3d;
+    private GameObject model3d;
+    private ObjManager objManager;
 	// Use this for initialization
 	void Start () {
-		
-	}
+        objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        model3d = objManager.model3d;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -18,13 +20,16 @@ public class ToggleWireframeOnValueChanged : MonoBehaviour {
     public void ToggleValueChanged() {        
         var isOn = this.gameObject.GetComponent<Toggle>().isOn;
         Debug.Log("ToggleValueChanged:" + isOn);
-        foreach (var item in model3d.GetComponentsInChildren<MeshRenderer>()) {
+        foreach (var item in model3d.GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
             var color = item.material.color;
-            if (isOn) {
-                item.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderWireframe);
+            if (isOn)
+            {
+                item.material = new Material(objManager.shaderWireframe);
             }
-            else {
-                item.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderStandard);
+            else
+            {
+                item.material = new Material(objManager.shaderStandard);
             }
             item.material.color = color;
         }

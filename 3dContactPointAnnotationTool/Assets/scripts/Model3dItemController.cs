@@ -31,7 +31,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
     // Use this for initialization
     void Start () {
         triangleMultiNum = 1;
-        var mesh = GetComponent<MeshFilter>().mesh;
+        var mesh = GetComponent<SkinnedMeshRenderer>().sharedMesh;        
         oldMesh = new Mesh();
         MeshACopyToMeshB(mesh, oldMesh);
     }
@@ -61,7 +61,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
     }
     private void UpdateTriangles()//根据倍数重新计算三角面片
     {        
-        var mesh = GetComponent<MeshFilter>().mesh;
+        var mesh = GetComponent<SkinnedMeshRenderer>().sharedMesh;
         var vertices = mesh.vertices;
         if (triangleMultiNum == 1)//1倍直接把原来存好的三角形给它
         {

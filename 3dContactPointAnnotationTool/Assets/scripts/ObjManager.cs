@@ -1,21 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
     public GameObject panelStatus;
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
+    public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们
     public GameObject scrollViewContactPointsContent;//接触点scrollView的content
-    public Shader shaderStandard;
-    public Shader shaderWireframe;
-    public int contactPointId;
-    public GameObject contactPoints2d;
+    public Shader shaderStandard;//标准shader
+    public Shader shaderWireframe;//网格shader
+    public int contactPointId;//3d接触点标号
+    public int humanModelId;//人体模型标号
+    public GameObject contactPoints2d;//2d接触点们
+    public GameObject humanModel;//SMPL人体模型
+    public Sprite spriteTriangleUp;//向上三角形sprite
+    public Sprite spriteTriangleRight;//向右三角形sprite
+    public Sprite spriteTriangleDown;//向下三角形sprite
+
+    public Button buttonGCP;
+    public Toggle toggleWireframe;
+
     // Use this for initialization
     void Start () {
         contactPointId = 0;
-
+        humanModelId = 0;
     }
 	
 	// Update is called once per frame

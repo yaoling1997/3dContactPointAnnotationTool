@@ -26,8 +26,7 @@ namespace Hont
             {
                 var go = new GameObject();
                 go.name = objFormatAnalyzer.ObjName[objId];
-                var meshRenderer = go.AddComponent<MeshRenderer>();
-                var meshFilter = go.AddComponent<MeshFilter>();
+                var skinnedMeshRenderer = go.AddComponent<SkinnedMeshRenderer>();
 
                 var mesh = new Mesh();
 
@@ -111,8 +110,8 @@ namespace Hont
                 mesh.uv = uvList.ToArray();
                 mesh.triangles = triangles;
 
-                meshFilter.mesh = mesh;
-                meshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderStandard);
+                skinnedMeshRenderer.sharedMesh = mesh;
+                skinnedMeshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderStandard);
                 re.Add(go);
             }
             return re;
