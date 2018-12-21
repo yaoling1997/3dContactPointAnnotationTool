@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都要有
 {
+    public bool trianglesEditable;//是否可以从面板编辑triangles
+    public bool positionEditable;//是否可以从面板编辑position
+    public bool rotationEditable;//是否可以从面板编辑rotation
+    public bool scaleEditable;//是否可以从面板编辑scale
+
     public class Cost
     {
         public float cost;
@@ -28,12 +33,24 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
     }
     private float triangleMultiNum;//三角面片倍数
     private Mesh oldMesh;//最初的网格
-    // Use this for initialization
+
+    private void Awake()
+    {        
+        trianglesEditable = true;
+        positionEditable = true;
+        rotationEditable = true;
+        scaleEditable = true;
+        gameObject.layer = Macro.MODEL3D_ITEM;//设置为model3dItem层
+    }
+    // Use this for initialization    
     void Start () {
         triangleMultiNum = 1;
-        var mesh = GetComponent<SkinnedMeshRenderer>().sharedMesh;        
-        oldMesh = new Mesh();
-        MeshACopyToMeshB(mesh, oldMesh);
+        if (GetComponent<SkinnedMeshRenderer>()!=null)//有SkinnedMeshRenderer
+        {
+            var mesh = GetComponent<SkinnedMeshRenderer>().sharedMesh;
+            oldMesh = new Mesh();
+            MeshACopyToMeshB(mesh, oldMesh);
+        }
     }
 	
 	// Update is called once per frame
@@ -48,12 +65,14 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         b.uv = (Vector2[])a.uv.Clone();
         b.triangles = (int[])a.triangles.Clone();
     }
-    public float GetTriangleMultiNum()
+    public float GetTriangleMultiNum()//获得三角形倍数
     {
         return triangleMultiNum;
     }
-    public void SetTriangleMultiNum(float v)
+    public void SetTriangleMultiNum(float v)//设置三角形倍数
     {
+        if (!trianglesEditable)//不可编辑triangles
+            return;
         if (triangleMultiNum == v)
             return;
         triangleMultiNum = v;

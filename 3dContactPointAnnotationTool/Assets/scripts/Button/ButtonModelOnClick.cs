@@ -10,6 +10,7 @@ public class ButtonModelOnClick : MonoBehaviour {
     public Color unselectedColor;//未选中时模型的颜色
     private GameObject panelStatus;
     private ObjManager objManager;
+    private GameObject model;//绑定的模型
     // Use this for initialization
     void Awake () {
         status = 0;
@@ -22,6 +23,7 @@ public class ButtonModelOnClick : MonoBehaviour {
     {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         panelStatus = objManager.panelStatus;
+        model= GetComponentInParent<ScrollViewItemController>().model;
     }
     // Update is called once per frame
     void Update () {
@@ -29,7 +31,6 @@ public class ButtonModelOnClick : MonoBehaviour {
 	}
     public void ChangeStatus()//反转状态
     {
-        var model= GetComponentInParent<ScrollViewItemController>().model; 
         var s = buttonModel.transform.parent.parent.GetComponent<ContentController>();
         status ^= 1;
         if (status == 1)

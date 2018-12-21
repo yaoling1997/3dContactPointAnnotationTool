@@ -38,9 +38,17 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     {
         contactPointId++;
         var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+        go.layer = Macro.CONTACT_POINTS_ITEM;//设置为ContactPointsItem层，实现光照等效果
+
         go.transform.position = center;//设置球的中心位置
         go.transform.localScale = new Vector3(2*x, 2*y, 2*z);//设置球的半径大小,scale是半径的两倍
-        go.GetComponent<MeshRenderer>().material.color = Color.red;
+        var mr = go.GetComponent<MeshRenderer>();//获取球的meshRenderer
+        mr.material.color = Color.red;//设置为红球
+        //不产生阴影也不接收阴影
+        mr.receiveShadows = false;
+        mr.shadowCastingMode =UnityEngine.Rendering.ShadowCastingMode.Off;
+
         go.transform.SetParent(contactPoints.transform);
         go.name = go.name + contactPointId;
         go.tag = Macro.UNSELECTED;

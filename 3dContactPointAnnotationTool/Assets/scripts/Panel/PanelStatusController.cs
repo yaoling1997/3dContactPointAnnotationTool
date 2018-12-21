@@ -63,9 +63,12 @@ public class PanelStatusController : MonoBehaviour {
     public void SetSelectedObj(GameObject obj)
     {
         selectedObj = obj;
-        if (obj.transform.parent.name.Equals("Model3d"))//该obj是model
+        Model3dItemController model3dItemController = null;
+        if (obj.layer.Equals(Macro.MODEL3D_ITEM))//该obj是model
         {
-            sliderTriangles.interactable = true;
+            model3dItemController = obj.GetComponent<Model3dItemController>();
+            sliderTriangles.interactable = model3dItemController.trianglesEditable;
+
             sliderTriangles.value = sliderTriangles.GetComponent<SliderTrianglesController>().TriangleNumToValue(obj.GetComponent<Model3dItemController>().GetTriangleMultiNum());//三角面片倍数to slider的value
         }
         else//该obj是接触点
@@ -74,42 +77,50 @@ public class PanelStatusController : MonoBehaviour {
             sliderTriangles.interactable = false;
         }        
         foreach(var item in gameObject.GetComponentsInChildren<InputField>())
-        {
-            item.interactable = true;
+        {            
             if (item.transform.parent.name.Equals("PanelStatusItemPosX"))
-            {                
+            {
+                item.interactable = model3dItemController==null?true: model3dItemController.positionEditable;//null说明选中的是接触点
                 item.text = obj.transform.position.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemPosY"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.positionEditable;//null说明选中的是接触点
                 item.text = obj.transform.position.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemPosZ"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.positionEditable;//null说明选中的是接触点
                 item.text = obj.transform.position.z.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotX"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.rotationEditable;//null说明选中的是接触点
                 item.text = obj.transform.eulerAngles.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotY"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.rotationEditable;//null说明选中的是接触点
                 item.text = obj.transform.eulerAngles.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotZ"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.rotationEditable;//null说明选中的是接触点
                 item.text = obj.transform.eulerAngles.z.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleX"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.scaleEditable;//null说明选中的是接触点
                 item.text = obj.transform.localScale.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleY"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.scaleEditable;//null说明选中的是接触点
                 item.text = obj.transform.localScale.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleZ"))
             {
+                item.interactable = model3dItemController == null ? true : model3dItemController.scaleEditable;//null说明选中的是接触点
                 item.text = obj.transform.localScale.z.ToString();
             }else
             {
