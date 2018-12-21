@@ -109,7 +109,8 @@ public class ScrollViewItemController : MonoBehaviour {
     }
     public void Delete()//删除该scrollView及其子孙scrollView和对应model
     {
-        foreach(var item in sons)
+        var sonsCopy = new List<GameObject>(sons);
+        foreach(var item in sonsCopy)
         {
             item.GetComponent<ScrollViewItemController>().Delete();
         }

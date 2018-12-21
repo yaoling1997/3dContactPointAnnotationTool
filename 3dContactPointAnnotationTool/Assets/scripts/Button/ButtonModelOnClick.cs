@@ -36,13 +36,15 @@ public class ButtonModelOnClick : MonoBehaviour {
         {
             s.selectedItem = buttonModel;
             buttonModel.GetComponent<Image>().color = Color.cyan;
-            model.GetComponent<SkinnedMeshRenderer>().material.color = selectedColor;
+            if (model.GetComponent<SkinnedMeshRenderer>()!=null)
+                model.GetComponent<SkinnedMeshRenderer>().material.color = selectedColor;
             model.tag = Macro.SELECTED;//设置为已选中
         }
         else
         {
             buttonModel.GetComponent<Image>().color = Color.white;
-            model.GetComponent<SkinnedMeshRenderer>().material.color = unselectedColor;
+            if (model.GetComponent<SkinnedMeshRenderer>() != null)
+                model.GetComponent<SkinnedMeshRenderer>().material.color = unselectedColor;
             model.tag = Macro.UNSELECTED;//设置为未选中
         }
     }

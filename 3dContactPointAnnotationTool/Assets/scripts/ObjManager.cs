@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
+    public Canvas canvas;//UI的canvas
     public GameObject panelStatus;
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject model3d;//3d模型们
