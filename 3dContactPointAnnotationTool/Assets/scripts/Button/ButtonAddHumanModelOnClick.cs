@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonAddHumanModelOnClick : MonoBehaviour {
     public GameObject scrollViewModelsContent;//scrollViewModels的content
@@ -37,8 +38,9 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
             if (o.gameObject == par.GetComponent<ScrollViewItemController>().model)
                 continue;
 
-            var svi = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
+            var svi = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);//创建对应的scrollViewItem
             svi.GetComponent<ScrollViewItemController>().Init(o.gameObject, scrollViewModelsContent);
+            svi.transform.Find("ButtonDelete").gameObject.SetActive(false);//儿子们的delete按钮都不显示，不能使用
             while (par.GetComponent<ScrollViewItemController>().model != o.parent.gameObject)
             {
                 par = par.GetComponent<ScrollViewItemController>().par;
