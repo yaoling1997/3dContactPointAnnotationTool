@@ -35,7 +35,9 @@ public class ImageController : MonoBehaviour {
         sliderScale.interactable = true;
         var buttonOverlay= panelController.transform.Find("ButtonOverlay").GetComponent<Button>();//开启buttonOverlay
         buttonOverlay.interactable = true;
-        GetComponentInParent<PanelImageController>().updateSize();
+        var buttonClear = panelController.transform.Find("ButtonClear").GetComponent<Button>();//开启buttonClear
+        buttonClear.interactable = true;
+        GetComponentInParent<PanelImageController>().UpdateSize();
     }
     public void SetScale(float scale)
     {

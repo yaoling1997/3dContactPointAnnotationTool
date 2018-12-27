@@ -8,6 +8,6 @@ public class SliderScaleOnValueChanged : MonoBehaviour {
     public void OnValueChanged()
     {
         var value= GetComponent<Slider>().value*3;//最多放大3倍
-        panelImage.GetComponent<PanelImageController>().setScale(value+1);
+        panelImage.GetComponent<PanelImageController>().SetScale(value+1);
     }
 }

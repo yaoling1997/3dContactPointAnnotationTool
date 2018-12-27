@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using System.IO;
 
 public class ButtonExportOnClick : MonoBehaviour {
-    public InputField InputField;
+    public InputField InputField;//导出路径
+    public Image image;//人和物的图像
     private ObjManager ObjManager;
 	// Use this for initialization
 	void Start () {
@@ -19,14 +20,19 @@ public class ButtonExportOnClick : MonoBehaviour {
 	}
     private IEnumerator Export3dContactPoints(string path)
     {
-        //path = @"C:\Users\acer-pc\Desktop\2.jpg";//
-        //Debug.Log(path);
         WWW www = new WWW("file://" + path);
         yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
         {
             string content = "";
             var contactPoints = ObjManager.contactPoints;
+            var imageRt = image.GetComponent<RectTransform>().sizeDelta;
+            var realWidth = image.mainTexture.width;//真实图像像素宽
+            var realHeight = image.mainTexture.height;//真实图像像素高
+            var nowWidth = imageRt.x;//工具中显示的图像的宽
+            var nowHeight = imageRt.y;//工具中显示的图像的高
+            Debug.Log("width:" + realWidth);
+            Debug.Log("height:" + realHeight);
             content += "3d:\r\n";
             foreach(var item in contactPoints.GetComponentsInChildren<Transform>())
             {
@@ -55,9 +61,18 @@ public class ButtonExportOnClick : MonoBehaviour {
                     continue;
                 var r = item.sizeDelta.x/2;
                 var p = item.localPosition;
-                content += (p.x-r) + " ";
-                content += (p.y-r) + " ";
-                content += r+"\r\n";
+                //content += (p.x-r) + " ";
+                //content += (p.y-r) + " ";
+                //content += r+"\r\n";
+                p.x -= r;
+                p.y -= r;
+                var realX = realWidth / nowWidth * p.x+ realWidth;//获得像素为单位的接触点x,y,r
+                var realY = realHeight / nowHeight * p.y + realHeight;
+                var realR = realWidth / nowWidth * r;
+                content += realX + " ";
+                content += realY + " ";
+                content += realR + "\r\n";
+
             }
             File.WriteAllText(path,content);
         }

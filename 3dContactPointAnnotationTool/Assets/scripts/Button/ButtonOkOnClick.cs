@@ -19,19 +19,18 @@ public class ButtonOkOnClick : MonoBehaviour {
     {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
     }
-    public void Click() {
-        Debug.Log("onClick");
+    public void Click() {        
         StartCoroutine(GetImage(inputFieldImagePath.text));
         StartCoroutine(GetObj(inputField3dModel.text));
     }
     private IEnumerator GetImage(string path) {
-        //path = @"C:\Users\acer-pc\Desktop\2.jpg";//
-        //Debug.Log(path);
         WWW www = new WWW("file://" + path);
         yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
         {
             Texture2D texture = new Texture2D(www.texture.width, www.texture.height);
+            Debug.Log("width:"+texture.width);
+            Debug.Log("height:" + texture.height);
             texture.SetPixels(www.texture.GetPixels());
             texture.Apply(true);
             texture.filterMode = FilterMode.Trilinear;
@@ -42,9 +41,6 @@ public class ButtonOkOnClick : MonoBehaviour {
         }
     }
     private IEnumerator GetObj(string path) {
-        //path = @"C:\Users\acer-pc\Desktop\sample.obj";//
-        //path = @"C:\Users\A\Desktop\sample.obj";//
-
         WWW www = new WWW("file://" + path);
         yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
