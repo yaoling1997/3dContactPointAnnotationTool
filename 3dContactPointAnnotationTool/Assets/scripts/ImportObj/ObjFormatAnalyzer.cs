@@ -48,7 +48,7 @@ namespace Hont
             var objNameList = new List<string>();
             string objName = "";//物体的名称
             int defaultObjNameNum = 0;//默认物体名称编号
-            int dealtFaceNum = 0;//已处理的面数
+            //int dealtFaceNum = 0;//已处理的面数
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -89,18 +89,17 @@ namespace Hont
                     face.Points[0] = new FacePoint() { VertexIndex = int.Parse(face1[0]), TextureIndex = 1 < face1.Length?int.Parse(face1[1]):0, NormalIndex = 2 < face1.Length ? int.Parse(face1[2]):0 };
                     face.Points[1] = new FacePoint() { VertexIndex = int.Parse(face2[0]), TextureIndex = 1 < face2.Length?int.Parse(face2[1]):0, NormalIndex = 2 < face2.Length ? int.Parse(face2[2]):0 };
                     face.Points[2] = new FacePoint() { VertexIndex = int.Parse(face3[0]), TextureIndex = 1 < face3.Length?int.Parse(face3[1]):0, NormalIndex = 2 < face3.Length ? int.Parse(face3[2]):0 };
-                    face.Points[3] = isQuad ? new FacePoint() { VertexIndex = int.Parse(face4[0]), TextureIndex = int.Parse(face4[1]), NormalIndex = int.Parse(face4[2]) } : default(FacePoint);
+                    face.Points[3] = isQuad ? new FacePoint() { VertexIndex = int.Parse(face4[0]), TextureIndex = 1 < face4.Length ? int.Parse(face4[1]):0, NormalIndex = 2 < face4.Length ? int.Parse(face4[2]):0 } : default(FacePoint);
                     face.IsQuad = isQuad;
 
                     faceList.Add(face);
                 }
                 else if (currentLine.Contains("o ")) {
-                    if (dealtFaceNum < faceList.Count) {
+                    if (objFaceBeginList.Count==0 && faceList.Count!=0) {
                         objName = "default" + defaultObjNameNum;
                         defaultObjNameNum++;
-                        objFaceBeginList.Add(dealtFaceNum);
-                        objNameList.Add(objName);
-                        dealtFaceNum = faceList.Count;
+                        objFaceBeginList.Add(0);
+                        objNameList.Add(objName);                        
                     }
                     objName = "";
                     int p = currentLine.IndexOf('o');
@@ -108,26 +107,26 @@ namespace Hont
                     for (p++; currentLine[p] == ' '; p++) ;
                     for (; p < length; p++)
                         objName += currentLine[p];
-                    if (objFaceBeginList.Count > 0 && dealtFaceNum == objFaceBeginList[objFaceBeginList.Count - 1]) {//前一个对象没有对应的面，直接改名字
+                    if (objFaceBeginList.Count > 0 && faceList.Count == objFaceBeginList[objFaceBeginList.Count - 1]) {//前一个对象没有对应的面，直接改名字
                         objNameList[objNameList.Count - 1] = objName;
                     }
                     else
                     {
-                        objFaceBeginList.Add(dealtFaceNum);
+                        objFaceBeginList.Add(faceList.Count);
                         objNameList.Add(objName);
                     }
                 }
             }
 
-            if (dealtFaceNum < faceList.Count)//还有剩余的面没有被处理
-            {
+            
+            if (objFaceBeginList.Count == 0 && faceList.Count != 0)
+            {//还有剩余的面没有被处理
                 objName = "default" + defaultObjNameNum;
                 defaultObjNameNum++;
-                objFaceBeginList.Add(dealtFaceNum);
+                objFaceBeginList.Add(0);
                 objNameList.Add(objName);
-                dealtFaceNum = faceList.Count;
             }
-            if (objFaceBeginList.Count > 0 && dealtFaceNum == objFaceBeginList[objFaceBeginList.Count - 1])
+            if (objFaceBeginList.Count > 0 && faceList.Count == objFaceBeginList[objFaceBeginList.Count - 1])
             {//最后一个对象没有对应的面，删除
                 objFaceBeginList.RemoveAt(objFaceBeginList.Count-1);
                 objNameList.RemoveAt(objNameList.Count-1);

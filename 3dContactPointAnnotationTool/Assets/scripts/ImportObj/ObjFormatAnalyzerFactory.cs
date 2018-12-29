@@ -58,8 +58,6 @@ namespace Hont
                         var tId = currentFace.Points[k].TextureIndex - 1;
                         var vec = sourceVertexArr[vId];
                         vertexList.Add(new Vector3(vec.X, vec.Y, vec.Z));
-                        Debug.Log("sourceVertexNormalArr.Length:" + sourceVertexNormalArr.Length);
-                        Debug.Log("nId:" + nId);
                         vec = nId!=-1?sourceVertexNormalArr[nId]: defaultVec;
                         vertexNormalList.Add(new Vector3(vec.X, vec.Y, vec.Z));
                         var uv = tId!=-1? sourceUVArr[tId] : defaultVec;
