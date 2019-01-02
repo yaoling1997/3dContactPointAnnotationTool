@@ -6,20 +6,27 @@ using UnityEngine.UI;
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
     public Canvas canvas;//UI的canvas
+    public GameObject panelModels;
+    public GameObject panelContactPoints;
     public GameObject panelStatus;
+    public GameObject panelReferenceImage;
+    public GameObject Axis;
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们
+    public GameObject scrollViewModelsContent;//模型scrollView的content
     public GameObject scrollViewContactPointsContent;//接触点scrollView的content
+    public GameObject MenuBar;//菜单栏
+    public GameObject contactPoints2d;//2d接触点们
+    public GameObject humanModel;//SMPL人体模型    
     public Shader shaderStandard;//标准shader
     public Shader shaderWireframe;//网格shader
     public int contactPointId;//3d接触点标号
     public int humanModelId;//人体模型标号
-    public GameObject contactPoints2d;//2d接触点们
-    public GameObject humanModel;//SMPL人体模型
     public Sprite spriteTriangleUp;//向上三角形sprite
     public Sprite spriteTriangleRight;//向右三角形sprite
     public Sprite spriteTriangleDown;//向下三角形sprite
+    
 
     public Button buttonGCP;
     public Toggle toggleWireframe;

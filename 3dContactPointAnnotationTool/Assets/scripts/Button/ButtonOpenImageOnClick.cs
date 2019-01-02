@@ -18,7 +18,7 @@ public class ButtonOpenImageOnClick : MonoBehaviour
         ofn.fileTitle = new string(new char[64]);
         ofn.maxFileTitle = ofn.fileTitle.Length;
         ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
-        ofn.title = "窗口标题";
+        ofn.title = "导入图像";
         ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
         if (LocalDialog.GetOpenFileName(ofn)) {
             Debug.Log("file: " + ofn.file);
