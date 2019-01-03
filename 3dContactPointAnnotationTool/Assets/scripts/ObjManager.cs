@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
     public Canvas canvas;//UI的canvas
+    public GameObject mainCamera;//主相机
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
     public GameObject panelReferenceImage;
-    public GameObject Axis;
+    public GameObject axis;
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们

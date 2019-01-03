@@ -231,7 +231,7 @@ public class MenuBarController : MonoBehaviour {
     }
     public void ButtonAxisOnClick()//Axis按钮被点击
     {
-        var Axis = objManager.Axis;
+        var Axis = objManager.axis;
         var active = !Axis.activeSelf;
         Axis.SetActive(active);
         WindowAxisToggle.isOn = active;
