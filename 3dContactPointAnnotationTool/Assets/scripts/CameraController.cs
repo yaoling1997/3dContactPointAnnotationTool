@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour {
 	void Update () {                
         Zoom();
         Orbit();        
-        transform.LookAt(model3d.transform);//使相机对准3dModel
+        //transform.LookAt(model3d.transform);//使相机对准3dModel
     }
 
     private void Zoom() {//鼠标滚轮实现放大缩小视角功能
