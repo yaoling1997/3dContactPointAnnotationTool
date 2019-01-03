@@ -11,6 +11,12 @@ public class MenuBarController : MonoBehaviour {
     private GameObject model3d;
     private GameObject scrollViewModelsContent;
 
+    public Toggle WindowModelsToggle;
+    public Toggle WindowContactPointsToggle;
+    public Toggle WindowStatusToggle;
+    public Toggle WindowReferenceImageToggle;
+    public Toggle WindowAxisToggle;
+
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
@@ -187,35 +193,47 @@ public class MenuBarController : MonoBehaviour {
             StartCoroutine(Export3dContactPoints(ofn.file));
         }
     }
+    public void ButtonExitOnClick()//Exit按钮被点击
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
     public void ButtonModelsOnClick()//Models按钮被点击
     {
-        var panelModels = objManager.panelModels;
-        Debug.Log("active:"+ panelModels.activeSelf);
+        var panelModels = objManager.panelModels;        
         var active = !panelModels.activeSelf;
         panelModels.SetActive(active);
+        WindowModelsToggle.isOn = active;
     }
     public void ButtonContactPointsOnClick()//ContactPoints按钮被点击
     {
-        var panelContactPoints = objManager.panelContactPoints;
+        var panelContactPoints = objManager.panelContactPoints;        
         var active = !panelContactPoints.activeSelf;
         panelContactPoints.SetActive(active);
+        WindowContactPointsToggle.isOn = active;
     }
     public void ButtonStatusOnClick()//Status按钮被点击
     {
         var panelStatus = objManager.panelStatus;
         var active = !panelStatus.activeSelf;
         panelStatus.SetActive(active);
+        WindowStatusToggle.isOn = active;
     }
     public void ButtonReferenceImageOnClick()//ReferenceImage按钮被点击
     {
         var panelReferenceImage = objManager.panelReferenceImage;
         var active = !panelReferenceImage.activeSelf;
         panelReferenceImage.SetActive(active);
+        WindowReferenceImageToggle.isOn = active;
     }
     public void ButtonAxisOnClick()//Axis按钮被点击
     {
-        var Axis = objManager.panelModels;
+        var Axis = objManager.Axis;
         var active = !Axis.activeSelf;
         Axis.SetActive(active);
+        WindowAxisToggle.isOn = active;
     }
 }
