@@ -15,6 +15,7 @@ public class ToolBarController : MonoBehaviour {
     private ObjManager objManager;
     private GameObject model3d;
     private GameObject mainCamera;
+    private GameObject camera2;
     private Color buttonSelectedColor;
     private int mouseStatus;//用户鼠标的状态,-1未选中工具,0 zoom,1 orbit
     private Color initButtonColor;//初始的按钮颜色
@@ -30,6 +31,7 @@ public class ToolBarController : MonoBehaviour {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         model3d = objManager.model3d;
         mainCamera = objManager.mainCamera;
+        camera2 = objManager.camera2;
     }
 
     void Update()
@@ -66,6 +68,7 @@ public class ToolBarController : MonoBehaviour {
         {
             mainCamera.transform.RotateAround(model3d.transform.position, mainCamera.transform.up, orbitSpeed * Input.GetAxis("Mouse X"));
             mainCamera.transform.RotateAround(model3d.transform.position, mainCamera.transform.right, -orbitSpeed * Input.GetAxis("Mouse Y"));
+            //camera2.transform.rotation = mainCamera.transform.rotation;
         }
     }
 

@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
-    public Canvas canvas;//UI的canvas
+    public Canvas canvas;//UI的canvas    
     public GameObject mainCamera;//主相机
+    public GameObject camera2;//用来渲染一些UI元素
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
