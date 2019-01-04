@@ -8,6 +8,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Canvas canvas;//UI的canvas    
     public GameObject mainCamera;//主相机
     public GameObject camera2;//用来渲染一些UI元素
+    public GameObject mainCameraOrbitPoint;//主相机orbit时的点
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
