@@ -7,19 +7,17 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
 {
     public Canvas canvas;//UI的canvas    
     public GameObject mainCamera;//主相机
-    public GameObject camera2;//用来渲染一些UI元素
-    public GameObject mainCameraOrbitPoint;//主相机orbit时的点
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
     public GameObject panelReferenceImage;
-    public GameObject axis;
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们
     public GameObject scrollViewModelsContent;//模型scrollView的content
     public GameObject scrollViewContactPointsContent;//接触点scrollView的content
-    public GameObject MenuBar;//菜单栏
+    public GameObject menuBar;//菜单栏
+    public GameObject toolBar;//工具栏
     public GameObject contactPoints2d;//2d接触点们
     public GameObject humanModel;//SMPL人体模型    
     public Shader shaderStandard;//标准shader

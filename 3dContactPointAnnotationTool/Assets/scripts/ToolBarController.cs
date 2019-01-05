@@ -5,23 +5,30 @@ using UnityEngine.UI;
 
 public class ToolBarController : MonoBehaviour {
     public Button[] buttons;//工具栏上的button
+    public Button buttonTransform;//global or local
     public float zoomSpeed = 1;
     public float orbitSpeed = 1;
     public float panViewSpeed = 1;
     public float minDist = 1;
     public float maxDist = 3000;
-    private bool isZooming = false;//是否正在缩放
-    private bool isOrbiting = false;//是否正在旋转
-    private bool isPanning = false;//是否正在平移视图
+    public bool isZooming = false;//是否正在缩放
+    public bool isOrbiting = false;//是否正在旋转
+    public bool isPanning = false;//是否正在平移视图
+    public bool isFocusing = false;//是否正在最大化显示选中视图
+    public bool isMoving = false;//是否正在移动对象
+    public bool isRotating = false;//是否正在旋转对象
+    public bool isScaling = false;//是否正在缩放对象
+    public bool isVolumeScaling = false;//是否正在长方体缩放对象
+    public bool isGlobal = false;//是否是global
 
     private ObjManager objManager;
     private GameObject model3d;
-    private GameObject mainCamera;
-    private GameObject camera2;
-    private GameObject mainCameraOrbitPoint;
     private Color buttonSelectedColor;
-    private int mouseStatus;//用户鼠标的状态,-1未选中工具,0 zoom,1 orbit,2 PanView
+    //用户鼠标的状态,-1未选中工具,0 zoom,1 orbit,2 PanView,4 move,5 rotate,6 scale,7 volumeScale
+    private int mouseStatus;
     private Color initButtonColor;//初始的按钮颜色
+    private string globalString = "Global";
+    private string localString = "Local";
 
     void Awake () {
         mouseStatus = -1;
@@ -33,9 +40,6 @@ public class ToolBarController : MonoBehaviour {
     {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         model3d = objManager.model3d;
-        mainCamera = objManager.mainCamera;
-        camera2 = objManager.camera2;
-        mainCameraOrbitPoint = objManager.mainCameraOrbitPoint;
     }
 
     void Update()
@@ -52,14 +56,6 @@ public class ToolBarController : MonoBehaviour {
             isZooming = true;
         else if (Input.GetMouseButtonUp(0))
             isZooming = false;
-        if (isZooming) {
-            Vector3 offset = mainCamera.transform.position - mainCameraOrbitPoint.transform.position;
-            float dist = offset.magnitude;//获取相机与3d模型的距离
-            dist = dist - (Input.GetAxis("Mouse X")+ Input.GetAxis("Mouse Y")) * zoomSpeed;
-            dist = Mathf.Clamp(dist, minDist, maxDist);
-            offset = offset.normalized * dist;
-            mainCamera.transform.position = mainCameraOrbitPoint.transform.position + offset;
-        }
     }
 
     private void Orbit()
@@ -68,16 +64,6 @@ public class ToolBarController : MonoBehaviour {
             isOrbiting = true;
         else if (Input.GetMouseButtonUp(0))
             isOrbiting = false;
-        //Debug.Log(isRotating);
-        if (isOrbiting)
-        {
-            var deltaX = Input.GetAxis("Mouse X");
-            var deltaY = Input.GetAxis("Mouse Y");
-            mainCamera.transform.RotateAround(mainCameraOrbitPoint.transform.position, mainCamera.transform.up, orbitSpeed * deltaX);
-            mainCamera.transform.RotateAround(mainCameraOrbitPoint.transform.position, mainCamera.transform.right, -orbitSpeed * deltaY);
-            camera2.transform.RotateAround(model3d.transform.position, camera2.transform.up, orbitSpeed * deltaX);
-            camera2.transform.RotateAround(model3d.transform.position, camera2.transform.right, -orbitSpeed * deltaY);
-        }
     }
 
     private void PanView()
@@ -86,17 +72,6 @@ public class ToolBarController : MonoBehaviour {
             isPanning = true;
         else if (Input.GetMouseButtonUp(0))
             isPanning = false;
-        //Debug.Log(isRotating);
-        if (isPanning)
-        {
-            Debug.Log("isPanning");
-            var deltaX = Input.GetAxis("Mouse X") * -panViewSpeed;
-            var deltaY = Input.GetAxis("Mouse Y") * -panViewSpeed;
-            mainCamera.transform.Translate(mainCamera.transform.right * deltaX,Space.World);
-            mainCamera.transform.Translate(mainCamera.transform.up * deltaY, Space.World);
-            mainCameraOrbitPoint.transform.Translate(mainCamera.transform.right * deltaX, Space.World);
-            mainCameraOrbitPoint.transform.Translate(mainCamera.transform.up * deltaY, Space.World);
-        }
     }
 
     private void ChangeStatus()
@@ -124,5 +99,49 @@ public class ToolBarController : MonoBehaviour {
         mouseStatus = mouseStatus == 2 ? -1 : 2;
         ChangeStatus();
     }
-
+    public void ButtonFocusOnClick()//Focus按钮被点击,最大化显示选中对象
+    {
+        isFocusing = true;
+    }
+    public void ButtonMoveOnClick()//Move按钮被点击,平移物体
+    {
+        mouseStatus = mouseStatus == 4 ? -1 : 4;
+        isMoving = mouseStatus == 4 ? true : false;
+        ChangeStatus();        
+    }
+    public void ButtonRotateOnClick()//Rotate按钮被点击,旋转物体
+    {
+        mouseStatus = mouseStatus == 5 ? -1 : 5;
+        isRotating = mouseStatus == 5 ? true : false;
+        ChangeStatus();
+    }
+    public void ButtonScaleOnClick()//Scale按钮被点击,缩放物体
+    {
+        mouseStatus = mouseStatus == 6 ? -1 : 6;
+        isScaling = mouseStatus == 6 ? true : false;
+        ChangeStatus();
+    }
+    public void ButtonVolumeScaleOnClick()//VolumeScale按钮被点击,以长方体形式缩放物体
+    {
+        mouseStatus = mouseStatus == 7 ? -1 : 7;
+        isVolumeScaling = mouseStatus == 7 ? true : false;
+        ChangeStatus();        
+    }
+    public void ButtonTransformOnClick()//transform按钮被点击,更换transform gizmo的形式,global or local
+    {
+        SetGlobal(!isGlobal);
+    }
+    public void SetGlobal(bool bl)
+    {
+        isGlobal = bl;
+        var textCp = buttonTransform.GetComponentInChildren<Text>();
+        if (isGlobal)
+            textCp.text = globalString;
+        else
+            textCp.text = localString;
+    }
+    public bool CanSelectObject()//是否可以选择对象,只有选中移动,旋转,缩放,长方体缩放工具才能选择对象
+    {
+        return 4 <= mouseStatus && mouseStatus <= 7;
+    }
 }

@@ -15,7 +15,6 @@ public class MenuBarController : MonoBehaviour {
     public Toggle WindowContactPointsToggle;
     public Toggle WindowStatusToggle;
     public Toggle WindowReferenceImageToggle;
-    public Toggle WindowAxisToggle;
 
     // Use this for initialization
     void Start () {
@@ -228,12 +227,5 @@ public class MenuBarController : MonoBehaviour {
         var active = !panelReferenceImage.activeSelf;
         panelReferenceImage.SetActive(active);
         WindowReferenceImageToggle.isOn = active;
-    }
-    public void ButtonAxisOnClick()//Axis按钮被点击
-    {
-        var Axis = objManager.axis;
-        var active = !Axis.activeSelf;
-        Axis.SetActive(active);
-        WindowAxisToggle.isOn = active;
     }
 }

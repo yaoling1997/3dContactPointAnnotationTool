@@ -319,6 +319,11 @@ namespace RTEditor
         /// </summary>
         private void Start()
         {
+            //added by me
+            objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+            toolBarController = objManager.toolBar.GetComponent<ToolBarController>();
+            //
+
             // Make sure all properties are valid
             ValidatePropertiesForRuntime();
 
@@ -338,24 +343,87 @@ namespace RTEditor
 
         private void Update()
         {
-            if (_activateTranslationGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.Translation);
+            // added by me
+            if (_activateTranslationGizmoShortcut.IsActiveInCurrentFrame())
+            {                
+                if (IsGizmoTypeAvailable(GizmoType.Translation))
+                    toolBarController.ButtonMoveOnClick();
+            }
             else
-            if (_activateRotationGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.Rotation);
+            if (_activateRotationGizmoShortcut.IsActiveInCurrentFrame())
+            {
+                if (IsGizmoTypeAvailable(GizmoType.Rotation))
+                    toolBarController.ButtonRotateOnClick();
+            }
             else
-            if (_activateScaleGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.Scale);
+            if (_activateScaleGizmoShortcut.IsActiveInCurrentFrame())
+            {
+                if (IsGizmoTypeAvailable(GizmoType.Scale))
+                    toolBarController.ButtonScaleOnClick();
+            }
             else
-            if (_activateVolumeScaleGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.VolumeScale);
+            if (_activateVolumeScaleGizmoShortcut.IsActiveInCurrentFrame())
+            {
+                if (IsGizmoTypeAvailable(GizmoType.VolumeScale))
+                    toolBarController.ButtonVolumeScaleOnClick();
+            }
 
-            if (_activateGlobalTransformShortcut.IsActiveInCurrentFrame()) ChangeTransformSpace(TransformSpace.Global);
-            else if (_activateLocalTransformShortcut.IsActiveInCurrentFrame()) ChangeTransformSpace(TransformSpace.Local);
+            if (toolBarController.isMoving)
+            {
+                ChangeActiveGizmo(GizmoType.Translation);
+                toolBarController.isMoving = false;
+            }
+            else if (toolBarController.isRotating)
+            {
+                ChangeActiveGizmo(GizmoType.Rotation);
+                toolBarController.isRotating = false;
+            }
+            else if (toolBarController.isScaling)
+            {
+                ChangeActiveGizmo(GizmoType.Scale);
+                toolBarController.isScaling = false;
+            }
+            else if (toolBarController.isVolumeScaling)
+            {
+                ChangeActiveGizmo(GizmoType.VolumeScale);
+                toolBarController.isVolumeScaling = false;
+            }
+            if (_activateGlobalTransformShortcut.IsActiveInCurrentFrame()) toolBarController.SetGlobal(true);
+            else if (_activateLocalTransformShortcut.IsActiveInCurrentFrame()) toolBarController.SetGlobal(false);
 
-            if (_turnOffGizmosShortcut.IsActiveInCurrentFrame()) TurnOffGizmos();
+            if (toolBarController.isGlobal)
+                ChangeTransformSpace(TransformSpace.Global);
+            else
+                ChangeTransformSpace(TransformSpace.Local);
+
+            if (_turnOffGizmosShortcut.IsActiveInCurrentFrame()||!toolBarController.CanSelectObject()) TurnOffGizmos();
             else
             if (_togglePivotShortcut.IsActiveInCurrentFrame())
             {
                 TransformPivotPoint newPivotPoint = _transformPivotPoint == TransformPivotPoint.Center ? TransformPivotPoint.MeshPivot : TransformPivotPoint.Center;
                 ChangeTransformPivotPoint(newPivotPoint);
             }
+
+            //
+
+            //if (_activateTranslationGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.Translation);
+            //else
+            //if (_activateRotationGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.Rotation);
+            //else
+            //if (_activateScaleGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.Scale);
+            //else
+            //if (_activateVolumeScaleGizmoShortcut.IsActiveInCurrentFrame()) ChangeActiveGizmo(GizmoType.VolumeScale);
+
+            //if (_activateGlobalTransformShortcut.IsActiveInCurrentFrame()) ChangeTransformSpace(TransformSpace.Global);
+            //else if (_activateLocalTransformShortcut.IsActiveInCurrentFrame()) ChangeTransformSpace(TransformSpace.Local);
+
+            //if (_turnOffGizmosShortcut.IsActiveInCurrentFrame()) TurnOffGizmos();
+            //else
+            //if (_togglePivotShortcut.IsActiveInCurrentFrame())
+            //{
+            //    TransformPivotPoint newPivotPoint = _transformPivotPoint == TransformPivotPoint.Center ? TransformPivotPoint.MeshPivot : TransformPivotPoint.Center;
+            //    ChangeTransformPivotPoint(newPivotPoint);
+            //}
         }
 
         /// <summary>
@@ -650,5 +718,13 @@ namespace RTEditor
             EstablishActiveGizmoPosition();
         }
         #endregion
+
+        //added by me
+        #region My Changes
+        private ObjManager objManager;
+        private ToolBarController toolBarController;
+        #endregion
+        //
+
     }
 }

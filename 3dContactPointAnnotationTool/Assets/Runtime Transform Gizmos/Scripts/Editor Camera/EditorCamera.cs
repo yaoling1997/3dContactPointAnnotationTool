@@ -370,6 +370,13 @@ namespace RTEditor
             if (!RuntimeEditorApplication.Instance.UseCustomCamera)
             {
                 if (_focusOnSelectionShortcut.IsActiveInCurrentFrame()) FocusOnSelection();
+                //added by me
+                if (toolBarController.isFocusing)
+                {
+                    FocusOnSelection();
+                    toolBarController.isFocusing = false;
+                }
+                //
                 if (_zoomSettings.IsZoomEnabled) ApplyCameraZoomBasedOnUserInput();
                 PanCameraBasedOnUserInput();
                 RotateCameraBasedOnUserInput();
@@ -433,6 +440,14 @@ namespace RTEditor
 
             // Zoom if necessary
             float scrollSpeed = Input.GetAxis("Mouse ScrollWheel");
+
+            //added by me
+            if (toolBarController.isZooming)
+            {
+                scrollSpeed += Input.GetAxis("Mouse Y");
+            }
+            //
+
             if (scrollSpeed != 0.0f)
             {
                 // Make sure all coroutines are stopped to avoid any conflicts
@@ -462,7 +477,11 @@ namespace RTEditor
         /// </summary>
         private void PanCameraBasedOnUserInput()
         {
-            if (_mouse.WasMouseMovedSinceLastFrame && _cameraPanShortcut.IsActive())
+            //added by me
+            var blCameraPan = _cameraPanShortcut.IsActive()||toolBarController.isPanning;
+            if (_mouse.WasMouseMovedSinceLastFrame && blCameraPan)
+            //
+            //if (_mouse.WasMouseMovedSinceLastFrame && _cameraPanShortcut.IsActive())
             {
                 // Make sure all coroutines are stopped to avoid any conflicts
                 StopAllCoroutines();
@@ -487,7 +506,10 @@ namespace RTEditor
             // If no mouse movemenet was performed, we don't need to continue
             if (!_mouse.WasMouseMovedSinceLastFrame) return;
 
-            bool orbit = _cameraOrbitShortcut.IsActive();
+            //added by me
+            bool orbit = _cameraOrbitShortcut.IsActive()||toolBarController.isOrbiting;
+            //
+            //bool orbit = _cameraOrbitShortcut.IsActive();
             bool lookAround = !orbit && _cameraLookAroundShortcut.IsActive();
 
             if (orbit || lookAround)
@@ -586,8 +608,16 @@ namespace RTEditor
         /// </summary>
         private IEnumerator StartSmoothZoom()
         {
+            //added by me
+            var scrollSpeed = Input.GetAxis("Mouse ScrollWheel");
+            if (toolBarController.isZooming)
+            {
+                scrollSpeed+= Input.GetAxis("Mouse Y");
+            }
+            float currentSpeed = (Camera.orthographic ? _zoomSettings.OrthographicSmoothZoomSpeed : _zoomSettings.PerspectiveSmoothZoomSpeed) * scrollSpeed;
+            //
             // Calculate the camera initial speed and the smooth value based on the camera type
-            float currentSpeed = (Camera.orthographic ? _zoomSettings.OrthographicSmoothZoomSpeed : _zoomSettings.PerspectiveSmoothZoomSpeed) * Input.GetAxis("Mouse ScrollWheel");
+            //float currentSpeed = (Camera.orthographic ? _zoomSettings.OrthographicSmoothZoomSpeed : _zoomSettings.PerspectiveSmoothZoomSpeed) * Input.GetAxis("Mouse ScrollWheel");
             float smoothValue = Camera.orthographic ? _zoomSettings.OrthographicSmoothValue : _zoomSettings.PerspectiveSmoothValue;
             currentSpeed *= CalculateZoomFactor();
 
@@ -816,5 +846,19 @@ namespace RTEditor
             _background.OnCameraUpdate(Camera, _isDoingPerspectiveSwitch);
         }
         #endregion
+
+        //added by me
+        #region My Changes
+        private ObjManager objManager;
+        private ToolBarController toolBarController;
+        private void Start()
+        {
+            objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+            toolBarController = objManager.toolBar.GetComponent<ToolBarController>();
+        }
+        #endregion
+        //
+
+
     }
 }

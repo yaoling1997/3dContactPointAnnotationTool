@@ -552,8 +552,8 @@ namespace RTEditor
         /// </summary>
         private bool CanOperate()
         {
-            return gameObject.activeSelf && enabled && 
-                   !EditorGizmoSystem.Instance.IsActiveGizmoReadyForObjectManipulation() && 
+            return gameObject.activeSelf && enabled &&
+                   !EditorGizmoSystem.Instance.IsActiveGizmoReadyForObjectManipulation() &&
                    !SceneGizmo.Instance.IsHovered();
         }
 
@@ -585,8 +585,12 @@ namespace RTEditor
         /// </param>
         private bool CanSelectObject(GameObject gameObj, ObjectSelectActionType selectActionType)
         {
+            //added by me
+            if (gameObj == null || gameObj.activeSelf == false || !CanOperate()||!toolBarController.CanSelectObject()) return false;
+            //
+
             // Ignore null and inactive objects. Also check if the selection mechansim can operate.
-            if (gameObj == null || gameObj.activeSelf == false || !CanOperate()) return false;
+            //if (gameObj == null || gameObj.activeSelf == false || !CanOperate()) return false;
 
             // Objects which are part of the RTEditor hierarchy, can never be selected
             if (gameObj.IsRTEditorSystemObject()) return false;
@@ -1228,5 +1232,18 @@ namespace RTEditor
             if (SelectionChanged != null) SelectionChanged(selectionChangedEventArgs);
         }
         #endregion
+
+        //added by me
+        #region My Changes
+        private ObjManager objManager;
+        private ToolBarController toolBarController;
+        private void Start()
+        {
+            objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+            toolBarController = objManager.toolBar.GetComponent<ToolBarController>();
+        }
+        #endregion
+        //
+
     }
 }
