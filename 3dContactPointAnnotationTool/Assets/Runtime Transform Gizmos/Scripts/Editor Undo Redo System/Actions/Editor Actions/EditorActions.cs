@@ -53,7 +53,11 @@ namespace RTEditor
                 EditorObjectSelection.Instance.OnDeleted();
 
                 // Record th action with the Undo/Redo system
-                EditorUndoRedoSystem.Instance.RegisterAction(this);
+                //added by me
+                if (EditorUndoRedoSystem.Instance!=null)
+                    EditorUndoRedoSystem.Instance.RegisterAction(this);
+                //
+                //EditorUndoRedoSystem.Instance.RegisterAction(this);
             }
         }
 
