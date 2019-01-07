@@ -2,27 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RTEditor;
 
 public class ScrollViewItemController : MonoBehaviour {
     public GameObject model;//scrollViewItem对应的model
     public Button buttonShowSons;//显示儿子scrollViewItem的按钮
     public GameObject panelTab;//显示缩进的panel
-    GameObject scrollViewContent;//scrollViewItem所放置到的content
+    public GameObject scrollViewContent;//scrollViewItem所放置到的content
     public GameObject par;//该scrollViewItem的父scrollViewItem
 
     private List<GameObject> sons;//该scrollViewItem的儿子scrollViewItem们
 
     private ObjManager objManager;
+    private EditorObjectSelection editorObjectSelection;
+    private int status;//0表示未选中，1表示选中
+    private Button buttonModel;//选中模型的按钮
+    public Color selectedColor;//选中时模型的颜色
+    public Color unselectedColor;//未选中时模型的颜色
+    private GameObject panelStatus;
     private bool ifShowSons;//是否显示儿子
     
     void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         ifShowSons = false;
         sons = new List<GameObject>();
+        status = 0;
+        selectedColor = Color.cyan;//默认选中颜色
+        unselectedColor = Color.white;//默认未选中颜色
+        buttonModel = transform.Find("ButtonModel").GetComponent<Button>();        
     }
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+        panelStatus = objManager.panelStatus;
+        editorObjectSelection = objManager.editorObjectSelection;
+    }
+    // Update is called once per frame
+    void Update () {
 		
 	}
     public void Init(GameObject item,GameObject scrollViewContent)//初始化scrollViewItem
@@ -30,15 +45,18 @@ public class ScrollViewItemController : MonoBehaviour {
         this.scrollViewContent = scrollViewContent;
         var buttonModel = transform.Find("ButtonModel");        
         buttonModel.GetComponentInChildren<Text>().text = item.name;
-        model = item;//将模型赋值给item的脚本        
+        model = item;//将模型赋值给item的脚本  
+        if (model.GetComponent<CorrespondingScrollViewItem>()==null)
+            model.AddComponent<CorrespondingScrollViewItem>();
+        model.GetComponent<CorrespondingScrollViewItem>().sviController = this;//将scrollViewItem赋值给model
         scrollViewContent.GetComponent<ContentController>().Add(gameObject);//将scrollViewItem添加到scrollView里 
-        NoSons();        
+        NoSons();
+        SetModelColor(unselectedColor);
     }
     public void Init(GameObject item, GameObject scrollViewContent,Color unselectedColor)//初始化scrollViewItem，未选中时模型的颜色
     {
-        Init(item, scrollViewContent);
-        var buttonModel = transform.Find("ButtonModel");
-        buttonModel.GetComponent<ButtonModelOnClick>().unselectedColor = unselectedColor;        
+        this.unselectedColor = unselectedColor;
+        Init(item, scrollViewContent);                
     }
     public void ShowSons()//显示儿子
     {
@@ -107,7 +125,7 @@ public class ScrollViewItemController : MonoBehaviour {
         var rtContent = scrollViewContent.GetComponent<RectTransform>();
         rtContent.sizeDelta = new Vector2(Mathf.Max(rtContent.sizeDelta.x, rtSvi.sizeDelta.x), rtContent.sizeDelta.y);
     }
-    public void Delete()//删除该scrollView及其子孙scrollView和对应model
+    public void Delete()//删除该scrollView及其子孙scrollView
     {
         var sonsCopy = new List<GameObject>(sons);
         foreach(var item in sonsCopy)
@@ -118,7 +136,60 @@ public class ScrollViewItemController : MonoBehaviour {
             objManager.model3d.GetComponent<Model3dController>().RemoveSon();//删除一个大模型
         if (par != null)//有父亲
             par.GetComponent<ScrollViewItemController>().RemoveSon(gameObject);
-        Destroy(model);//删除item对应模型
+        //Destroy(model);//删除item对应模型
         Destroy(gameObject);//删除ScrollViewItem
     }
+    public void SetModelColor(Color color)//设置模型颜色
+    {
+        if (model.GetComponent<SkinnedMeshRenderer>() != null)
+            model.GetComponent<SkinnedMeshRenderer>().material.color = color;
+        else if (model.GetComponent<MeshRenderer>() != null)
+            model.GetComponent<MeshRenderer>().material.color = color;
+
+    }
+    public void SetSelected()
+    {
+        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(model);//将该scrollVIew项的model赋值给panelStatus，显示该model信息        
+        status = 1;
+        buttonModel.GetComponent<Image>().color = Color.cyan;
+        SetModelColor(selectedColor);
+        model.tag = Macro.SELECTED;//设置为已选中
+    }
+    public void SetUnselected()
+    {
+        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(null);//将该scrollVIew项的model赋值给panelStatus，显示该model信息        
+        status = 0;
+        buttonModel.GetComponent<Image>().color = Color.white;
+        SetModelColor(unselectedColor);
+        model.tag = Macro.UNSELECTED;//设置为未选中
+    }
+    public void ChangeStatus()//反转状态
+    {
+        status ^= 1;
+        if (status == 1)
+        {
+            editorObjectSelection.AddObjectToSelection(model, true);
+            //SetSelected();
+        }
+        else
+        {
+            editorObjectSelection.RemoveObjectFromSelection(model, true);
+            //SetUnselected();
+        }
+    }
+    public void ButtonModelOnClick()
+    {        
+        ChangeStatus();
+    }
+    public void ButtonDeleteOnClick()//删除一系列的scrollView及model
+    {
+        List<GameObject> selectedObjects = new List<GameObject>();
+        selectedObjects.Add(model);
+        editorObjectSelection.SetSelectedObjects(selectedObjects, true);
+        var deleteAction = new DeleteSelectedObjectsAction();
+        deleteAction.Execute();
+        //Delete();
+
+    }
+
 }

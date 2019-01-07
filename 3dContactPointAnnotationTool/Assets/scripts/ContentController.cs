@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ContentController : MonoBehaviour {
-    public Button selectedItem;
+    
 	// Use this for initialization
-	void Start () {
-        selectedItem = null;
+	void Start () {        
 
     }
 	

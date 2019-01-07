@@ -21,8 +21,7 @@ public class ToolBarController : MonoBehaviour {
     public bool isVolumeScaling = false;//是否正在长方体缩放对象
     public bool isGlobal = false;//是否是global
 
-    private ObjManager objManager;
-    private GameObject model3d;
+    //private ObjManager objManager;
     private Color buttonSelectedColor;
     //用户鼠标的状态,-1未选中工具,0 zoom,1 orbit,2 PanView,4 move,5 rotate,6 scale,7 volumeScale
     private int mouseStatus;
@@ -38,8 +37,7 @@ public class ToolBarController : MonoBehaviour {
 
     void Start()
     {
-        objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        model3d = objManager.model3d;
+        //objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
     }
 
     void Update()

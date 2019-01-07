@@ -15,9 +15,9 @@ public class ButtonClearContactPointsOnClick : MonoBehaviour {
 	}
     public void OnClick()
     {
-        foreach(var item in scrollViewContent.GetComponentsInChildren<ButtonDeleteOnClick>())
+        foreach(var item in scrollViewContent.GetComponentsInChildren<ScrollViewItemController>())
         {
-            item.OnClick();
+            item.ButtonDeleteOnClick();
         }
     }
 }

@@ -27,10 +27,10 @@ public class MenuBarController : MonoBehaviour {
 	void Update () {
 		
 	}
-    private IEnumerator GetImage(string path)
+    private void GetImage(string path)
     {
         WWW www = new WWW("file://" + path);
-        yield return new WaitForSeconds(1);
+        //yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
         {
             Texture2D texture = new Texture2D(www.texture.width, www.texture.height);
@@ -48,10 +48,10 @@ public class MenuBarController : MonoBehaviour {
         }
     }
 
-    private IEnumerator GetObj(string path)
+    private void GetObj(string path)
     {
         WWW www = new WWW("file://" + path);
-        yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
+        //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
         if (www != null && string.IsNullOrEmpty(www.error))
         {
             var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);
@@ -71,10 +71,10 @@ public class MenuBarController : MonoBehaviour {
             Debug.Log("no such model!");
         }
     }
-    private IEnumerator Export3dContactPoints(string path)
+    private void Export3dContactPoints(string path)
     {
         WWW www = new WWW("file://" + path);
-        yield return new WaitForSeconds(1);
+        //yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error))
         {
             string content = "";
@@ -151,7 +151,8 @@ public class MenuBarController : MonoBehaviour {
         if (LocalDialog.GetOpenFileName(ofn))
         {
             Debug.Log("file: " + ofn.file);
-            StartCoroutine(GetImage(ofn.file));
+            //StartCoroutine(GetImage(ofn.file));
+            GetImage(ofn.file);
         }
 
     }
@@ -170,7 +171,8 @@ public class MenuBarController : MonoBehaviour {
         if (LocalDialog.GetOpenFileName(ofn))
         {
             Debug.Log("file: " + ofn.file);
-            StartCoroutine(GetObj(ofn.file));
+            //StartCoroutine(GetObj(ofn.file));
+            GetObj(ofn.file);
         }
 
     }
@@ -184,12 +186,13 @@ public class MenuBarController : MonoBehaviour {
         ofn.fileTitle = new string(new char[64]);
         ofn.maxFileTitle = ofn.fileTitle.Length;
         ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
-        ofn.title = "窗口标题";
+        ofn.title = "导出接触点";
         ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
         if (LocalDialog.GetOpenFileName(ofn))
         {
             Debug.Log("file: " + ofn.file);
-            StartCoroutine(Export3dContactPoints(ofn.file));
+            //StartCoroutine(Export3dContactPoints(ofn.file));
+            Export3dContactPoints(ofn.file);
         }
     }
     public void ButtonExitOnClick()//Exit按钮被点击

@@ -63,6 +63,15 @@ public class PanelStatusController : MonoBehaviour {
     public void SetSelectedObj(GameObject obj)
     {
         selectedObj = obj;
+        if (obj == null)
+        {
+            foreach(var item in GetComponentsInChildren<InputField>())
+            {
+                item.interactable = false;
+                item.text = 0.ToString();
+            }
+            return;
+        }
         Model3dItemController model3dItemController = null;
         if (obj.layer.Equals(Macro.MODEL3D_ITEM))//该obj是model
         {

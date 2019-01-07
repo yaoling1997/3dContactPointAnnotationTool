@@ -3775,6 +3775,7 @@ MonoBehaviour:
   spriteTriangleDown: {fileID: 21300000, guid: 49ad2c0e9cc4daa4cbd08e005dae4898, type: 3}
   buttonGCP: {fileID: 1843674478}
   toggleWireframe: {fileID: 1725419539}
+  editorObjectSelection: {fileID: 1818925142}
 --- !u!4 &478237358
 Transform:
   m_ObjectHideFlags: 0
@@ -7522,6 +7523,11 @@ Prefab:
     - target: {fileID: 1231730695797996, guid: e616f9a207ac5e647a9cb710be5a6c6a, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114478307252834186, guid: e616f9a207ac5e647a9cb710be5a6c6a,
+        type: 2}
+      propertyPath: _actionLimit
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e616f9a207ac5e647a9cb710be5a6c6a, type: 2}
@@ -11624,6 +11630,12 @@ Transform:
   m_Father: {fileID: 1506970176}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1818925142 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114169054547029764, guid: e616f9a207ac5e647a9cb710be5a6c6a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1076995954}
+  m_Script: {fileID: 11500000, guid: d3422368a2066bd4491246c6cdb58c5a, type: 3}
 --- !u!1 &1820341617
 GameObject:
   m_ObjectHideFlags: 0

@@ -91,7 +91,6 @@ GameObject:
   - component: {fileID: 222502445243353328}
   - component: {fileID: 114612476214996836}
   - component: {fileID: 114686248419904308}
-  - component: {fileID: 114251043245375456}
   m_Layer: 5
   m_Name: ButtonDelete
   m_TagString: Untagged
@@ -128,7 +127,6 @@ GameObject:
   - component: {fileID: 222220563694332766}
   - component: {fileID: 114617825560455800}
   - component: {fileID: 114870144276175964}
-  - component: {fileID: 114262048035115868}
   m_Layer: 5
   m_Name: ButtonModel
   m_TagString: Untagged
@@ -180,30 +178,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114251043245375456
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1699929376806908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cab381bea6619c4c88dbde6b88120ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114262048035115868
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1985521908046022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b149a174571ab374484eb0644e8d90ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedColor: {r: 0, g: 0, b: 0, a: 0}
-  unselectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &114337682060249100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -245,7 +219,10 @@ MonoBehaviour:
   model: {fileID: 0}
   buttonShowSons: {fileID: 114791369385392600}
   panelTab: {fileID: 1239047223961642}
+  scrollViewContent: {fileID: 0}
   par: {fileID: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
+  unselectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &114585782623344304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -426,7 +403,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114612476214996836}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114533950078860266}
+        m_MethodName: ButtonDeleteOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114791369385392600
@@ -552,7 +540,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114617825560455800}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114533950078860266}
+        m_MethodName: ButtonModelOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!222 &222014586304994484

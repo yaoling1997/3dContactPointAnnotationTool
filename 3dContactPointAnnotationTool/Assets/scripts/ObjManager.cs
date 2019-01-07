@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RTEditor;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
@@ -28,9 +29,10 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Sprite spriteTriangleRight;//向右三角形sprite
     public Sprite spriteTriangleDown;//向下三角形sprite
     
-
     public Button buttonGCP;
     public Toggle toggleWireframe;
+
+    public EditorObjectSelection editorObjectSelection;
 
     // Use this for initialization
     void Start () {
@@ -72,5 +74,15 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     {
         CreateContactPointSphere(center, v.x, v.y, v.z);
     }
-
+    public void UnselectAll()
+    {
+        foreach(var item in panelModels.GetComponentsInChildren<ScrollViewItemController>())
+        {
+            item.SetUnselected();
+        }
+        foreach (var item in panelContactPoints.GetComponentsInChildren<ScrollViewItemController>())
+        {
+            item.SetUnselected();
+        }
+    }
 }

@@ -138,6 +138,19 @@ namespace RTEditor
         #region Public Methods
         public void OnDuplicated(List<GameObject> duplicatedRoots)
         {
+            //added by me
+            var prefabScrollViewItem = objManager.prefabScrollViewItem;
+            foreach(var gameObj in duplicatedRoots)
+            {
+                var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
+                var scrollViewContent = gameObj.GetComponent<CorrespondingScrollViewItem>().sviController.scrollViewContent;
+                if (gameObj.layer==Macro.MODEL3D_ITEM)
+                    scrollViewItem.GetComponent<ScrollViewItemController>().Init(gameObj, scrollViewContent);
+                else
+                    scrollViewItem.GetComponent<ScrollViewItemController>().Init(gameObj, scrollViewContent , Color.red);
+                //scrollViewItem.GetComponent<ScrollViewItemController>().SetSelected();
+            }
+            //added by me
             if (SelectionDuplicated != null) SelectionDuplicated(new List<GameObject>(_selectedObjects), duplicatedRoots);
         }
 
@@ -147,7 +160,20 @@ namespace RTEditor
             {
                 List<GameObject> deletedObjects = new List<GameObject>(_selectedObjects);
                 ClearSelection(false, ObjectDeselectActionType.SelectionDeleted);
+
+                //added by me
+                foreach(var gameObj in deletedObjects)
+                {
+                    var svi = gameObj.GetComponent<CorrespondingScrollViewItem>().sviController;
+                    if (svi != null)
+                    {
+                        svi.Delete();
+                    }
+                }
                 if (SelectionDeleted != null) SelectionDeleted(deletedObjects);
+                //
+
+                //if (SelectionDeleted != null) SelectionDeleted(deletedObjects);
             }
         }
 
@@ -440,6 +466,17 @@ namespace RTEditor
 
             // Apply the snapshot
             _selectedObjects = new HashSet<GameObject>(objectSelectionSnapshot.SelectedGameObjects);
+            //added by me
+            objManager.UnselectAll();
+            foreach (var gameObj in _selectedObjects)
+            {
+                var svi = gameObj.GetComponent<CorrespondingScrollViewItem>();
+                if (svi != null)
+                {
+                    svi.sviController.SetSelected();
+                }
+            }
+            //
             _lastSelectedGameObject = objectSelectionSnapshot.LastSelectedGameObject;
 
             // Inform the previosuly selected objects that they are no longer selected
@@ -585,12 +622,8 @@ namespace RTEditor
         /// </param>
         private bool CanSelectObject(GameObject gameObj, ObjectSelectActionType selectActionType)
         {
-            //added by me
-            if (gameObj == null || gameObj.activeSelf == false || !CanOperate()||!toolBarController.CanSelectObject()) return false;
-            //
-
             // Ignore null and inactive objects. Also check if the selection mechansim can operate.
-            //if (gameObj == null || gameObj.activeSelf == false || !CanOperate()) return false;
+            if (gameObj == null || gameObj.activeSelf == false || !CanOperate()) return false;
 
             // Objects which are part of the RTEditor hierarchy, can never be selected
             if (gameObj.IsRTEditorSystemObject()) return false;
@@ -688,6 +721,10 @@ namespace RTEditor
         /// </summary>
         private void OnInputDeviceFirstButtonDown()
         {
+            //added by me
+            if (!toolBarController.CanSelectObject())
+                return;
+            //
             // Can we operate and can we select by clicking?
             if (CanOperate() && ObjectSelectionSettings.CanClickSelect)
             {
@@ -771,7 +808,11 @@ namespace RTEditor
                     preChangeSnapshot.TakeSnapshot();
 
                     // Clear the selection
-                    _selectedObjects.Clear();
+
+                    //added by me
+                    SelectedObjectsClear();
+                    //
+                    //_selectedObjects.Clear();
                     _lastSelectedGameObject = null;
 
                     // Take a post-change snapshot
@@ -784,7 +825,10 @@ namespace RTEditor
                 }
                 else
                 {
-                    _selectedObjects.Clear();
+                    //added by me
+                    SelectedObjectsClear();
+                    //
+                    //_selectedObjects.Clear();
                     _lastSelectedGameObject = null;
                 }
 
@@ -815,6 +859,10 @@ namespace RTEditor
         /// </summary>
         private void OnInputDeviceFirstButtonUp()
         {
+            //added by me
+            if (!toolBarController.CanSelectObject())
+                return;
+            //
             // Ensure that the selection shape is no hidden
             GetObjectSelectionShape().IsVisible = false;
 
@@ -840,6 +888,11 @@ namespace RTEditor
         /// </summary>
         private void OnInputDeviceMoved()
         {
+            //added by me
+            if (!toolBarController.CanSelectObject())
+                return;
+            //
+
             // Can we perform multi-select?
             if (CanPerformMultiSelect())
             {
@@ -1098,7 +1151,10 @@ namespace RTEditor
         {
             if (CanSelectObject(gameObj, selectActionType))
             {
-                _selectedObjects.Add(gameObj);
+                //added by me
+                SelectedObjectsAdd(gameObj);
+                //
+                //_selectedObjects.Add(gameObj);
                 _lastSelectedGameObject = gameObj;
                 _lastSelectActionType = selectActionType;
                 _lastDeselectActionType = ObjectDeselectActionType.None;
@@ -1151,7 +1207,10 @@ namespace RTEditor
         {
             if (IsObjectSelected(gameObj))
             {
-                _selectedObjects.Remove(gameObj);
+                //added by me
+                SelectedObjectsRemove(gameObj);
+                //
+                //_selectedObjects.Remove(gameObj);
                 _lastSelectedGameObject = RetrieveAGameObjectFromObjectSelectionCollection();
                 _lastDeselectActionType = deselectActionType;
                 _lastSelectActionType = ObjectSelectActionType.None;
@@ -1213,8 +1272,10 @@ namespace RTEditor
                         editorEventListener.OnDeselected(deselectEventArgs);
                     }
                 }
-
-                _selectedObjects.Clear();
+                //added by me
+                SelectedObjectsClear();
+                //
+                //_selectedObjects.Clear();
                 AddObjectToSelection(gameObj, selectActionType);
 
                 // We always return true, because the selection has been cleared
@@ -1241,6 +1302,37 @@ namespace RTEditor
         {
             objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
             toolBarController = objManager.toolBar.GetComponent<ToolBarController>();
+        }
+        private void SelectedObjectsAdd(GameObject gameObj)
+        {
+            var svi = gameObj.GetComponent<CorrespondingScrollViewItem>();
+            if (svi != null)
+            {
+                svi.sviController.SetSelected();
+            }
+            _selectedObjects.Add(gameObj);
+        }
+        private void SelectedObjectsRemove(GameObject gameObj)
+        {
+            var svi = gameObj.GetComponent<CorrespondingScrollViewItem>();
+            if (svi != null)
+            {
+                svi.sviController.SetUnselected();
+            }
+            _selectedObjects.Remove(gameObj);
+        }
+        private void SelectedObjectsClear()
+        {
+            foreach(var gameObj in _selectedObjects)
+            {
+                var svi = gameObj.GetComponent<CorrespondingScrollViewItem>();
+                if (svi != null)
+                {
+                    svi.sviController.SetUnselected();
+                }
+
+            }
+            _selectedObjects.Clear();
         }
         #endregion
         //
