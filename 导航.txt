@@ -121,3 +121,6 @@ https://blog.csdn.net/tjj00686/article/details/52745344
 
 C# default(T)¹Ø¼ü×Ö
 https://blog.csdn.net/lizhenxiqnmlgb/article/details/81476115
+
+COCO 2018 Keypoint Detection Task
+http://cocodataset.org/#keypoints-2018
