@@ -18,8 +18,6 @@ public class InputFieldOnValueChanged : MonoBehaviour {
 	}
     public void OnValueChanged()
     {
-        Debug.Log("OnValueChanged");
-        Debug.Log(gameObject.GetComponent<InputField>().text);
         float v = float.Parse(gameObject.GetComponent<InputField>().text);
         var obj = objManager.panelStatus.GetComponent<PanelStatusController>().selectedObj;//获得选中对象
         if (obj == null)//对象为空

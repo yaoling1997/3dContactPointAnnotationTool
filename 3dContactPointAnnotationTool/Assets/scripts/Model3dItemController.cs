@@ -41,6 +41,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         rotationEditable = true;
         scaleEditable = true;
         gameObject.layer = Macro.MODEL3D_ITEM;//设置为model3dItem层
+        gameObject.tag = Macro.UNSELECTED;//将tag设置为未选中
     }
     // Use this for initialization    
     void Start () {
