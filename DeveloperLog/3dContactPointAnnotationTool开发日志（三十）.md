@@ -1,0 +1,1 @@
+&emsp;&emsp;在vs2017里生成opencv时遇到了无法打开python27_d.lib的问题，具体解决请看[这个](https://www.cnblogs.com/rainbow70626/p/9071687.html)，不过我用的是方法2，python37_d.lib找不到同理。
