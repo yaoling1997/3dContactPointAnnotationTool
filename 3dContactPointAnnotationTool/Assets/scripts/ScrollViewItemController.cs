@@ -20,7 +20,9 @@ public class ScrollViewItemController : MonoBehaviour {
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
     private GameObject panelStatus;
+    private PanelStatusController panelStatusController;
     private bool ifShowSons;//是否显示儿子
+
     
     void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
@@ -34,6 +36,7 @@ public class ScrollViewItemController : MonoBehaviour {
     void Start()
     {
         panelStatus = objManager.panelStatus;
+        panelStatusController = panelStatus.GetComponentInChildren<PanelStatusController>();
         editorObjectSelection = objManager.editorObjectSelection;
     }
     // Update is called once per frame
@@ -149,7 +152,7 @@ public class ScrollViewItemController : MonoBehaviour {
     }
     public void SetSelected()
     {
-        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(model);//将该scrollVIew项的model赋值给panelStatus，显示该model信息        
+        panelStatusController.SetSelectedObj(model);//将该scrollVIew项的model赋值给panelStatus，显示该model信息        
         status = 1;
         buttonModel.GetComponent<Image>().color = Color.cyan;
         SetModelColor(selectedColor);
@@ -157,7 +160,7 @@ public class ScrollViewItemController : MonoBehaviour {
     }
     public void SetUnselected()
     {
-        panelStatus.GetComponent<PanelStatusController>().SetSelectedObj(null);//将该scrollVIew项的model赋值给panelStatus，显示该model信息        
+        panelStatusController.SetSelectedObj(null);//将该scrollVIew项的model赋值给panelStatus，显示该model信息        
         status = 0;
         buttonModel.GetComponent<Image>().color = Color.white;
         SetModelColor(unselectedColor);
