@@ -8,14 +8,65 @@ using UnityEngine.UI;
 public class ButtonAddHumanModelOnClick : MonoBehaviour {
     public GameObject scrollViewModelsContent;//scrollViewModels的content
     private ObjManager objManager;
-	// Use this for initialization
-	void Start () {
+    private Dictionary<string, int> _boneNameToJointIndex;
+    // Use this for initialization
+    void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        _boneNameToJointIndex = new Dictionary<string, int>();
+        //_boneNameToJointIndex.Add("Pelvis", 0);
+        //_boneNameToJointIndex.Add("L_Hip", 1);
+        //_boneNameToJointIndex.Add("R_Hip", 2);
+        //_boneNameToJointIndex.Add("Spine1", 3);
+        //_boneNameToJointIndex.Add("L_Knee", 4);
+        //_boneNameToJointIndex.Add("R_Knee", 5);
+        //_boneNameToJointIndex.Add("Spine2", 6);
+        //_boneNameToJointIndex.Add("L_Ankle", 7);
+        //_boneNameToJointIndex.Add("R_Ankle", 8);
+        //_boneNameToJointIndex.Add("Spine3", 9);
+        //_boneNameToJointIndex.Add("L_Foot", 10);
+        //_boneNameToJointIndex.Add("R_Foot", 11);
+        //_boneNameToJointIndex.Add("Neck", 12);
+        //_boneNameToJointIndex.Add("L_Collar", 13);
+        //_boneNameToJointIndex.Add("R_Collar", 14);
+        //_boneNameToJointIndex.Add("Head", 15);
+        //_boneNameToJointIndex.Add("L_Shoulder", 16);
+        //_boneNameToJointIndex.Add("R_Shoulder", 17);
+        //_boneNameToJointIndex.Add("L_Elbow", 18);
+        //_boneNameToJointIndex.Add("R_Elbow", 19);
+        //_boneNameToJointIndex.Add("L_Wrist", 20);
+        //_boneNameToJointIndex.Add("R_Wrist", 21);
+        //_boneNameToJointIndex.Add("L_Hand", 22);
+        //_boneNameToJointIndex.Add("R_Hand", 23);
+
+        _boneNameToJointIndex.Add("Pelvis", 0);
+        _boneNameToJointIndex.Add("R_Hip", 1);
+        _boneNameToJointIndex.Add("L_Hip", 2);
+        _boneNameToJointIndex.Add("Spine1", 3);
+        _boneNameToJointIndex.Add("R_Knee", 4);
+        _boneNameToJointIndex.Add("L_Knee", 5);
+        _boneNameToJointIndex.Add("Spine2", 6);
+        _boneNameToJointIndex.Add("R_Ankle", 7);
+        _boneNameToJointIndex.Add("L_Ankle", 8);
+        _boneNameToJointIndex.Add("Spine3", 9);
+        _boneNameToJointIndex.Add("R_Foot", 10);
+        _boneNameToJointIndex.Add("L_Foot", 11);
+        _boneNameToJointIndex.Add("Neck", 12);
+        _boneNameToJointIndex.Add("R_Collar", 13);
+        _boneNameToJointIndex.Add("L_Collar", 14);
+        _boneNameToJointIndex.Add("Head", 15);
+        _boneNameToJointIndex.Add("R_Shoulder", 16);
+        _boneNameToJointIndex.Add("L_Shoulder", 17);
+        _boneNameToJointIndex.Add("R_Elbow", 18);
+        _boneNameToJointIndex.Add("L_Elbow", 19);
+        _boneNameToJointIndex.Add("R_Wrist", 20);
+        _boneNameToJointIndex.Add("L_Wrist", 21);
+        _boneNameToJointIndex.Add("R_Hand", 22);
+        _boneNameToJointIndex.Add("L_Hand", 23);
 
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
     public void OnClick()//按钮被点击
@@ -43,6 +94,8 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
         var smr = model.GetComponent<SkinnedMeshRenderer>();
         var _bones = smr.bones;
         var _boneNamePrefix = "";
+
+
         foreach (Transform bone in _bones)
         {
             if (bone.name.EndsWith("root"))
@@ -52,38 +105,37 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
                 break;
             }
         }
-        int id = 0;
-        for (int i = 0; i < _bones.Length; i++)
-        {            
-            string boneName = _bones[i].name;
+        foreach (var bone in _bones)
+        {
+            string boneName = bone.name;
             boneName = boneName.Replace(_boneNamePrefix, "");
-            if (boneName == "root")
+            int id;
+            if (_boneNameToJointIndex.TryGetValue(boneName,out id))
             {
-                continue;
+                bone.transform.localRotation = Quaternion.Euler(new Vector3(poseParam[id * 3], poseParam[id * 3 + 1], poseParam[id * 3 + 2]));
             }
-            _bones[i].transform.eulerAngles = new Vector3(poseParam[id * 3 + 2],  poseParam[id * 3 + 1], poseParam[id * 3]);
-            id++;
+
         }
-        //float _shapeBlendsScale = 5.0f;
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    float pos, neg;
-        //    float beta = shapeParam[i] / _shapeBlendsScale;
+        float _shapeBlendsScale = 5.0f;
+        for (int i = 0; i < 10; i++)
+        {
+            float pos, neg;
+            float beta = shapeParam[i] / _shapeBlendsScale;
 
-        //    if (beta >= 0)
-        //    {
-        //        pos = beta;
-        //        neg = 0.0f;
-        //    }
-        //    else
-        //    {
-        //        pos = 0.0f;
-        //        neg = -beta;
-        //    }
+            if (beta >= 0)
+            {
+                pos = beta;
+                neg = 0.0f;
+            }
+            else
+            {
+                pos = 0.0f;
+                neg = -beta;
+            }
 
-        //    smr.SetBlendShapeWeight(i * 2 + 0, pos * 100.0f); // map [0, 1] space to [0, 100]
-        //    smr.SetBlendShapeWeight(i * 2 + 1, neg * 100.0f); // map [0, 1] space to [0, 100]
-        //}
+            smr.SetBlendShapeWeight(i * 2 + 0, pos * 100.0f); // map [0, 1] space to [0, 100]
+            smr.SetBlendShapeWeight(i * 2 + 1, neg * 100.0f); // map [0, 1] space to [0, 100]
+        }
 
     }
     public void AddHumanModel(string path)//点击添加一个人物模型
