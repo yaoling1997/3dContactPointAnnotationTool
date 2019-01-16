@@ -1116,8 +1116,16 @@ namespace RTEditor
 
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-
-            return results.Count != 0;
+            //added by me
+            int cnt = results.Count;
+            foreach(var item in results)
+            {
+                if (item.gameObject.layer.Equals(Macro.BACKGROUND))
+                    cnt--;
+            }
+            return cnt != 0;
+            //
+            //return results.Count != 0;
         }
 
         /// <summary>

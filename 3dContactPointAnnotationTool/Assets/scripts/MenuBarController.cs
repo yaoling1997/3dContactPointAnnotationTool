@@ -39,8 +39,16 @@ public class MenuBarController : MonoBehaviour {
             texture.SetPixels(www.texture.GetPixels());
             texture.Apply(true);
             texture.filterMode = FilterMode.Trilinear;
-            var image= objManager.contactPoints2d;//contactPoints2d就是那张图像，只是所有2d接触点都挂在这个图像上
-            image.GetComponent<ImageController>().SetImage(texture);
+            //var image= objManager.contactPoints2d;//contactPoints2d就是那张图像，只是所有2d接触点都挂在这个图像上
+            //image.GetComponent<ImageController>().SetImage(texture);
+            var imageBackground = objManager.imageBackground;
+            imageBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(texture.width, texture.height);
+            var image = imageBackground.GetComponent<Image>();
+            image.sprite= Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            var color = image.color;
+            color.a = 1;
+            image.color = color;
+            objManager.panelBackgroundImageControllerScript.Init(texture);
         }
         else
         {
@@ -70,6 +78,54 @@ public class MenuBarController : MonoBehaviour {
             Debug.Log("no such model!");
         }
     }
+    private Vector3[] GetRealBoundsVertices(MeshFilter meshFilter)//将点变换到真实的点（应用位移、旋转、缩放变换）
+    {
+        Mesh mesh = meshFilter.mesh;        
+        var vertices = new Vector3[8];
+        var transform = meshFilter.transform;
+        var bounds = meshFilter.mesh.bounds;
+        var x = bounds.extents.x;
+        var y = bounds.extents.y;
+        var z = bounds.extents.z;
+        Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
+        Matrix4x4 m = Matrix4x4.TRS(transform.position, rotation, transform.localScale);
+        vertices[0] = m.MultiplyPoint3x4(bounds.center + new Vector3(x, y, z));
+        vertices[1] = m.MultiplyPoint3x4(bounds.center + new Vector3(-x, y, z));
+        vertices[2] = m.MultiplyPoint3x4(bounds.center + new Vector3(x, -y, z));
+        vertices[3] = m.MultiplyPoint3x4(bounds.center + new Vector3(x, y, -z));
+        vertices[4] = m.MultiplyPoint3x4(bounds.center + new Vector3(-x, -y, z));
+        vertices[5] = m.MultiplyPoint3x4(bounds.center + new Vector3(-x, y, -z));
+        vertices[6] = m.MultiplyPoint3x4(bounds.center + new Vector3(x, -y, -z));
+        vertices[7] = m.MultiplyPoint3x4(bounds.center + new Vector3(-x, -y, -z));
+        return vertices;
+    }
+    private Vector2 GetMinVector2(Vector2 a, Vector2 b)//每一维取最小的
+    {
+        var re = new Vector2(0, 0);
+        re.x = Mathf.Min(a.x, b.x);
+        re.y = Mathf.Min(a.y, b.y);
+        return re;
+    }
+    private Vector2 GetMaxVector2(Vector2 a, Vector2 b)//每一维取最大的
+    {
+        var re = new Vector2(0, 0);
+        re.x = Mathf.Max(a.x, b.x);
+        re.y = Mathf.Max(a.y, b.y);
+        return re;
+    }
+    private Bounds GetBoundsOfVector3Array(Vector3[] v)//根据vector2的数组获得他们的包围盒bounds
+    {
+        var oo = Macro.oo;
+        var MinP = new Vector2(oo, oo);
+        var MaxP = new Vector2(-oo, -oo);
+        foreach (var i in v)
+        {
+            MinP = GetMinVector2(MinP, i);
+            MaxP = GetMaxVector2(MaxP, i);
+        }
+        return new Bounds((MinP + MaxP) / 2, MaxP - MinP);
+    }
+
     private void Export3dContactPoints(string path)
     {
         WWW www = new WWW("file://" + path);
@@ -78,7 +134,7 @@ public class MenuBarController : MonoBehaviour {
         {
             string content = "";
             var contactPoints = objManager.contactPoints;
-            var image = objManager.contactPoints2d.GetComponent<Image>();
+            var image = objManager.imageBackground.GetComponent<Image>();
             var imageRt = image.GetComponent<RectTransform>().sizeDelta;
             var realWidth = image.mainTexture.width;//真实图像像素宽
             var realHeight = image.mainTexture.height;//真实图像像素高
@@ -92,13 +148,18 @@ public class MenuBarController : MonoBehaviour {
                 if (item.name.Equals(contactPoints.name))
                     continue;
                 var p = item.position;
+                var e = item.eulerAngles;
                 var s = item.localScale;
                 content += p.x + " ";
                 content += p.y + " ";
-                content += p.z + " ";
-                content += s.x / 2 + " ";
-                content += s.y / 2 + " ";
-                content += s.z / 2 + "\r\n";
+                content += p.z + " ";//支点
+                content += e.x + " ";
+                content += e.y + " ";
+                content += e.z + " ";//欧拉角
+                content += s.x + " ";
+                content += s.y + " ";
+                content += s.z + "\r\n";//局部轴的缩放
+                //保留4位小数
                 //content += System.Math.Round(p.x,4) + " ";
                 //content += System.Math.Round(p.y,4) + " ";
                 //content += System.Math.Round(p.z,4) + " ";
@@ -106,25 +167,27 @@ public class MenuBarController : MonoBehaviour {
                 //content += System.Math.Round(s.y,4) + " ";
                 //content += System.Math.Round(s.z,4) + "\r\n";
             }
-            var contactPoints2d = objManager.contactPoints2d;
+            var imageBackground = objManager.imageBackground;
             content += "2d:\r\n";
-            foreach (var item in contactPoints2d.GetComponentsInChildren<RectTransform>())
+            foreach (var item in contactPoints.GetComponentsInChildren<Transform>())
             {
-                if (item.name.Equals(contactPoints2d.name))
+                if (item.name.Equals(contactPoints.name))
                     continue;
-                var r = item.sizeDelta.x / 2;
-                var p = item.localPosition;
-                //content += (p.x-r) + " ";
-                //content += (p.y-r) + " ";
-                //content += r+"\r\n";
-                p.x -= r;
-                p.y -= r;
-                var realX = realWidth / nowWidth * p.x + realWidth;//获得像素为单位的接触点x,y,r
-                var realY = realHeight / nowHeight * p.y + realHeight;
-                var realR = realWidth / nowWidth * r;
-                content += realX + " ";
-                content += realY + " ";
-                content += realR + "\r\n";
+                var vertices=GetRealBoundsVertices(item.GetComponent<MeshFilter>());
+                var bounds = GetBoundsOfVector3Array(vertices);
+                //var r = item.sizeDelta.x / 2;
+                //var p = item.localPosition;
+                ////content += (p.x-r) + " ";
+                ////content += (p.y-r) + " ";
+                ////content += r+"\r\n";
+                //p.x -= r;
+                //p.y -= r;
+                //var realX = realWidth / nowWidth * p.x + realWidth;//获得像素为单位的接触点x,y,r
+                //var realY = realHeight / nowHeight * p.y + realHeight;
+                //var realR = realWidth / nowWidth * r;
+                //content += realX + " ";
+                //content += realY + " ";
+                //content += realR + "\r\n";
 
             }
             File.WriteAllText(path, content);
@@ -222,12 +285,5 @@ public class MenuBarController : MonoBehaviour {
         var active = !panelStatus.activeSelf;
         panelStatus.SetActive(active);
         WindowStatusToggle.isOn = active;
-    }
-    public void ButtonReferenceImageOnClick()//ReferenceImage按钮被点击
-    {
-        var panelReferenceImage = objManager.panelReferenceImage;
-        var active = !panelReferenceImage.activeSelf;
-        panelReferenceImage.SetActive(active);
-        WindowReferenceImageToggle.isOn = active;
     }
 }

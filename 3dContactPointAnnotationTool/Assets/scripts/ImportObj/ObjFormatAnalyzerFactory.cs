@@ -90,6 +90,7 @@ namespace Hont
                 }
 
                 mesh.vertices = vertexList.ToArray();
+                Debug.Log("sourceVertexNormalArr: "+ sourceVertexNormalArr.Length);
                 mesh.normals = sourceVertexNormalArr.Length==0 ? null:vertexNormalList.ToArray();
                 mesh.uv = sourceUVArr.Length==0 ? null:uvList.ToArray();
                 mesh.triangles = triangles;

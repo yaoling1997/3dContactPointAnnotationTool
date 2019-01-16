@@ -30,8 +30,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
                 return -1;
             else return 1;
         }
-    }
-    private const float oo = 1e18f;
+    }    
     private const float eps = 1e-7f;
     public GameObject model3d;//整个场景对象
     public GameObject contactPoints;//所有接触点
@@ -74,6 +73,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
     }
     private Bounds GetBoundsOfVector3Array(Vector3 []v)//根据vector3的数组获得他们的包围盒bounds
     {
+        var oo = Macro.oo;
         var MinP = new Vector3(oo, oo, oo);
         var MaxP = new Vector3(-oo, -oo, -oo);
         foreach (var i in v){

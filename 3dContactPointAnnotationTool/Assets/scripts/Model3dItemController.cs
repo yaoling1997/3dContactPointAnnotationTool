@@ -33,6 +33,8 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
     }
     private float triangleMultiNum;//三角面片倍数
     private Mesh oldMesh;//最初的网格
+    private bool haveNormals;
+    private bool haveUv;
 
     private void Awake()
     {        
@@ -51,6 +53,8 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
             var mesh = GetComponent<SkinnedMeshRenderer>().sharedMesh;
             oldMesh = new Mesh();
             MeshACopyToMeshB(mesh, oldMesh);
+            haveNormals = oldMesh.normals.Length != 0;
+            haveUv = oldMesh.uv.Length != 0;
         }
     }
 	
@@ -138,13 +142,17 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
             var uv = new Vector2(0, 0);
             foreach (var i in triangle)
             {
-                normal += normalsList[i];
-                uv += uvList[i];
+                if (haveNormals)
+                    normal += normalsList[i];
+                if (haveUv)
+                    uv += uvList[i];
             }
             normal /= triangle.Length;
             uv /= triangle.Length;
-            normalsList.Add(normal);
-            uvList.Add(uv);
+            if (haveNormals)
+                normalsList.Add(normal);
+            if (haveUv)
+                uvList.Add(uv);
             var t1 = new int[] { outTriangle[0], tot, outTriangle[2] };
             var t2 = new int[] { outTriangle[1], outTriangle[2], tot };
 
@@ -168,8 +176,10 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         }
         mesh.Clear();
         mesh.vertices = verticesList.ToArray();
-        mesh.normals = normalsList.ToArray();
-        mesh.uv = uvList.ToArray();
+        if (haveNormals)
+            mesh.normals = normalsList.ToArray();
+        if (haveUv)
+            mesh.uv = uvList.ToArray();
         mesh.triangles = trianglesList.ToArray();
     }
     private float DivideTriangle(int []triangle,out int []outTriangle,List<Vector3> vertices)//切割三角形

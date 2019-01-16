@@ -131,13 +131,20 @@ namespace Hont
                 objFaceBeginList.RemoveAt(objFaceBeginList.Count-1);
                 objNameList.RemoveAt(objNameList.Count-1);
             }
-
             VertexArr = vertexList.ToArray();
             VertexNormalArr = vertexNormalList.ToArray();
             VertexTextureArr = vertexTextureList.ToArray();
             FaceArr = faceList.ToArray();
-            ObjFaceBeginArr = objFaceBeginList.ToArray();
-            ObjNameArr = objNameList.ToArray();
+            //把整个obj文件当做单个对象
+            var fbl = new List<int>();
+            var nl = new List<string>();
+            fbl.Add(objFaceBeginList[0]);
+            nl.Add(objNameList[objNameList.Count-1]);
+            ObjFaceBeginArr = fbl.ToArray();
+            ObjNameArr = nl.ToArray();
+            //
+            //ObjFaceBeginArr = objFaceBeginList.ToArray();
+            //ObjNameArr = objNameList.ToArray();
         }
     }
 }
