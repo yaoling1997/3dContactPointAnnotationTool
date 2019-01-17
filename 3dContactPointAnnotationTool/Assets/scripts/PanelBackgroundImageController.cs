@@ -6,33 +6,25 @@ using UnityEngine.UI;
 public class PanelBackgroundImageController : MonoBehaviour {
     public InputField inputFieldAlpha;
     public InputField inputFieldScale;
-    public Button buttonOverlay;
-    public Button buttonClear;
 
     private ObjManager objManager;
     private GameObject imageBackground;
-    private Texture2D imageTexture;
-    private GameObject contactPoints;//3d接触点
-    private Camera mainCamera;//主相机
+    
+
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        imageBackground = objManager.imageBackground;
-        contactPoints = objManager.contactPoints;
-        mainCamera = objManager.mainCamera;
+        imageBackground = objManager.imageBackground;        
     }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
-    public void Init(Texture2D texture)//导入图片调用初始化函数
-    {
-        imageTexture = texture;
+    public void Init()//导入图片调用初始化函数
+    {        
         inputFieldAlpha.interactable = true;
         inputFieldScale.interactable = true;
-        buttonOverlay.interactable = true;
-        buttonClear.interactable = true;
         inputFieldAlpha.text = 1.ToString();
         inputFieldScale.text = 1.ToString();        
     }
@@ -48,7 +40,9 @@ public class PanelBackgroundImageController : MonoBehaviour {
     {
         float v = float.Parse(inputFieldScale.text);
         var rt = imageBackground.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(imageTexture.width*v,imageTexture.height*v);
+        var texture = imageBackground.GetComponent<Image>().mainTexture;
+        Debug.Log("width:"+texture.width+" height:"+texture.height);
+        rt.sizeDelta = new Vector2(texture.width*v, texture.height*v);
     }
     public void ButtonOverlayOnClick()
     {

@@ -624,7 +624,10 @@ namespace RTEditor
         {
             // Ignore null and inactive objects. Also check if the selection mechansim can operate.
             if (gameObj == null || gameObj.activeSelf == false || !CanOperate()) return false;
-
+            //added by me
+            if (gameObj.GetComponent<CorrespondingScrollViewItem>() == null)//没有对应选项卡不能选择
+                return false;
+            //
             // Objects which are part of the RTEditor hierarchy, can never be selected
             if (gameObj.IsRTEditorSystemObject()) return false;
 

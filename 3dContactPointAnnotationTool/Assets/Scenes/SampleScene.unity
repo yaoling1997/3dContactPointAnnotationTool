@@ -3102,8 +3102,8 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 473182142}
-  m_LocalRotation: {x: 0.119760446, y: -0.28478777, z: 0.03588616, w: 0.9504029}
-  m_LocalPosition: {x: 3.48, y: 2.07, z: -4.78}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1214354283}
@@ -3368,6 +3368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 411569372}
   mainCamera: {fileID: 473182144}
+  cameraBackground: {fileID: 1961614005}
   panelModels: {fileID: 1274791806}
   panelContactPoints: {fileID: 203596682}
   panelStatus: {fileID: 755834021}
@@ -7260,7 +7261,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -49.700012}
-  m_SizeDelta: {x: 200, y: 400}
+  m_SizeDelta: {x: 200, y: 130}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1061344715
 MonoBehaviour:
@@ -7274,7 +7275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.39215687}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7576,7 +7577,7 @@ MonoBehaviour:
   _customCamera: {fileID: 0}
   _volumeSizeForLightObjects: {x: 0.5, y: 0.5, z: 0.5}
   _volumeSizeForParticleSystemObjects: {x: 0.5, y: 0.5, z: 0.5}
-  _volumeSizeForEmptyObjects: {x: 0.5, y: 0.5, z: 0.5}
+  _volumeSizeForEmptyObjects: {x: 0.1, y: 0.1, z: 0.1}
   _xzGrid:
     _isVisible: 1
     _cellSizeX: 1
@@ -7666,8 +7667,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputFieldAlpha: {fileID: 1854979995}
   inputFieldScale: {fileID: 1868897396}
-  buttonOverlay: {fileID: 0}
-  buttonClear: {fileID: 0}
 --- !u!114 &1268355502
 MonoBehaviour:
   m_ObjectHideFlags: 0

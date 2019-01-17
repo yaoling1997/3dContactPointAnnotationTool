@@ -32,6 +32,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
         }
     }    
     private const float eps = 1e-7f;
+    private float oo;
     public GameObject model3d;//整个场景对象
     public GameObject contactPoints;//所有接触点
     public Button buttonGCP;
@@ -39,11 +40,12 @@ public class ButtonGCPOnClick : MonoBehaviour {
     public Slider sliderGCP;//显示GCP进度的slider
     public Text textTimeCost;//显示计算过程最终花费的时间
     private GameObject objManager;
-    private List<Bounds> xjBoundsList;//不同物体相交的区域
+    private List<Bounds> xjBoundsList;//不同物体相交的区域    
 
 	// Use this for initialization
 	void Start () {
         objManager = GameObject.Find("ObjManager");
+        oo = Macro.oo;
     }
 	
 	// Update is called once per frame
@@ -73,7 +75,6 @@ public class ButtonGCPOnClick : MonoBehaviour {
     }
     private Bounds GetBoundsOfVector3Array(Vector3 []v)//根据vector3的数组获得他们的包围盒bounds
     {
-        var oo = Macro.oo;
         var MinP = new Vector3(oo, oo, oo);
         var MaxP = new Vector3(-oo, -oo, -oo);
         foreach (var i in v){

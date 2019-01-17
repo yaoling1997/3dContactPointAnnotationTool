@@ -10,6 +10,7 @@ public class MenuBarController : MonoBehaviour {
     private ObjManager objManager;
     private GameObject model3d;
     private GameObject scrollViewModelsContent;
+    private GameObject imageBackground;
 
     public Toggle WindowModelsToggle;
     public Toggle WindowContactPointsToggle;
@@ -21,6 +22,7 @@ public class MenuBarController : MonoBehaviour {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         model3d = objManager.model3d;
         scrollViewModelsContent = objManager.scrollViewModelsContent;
+        imageBackground = objManager.imageBackground;
     }
 	
 	// Update is called once per frame
@@ -48,7 +50,7 @@ public class MenuBarController : MonoBehaviour {
             var color = image.color;
             color.a = 1;
             image.color = color;
-            objManager.panelBackgroundImageControllerScript.Init(texture);
+            objManager.panelBackgroundImageControllerScript.Init();
         }
         else
         {
@@ -113,17 +115,27 @@ public class MenuBarController : MonoBehaviour {
         re.y = Mathf.Max(a.y, b.y);
         return re;
     }
-    private Bounds GetBoundsOfVector3Array(Vector3[] v)//根据vector2的数组获得他们的包围盒bounds
+    private void Get2dContactPoint(Vector3[] v,out Vector2 center,out Vector2 d)//根据vector3的数组获得他们的二维接触点(x,y坐标,x,y缩放大小)
     {
         var oo = Macro.oo;
         var MinP = new Vector2(oo, oo);
         var MaxP = new Vector2(-oo, -oo);
+        var mainCamera = objManager.mainCamera;
+        var cameraBackground = objManager.cameraBackground;
+        var rt = imageBackground.GetComponent<RectTransform>();
         foreach (var i in v)
         {
-            MinP = GetMinVector2(MinP, i);
-            MaxP = GetMaxVector2(MaxP, i);
+            Debug.Log("v:" + v);
+            var p = mainCamera.WorldToScreenPoint(i);//世界坐标点转屏幕坐标点
+            Vector2 lp;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, p, cameraBackground, out lp);//屏幕坐标点转局部坐标点
+            MinP = GetMinVector2(MinP, lp);
+            MaxP = GetMaxVector2(MaxP, lp);
         }
-        return new Bounds((MinP + MaxP) / 2, MaxP - MinP);
+        Debug.Log("MinP:"+MinP);
+        Debug.Log("MaxP:" + MaxP);
+        center = (MinP + MaxP) / 2 + rt.sizeDelta / 2;
+        d = MaxP - MinP;
     }
 
     private void Export3dContactPoints(string path)
@@ -166,30 +178,29 @@ public class MenuBarController : MonoBehaviour {
                 //content += System.Math.Round(s.x,4) + " ";
                 //content += System.Math.Round(s.y,4) + " ";
                 //content += System.Math.Round(s.z,4) + "\r\n";
-            }
-            var imageBackground = objManager.imageBackground;
+            }            
             content += "2d:\r\n";
             foreach (var item in contactPoints.GetComponentsInChildren<Transform>())
             {
                 if (item.name.Equals(contactPoints.name))
                     continue;
                 var vertices=GetRealBoundsVertices(item.GetComponent<MeshFilter>());
-                var bounds = GetBoundsOfVector3Array(vertices);
-                //var r = item.sizeDelta.x / 2;
-                //var p = item.localPosition;
-                ////content += (p.x-r) + " ";
-                ////content += (p.y-r) + " ";
-                ////content += r+"\r\n";
-                //p.x -= r;
-                //p.y -= r;
-                //var realX = realWidth / nowWidth * p.x + realWidth;//获得像素为单位的接触点x,y,r
-                //var realY = realHeight / nowHeight * p.y + realHeight;
-                //var realR = realWidth / nowWidth * r;
-                //content += realX + " ";
-                //content += realY + " ";
-                //content += realR + "\r\n";
+                Vector2 p, d;
+                Get2dContactPoint(vertices,out p,out d);
+                Debug.Log("p:"+p);
+                Debug.Log("d:"+d);
+                var realPx = realWidth / nowWidth * p.x;//获得像素为单位的接触点x,y,r
+                var realPy = realHeight / nowHeight * p.y;
+                var realDx = realWidth / nowWidth * d.x;
+                var realDy = realHeight / nowHeight * d.y;
+                Debug.Log("realp:" + new Vector2(realPx, realPy));
+                Debug.Log("reald:" + new Vector2(realDx, realDy));
 
-            }
+                content += realPx + " ";
+                content += realPy + " ";
+                content += realDx + " ";
+                content += realDy + "\r\n";
+            }            
             File.WriteAllText(path, content);
         }
         else
