@@ -139,7 +139,7 @@ public class ScrollViewItemController : MonoBehaviour {
             objManager.model3d.GetComponent<Model3dController>().RemoveSon();//删除一个大模型
         if (par != null)//有父亲
             par.GetComponent<ScrollViewItemController>().RemoveSon(gameObject);
-        //Destroy(model);//删除item对应模型
+        Destroy(model);//删除item对应模型
         Destroy(gameObject);//删除ScrollViewItem
     }
     public void SetModelColor(Color color)//设置模型颜色
