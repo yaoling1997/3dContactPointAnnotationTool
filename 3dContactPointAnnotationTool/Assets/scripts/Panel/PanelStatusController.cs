@@ -60,6 +60,56 @@ public class PanelStatusController : MonoBehaviour {
             }
         }
     }
+    public void UpdateInputFieldValues()//更新所有inputFiled显示的值
+    {
+        var obj = selectedObj;
+        if (obj == null)
+            return;
+        foreach (var item in gameObject.GetComponentsInChildren<InputField>())
+        {
+
+            if (item.transform.parent.name.Equals("PanelStatusItemPosX"))
+            {
+                item.text = obj.transform.position.x.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemPosY"))
+            {
+                item.text = obj.transform.position.y.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemPosZ"))
+            {
+                item.text = obj.transform.position.z.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemRotX"))
+            {
+                item.text = obj.transform.eulerAngles.x.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemRotY"))
+            {
+                item.text = obj.transform.eulerAngles.y.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemRotZ"))
+            {
+                item.text = obj.transform.eulerAngles.z.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemScaleX"))
+            {
+                item.text = obj.transform.localScale.x.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemScaleY"))
+            {
+                item.text = obj.transform.localScale.y.ToString();
+            }
+            else if (item.transform.parent.name.Equals("PanelStatusItemScaleZ"))
+            {
+                item.text = obj.transform.localScale.z.ToString();
+            }
+            else
+            {
+                Debug.Log("statusPanelController:can not find correct parent!");
+            }
+        }
+    }
     public void SetSelectedObj(GameObject obj)
     {
         selectedObj = obj;
@@ -85,56 +135,48 @@ public class PanelStatusController : MonoBehaviour {
             sliderTriangles.value = 0;
             sliderTriangles.interactable = false;
         }        
-        foreach(var item in gameObject.GetComponentsInChildren<InputField>())
+        foreach(var item in gameObject.GetComponentsInChildren<InputField>())//更新interactable
         {            
             if (item.transform.parent.name.Equals("PanelStatusItemPosX"))
             {
                 item.interactable = model3dItemController==null?true: model3dItemController.positionEditable;//null说明选中的是接触点
-                item.text = obj.transform.position.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemPosY"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.positionEditable;//null说明选中的是接触点
-                item.text = obj.transform.position.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemPosZ"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.positionEditable;//null说明选中的是接触点
-                item.text = obj.transform.position.z.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotX"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.rotationEditable;//null说明选中的是接触点
-                item.text = obj.transform.eulerAngles.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotY"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.rotationEditable;//null说明选中的是接触点
-                item.text = obj.transform.eulerAngles.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotZ"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.rotationEditable;//null说明选中的是接触点
-                item.text = obj.transform.eulerAngles.z.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleX"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.scaleEditable;//null说明选中的是接触点
-                item.text = obj.transform.localScale.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleY"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.scaleEditable;//null说明选中的是接触点
-                item.text = obj.transform.localScale.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleZ"))
             {
                 item.interactable = model3dItemController == null ? true : model3dItemController.scaleEditable;//null说明选中的是接触点
-                item.text = obj.transform.localScale.z.ToString();
             }else
             {
                 Debug.Log("statusPanelController:can not find correct parent!");
             }            
         }
+        UpdateInputFieldValues();
     }
 }

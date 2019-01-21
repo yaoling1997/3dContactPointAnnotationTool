@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 namespace RTEditor
 {
@@ -428,6 +429,34 @@ namespace RTEditor
                 _transform.hasChanged = false;
             }
         }
+        /// <summary>
+        /// Returns true if any UI elements are hovered by the mouse cursor. This method
+        /// is useful because it allows us to avoid selecting objects when clicking on UI 
+        /// elements.
+        /// </summary>
+        private bool WereAnyUIElementsHovered()
+        {
+            if (EventSystem.current == null) return false;
+
+            Vector2 inputDevPos;
+            if (!InputDevice.Instance.GetPosition(out inputDevPos)) return false;
+
+            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+            eventDataCurrentPosition.position = new Vector2(inputDevPos.x, inputDevPos.y);
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+            //added by me
+            int cnt = results.Count;
+            foreach (var item in results)
+            {
+                if (item.gameObject.layer.Equals(Macro.BACKGROUND))
+                    cnt--;
+            }
+            return cnt != 0;
+            //
+            //return results.Count != 0;
+        }
 
         /// <summary>
         /// Applies any necessary zoom to the camera based on user input. 
@@ -437,7 +466,10 @@ namespace RTEditor
             // Ugly, ugly, ugly!!!
             if (RuntimeEditorApplication.Instance.ScrollGridUpDownShortcut.IsActive() ||
                 RuntimeEditorApplication.Instance.ScrollGridUpDownStepShortcut.IsActive()) return;
-
+            //added by me
+            if (WereAnyUIElementsHovered())
+                return;
+            //
             // Zoom if necessary
             float scrollSpeed = Input.GetAxis("Mouse ScrollWheel");
 

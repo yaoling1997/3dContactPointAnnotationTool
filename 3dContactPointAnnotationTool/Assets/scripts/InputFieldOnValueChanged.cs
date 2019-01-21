@@ -7,15 +7,18 @@ public class InputFieldOnValueChanged : MonoBehaviour {
     //public Text text;
     // Use this for initialization
     private ObjManager objManager;
+    private InputField inputField;
 	void Start () {
         objManager= GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        gameObject.GetComponent<InputField>().onValueChanged.AddListener(delegate { OnValueChanged(); });
+        inputField = gameObject.GetComponent<InputField>();
+        inputField.text = 0.ToString();
+        inputField.onValueChanged.AddListener(delegate { OnValueChanged(); });
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Update () {        
+
+    }
     public void OnValueChanged()
     {
         float v = float.Parse(gameObject.GetComponent<InputField>().text);
