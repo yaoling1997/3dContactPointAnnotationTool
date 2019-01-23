@@ -17,6 +17,7 @@ public class ScrollViewItemController : MonoBehaviour {
     private EditorObjectSelection editorObjectSelection;
     private int status;//0表示未选中，1表示选中
     private Button buttonModel;//选中模型的按钮
+    private Button buttonDelete;//删除模型的按钮
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
     private GameObject panelStatus;
@@ -31,7 +32,8 @@ public class ScrollViewItemController : MonoBehaviour {
         status = 0;
         selectedColor = Color.cyan;//默认选中颜色
         unselectedColor = Color.white;//默认未选中颜色
-        buttonModel = transform.Find("ButtonModel").GetComponent<Button>();        
+        buttonModel = transform.Find("ButtonModel").GetComponent<Button>();
+        buttonDelete = transform.Find("ButtonDelete").GetComponent<Button>();
     }
     void Start()
     {
@@ -43,11 +45,15 @@ public class ScrollViewItemController : MonoBehaviour {
     void Update () {
 		
 	}
-    public void Init(GameObject item,GameObject scrollViewContent)//初始化scrollViewItem
+    public void Init(GameObject item,GameObject scrollViewContent,string name=null)//初始化scrollViewItem
     {
-        this.scrollViewContent = scrollViewContent;
-        var buttonModel = transform.Find("ButtonModel");        
-        buttonModel.GetComponentInChildren<Text>().text = item.name;
+        this.scrollViewContent = scrollViewContent;        
+
+        if (name == null)//修改选项卡名字
+            buttonModel.GetComponentInChildren<Text>().text = item.name;
+        else
+            buttonModel.GetComponentInChildren<Text>().text = name;
+        buttonDelete.gameObject.SetActive(item.GetComponent<ItemController>().canDelete);//设置删除按钮
         model = item;//将模型赋值给item的脚本  
         if (model.GetComponent<CorrespondingScrollViewItem>()==null)
             model.AddComponent<CorrespondingScrollViewItem>();
@@ -167,7 +173,7 @@ public class ScrollViewItemController : MonoBehaviour {
         model.tag = Macro.UNSELECTED;//设置为未选中
     }
     public void ChangeStatus()//反转状态
-    {
+    {        
         status ^= 1;
         if (status == 1)
         {
@@ -182,7 +188,13 @@ public class ScrollViewItemController : MonoBehaviour {
     }
     public void ButtonModelOnClick()
     {        
-        ChangeStatus();
+        if (Input.GetKey(KeyCode.LeftControl))//左ctrl被按住
+            ChangeStatus();
+        else
+        {
+            editorObjectSelection.ClearSelection(true);
+            ChangeStatus();
+        }
     }
     public void ButtonDeleteOnClick()//删除一系列的scrollView及model
     {

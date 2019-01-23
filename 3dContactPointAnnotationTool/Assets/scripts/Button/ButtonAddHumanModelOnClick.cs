@@ -63,6 +63,7 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
         _boneNameToJointIndex.Add("R_Hand", 22);
         _boneNameToJointIndex.Add("L_Hand", 23);
 
+        AddMainCameraSvi();
     }
 
     // Update is called once per frame
@@ -142,6 +143,19 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
         }
 
     }
+    private void AddMainCameraSvi()//添加与主相机对应的svi
+    {
+        var mainCamera = objManager.mainCamera.gameObject;//得到主相机        
+        var prefabScrollViewItem = objManager.prefabScrollViewItem;
+        var itemController = mainCamera.AddComponent<ItemController>();//添加该脚本
+        itemController.trianglesEditable = false;//禁用三角形编辑
+        itemController.scaleEditable = false;//禁用scale编辑
+        itemController.canDelete = false;
+
+        var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
+        scrollViewItem.GetComponent<ScrollViewItemController>().Init(mainCamera, scrollViewModelsContent,"MainCamera");
+    }
+
     public void AddHumanModel(string path)//点击添加一个人物模型
     {
         objManager.humanModelId++;
@@ -152,9 +166,9 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
         model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d
         item.tag = Macro.UNSELECTED;//将tag设置为未选中
         item.AddComponent<Model3dItemController>();//添加该脚本
-
-        item.GetComponent<Model3dItemController>().trianglesEditable = false;//禁用三角形编辑
-        item.GetComponent<Model3dItemController>().scaleEditable = false;//禁用scale编辑
+        item.AddComponent<ItemController>();//添加该脚本
+        item.GetComponent<ItemController>().trianglesEditable = false;//禁用三角形编辑
+        item.GetComponent<ItemController>().scaleEditable = false;//禁用scale编辑
 
         var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
         scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
@@ -164,9 +178,17 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
             if (o.gameObject == par.GetComponent<ScrollViewItemController>().model)
                 continue;
 
+            var itemController = o.gameObject.AddComponent<ItemController>();
+            itemController.trianglesEditable = false;//禁用三角形编辑
+            itemController.canDelete = false;//儿子们的delete按钮都不显示，不能使用
+            if (!o.name.Equals("m_avg_root"))//不是m_avg_root
+            {
+                itemController.positionEditable = false;//禁用坐标编辑
+                itemController.scaleEditable = false;//禁用scale编辑
+            }
+            //添加了ItemController后再添加对应的scrollViewItem
             var svi = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);//创建对应的scrollViewItem
             svi.GetComponent<ScrollViewItemController>().Init(o.gameObject, scrollViewModelsContent);
-            svi.transform.Find("ButtonDelete").gameObject.SetActive(false);//儿子们的delete按钮都不显示，不能使用
             while (par.GetComponent<ScrollViewItemController>().model != o.parent.gameObject)
             {
                 par = par.GetComponent<ScrollViewItemController>().par;
@@ -174,13 +196,6 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
             par.GetComponent<ScrollViewItemController>().AddSon(svi);
             par = svi;
 
-            var model3dItemController = o.gameObject.AddComponent<Model3dItemController>();
-            if (!o.name.Equals("m_avg_root"))//不是m_avg_root
-            {
-                model3dItemController.trianglesEditable = false;//禁用三角形编辑
-                model3dItemController.positionEditable = false;//禁用坐标编辑
-                model3dItemController.scaleEditable = false;//禁用scale编辑
-            }
         }
         WWW www = new WWW("file://" + path);
         if (www != null && string.IsNullOrEmpty(www.error))

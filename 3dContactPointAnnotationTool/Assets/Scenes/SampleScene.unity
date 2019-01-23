@@ -3372,7 +3372,7 @@ MonoBehaviour:
   panelModels: {fileID: 1274791806}
   panelContactPoints: {fileID: 203596682}
   panelStatus: {fileID: 755834021}
-  panelReferenceImage: {fileID: 0}
+  panelStatusController: {fileID: 1509974696}
   prefabScrollViewItem: {fileID: 1726135607122212, guid: 4e4e8199afe449c489a25a1c2a3ac802,
     type: 2}
   model3d: {fileID: 1050585549}

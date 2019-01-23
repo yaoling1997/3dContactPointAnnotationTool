@@ -158,7 +158,15 @@ namespace RTEditor
         {
             if (NumberOfSelectedObjects != 0)
             {
-                List<GameObject> deletedObjects = new List<GameObject>(_selectedObjects);
+                //List<GameObject> deletedObjects = new List<GameObject>(_selectedObjects);
+                //added by me
+                var deletedObjects = new List<GameObject>();
+                foreach (var selectedObject in _selectedObjects)
+                {
+                    if (selectedObject.GetComponent<ItemController>().canDelete)
+                        deletedObjects.Add(selectedObject);
+                }
+                //
                 ClearSelection(false, ObjectDeselectActionType.SelectionDeleted);
 
                 //added by me
@@ -197,13 +205,11 @@ namespace RTEditor
         public bool AddObjectToSelection(GameObject gameObj, bool allowUndoRedo)
         {
             if (gameObj == null) return false;
-
             // If the current selection is composed of this object only, we exit. This allows us to 
             // avoid registering an Undo operation for what essentially is a no-op.
             if (IsSelectionExactMatch(new List<GameObject> { gameObj })) return false;
-
             // Continue based on whether or not Undo/Redo is allowed
-            if(allowUndoRedo)
+            if (allowUndoRedo)
             {
                 // Take a pre-change snapshot
                 var preChangeSnapshot = new ObjectSelectionSnapshot();
@@ -628,8 +634,9 @@ namespace RTEditor
             if (gameObj.GetComponent<CorrespondingScrollViewItem>() == null)//没有对应选项卡不能选择
                 return false;
             //
+            
             // Objects which are part of the RTEditor hierarchy, can never be selected
-            if (gameObj.IsRTEditorSystemObject()) return false;
+            //if (gameObj.IsRTEditorSystemObject()) return false;//为了能够选择相机于是把它注释掉了
 
             // Take settings into account
             bool objectHasMesh = gameObj.HasMesh();

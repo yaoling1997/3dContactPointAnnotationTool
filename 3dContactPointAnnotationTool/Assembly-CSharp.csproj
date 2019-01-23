@@ -232,6 +232,7 @@
      <Compile Include="Assets\scripts\ImportObj\ObjFormatAnalyzer.cs" />
      <Compile Include="Assets\scripts\ImportObj\ObjFormatAnalyzerFactory.cs" />
      <Compile Include="Assets\scripts\InputFieldOnValueChanged.cs" />
+     <Compile Include="Assets\scripts\ItemController.cs" />
      <Compile Include="Assets\scripts\Macro.cs" />
      <Compile Include="Assets\scripts\MenuBarController.cs" />
      <Compile Include="Assets\scripts\Model3dController.cs" />

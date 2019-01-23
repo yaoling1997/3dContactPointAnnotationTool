@@ -1319,6 +1319,10 @@ namespace RTEditor
                             //       work otherwise, but this is the intended behaviour.
                             if (topParent != null)
                             {
+                                //added by me
+                                if (!topParent.GetComponent<ItemController>().rotationEditable)//旋转不能修改
+                                    continue;
+                                //
                                 float rotationAngle = angleInDegrees;
                                 if (canUseAxisMask && _objAxisMask.ContainsKey(topParent))
                                 {

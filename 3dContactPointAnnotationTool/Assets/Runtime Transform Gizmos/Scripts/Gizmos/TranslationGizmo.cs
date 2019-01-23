@@ -1885,6 +1885,10 @@ namespace RTEditor
                         //       are both translated by the same amount).
                         if (topParent != null)
                         {
+                            //added by me
+                            if (!topParent.GetComponent<ItemController>().positionEditable)//位置不能修改
+                                continue;
+                            //
                             Vector3 moveVector = translationVector;
                             if(canUseAxisMask && _objAxisMask.ContainsKey(topParent))
                             {

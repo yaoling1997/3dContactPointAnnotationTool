@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都要有
 {
-    public bool trianglesEditable;//是否可以从面板编辑triangles
-    public bool positionEditable;//是否可以从面板编辑position
-    public bool rotationEditable;//是否可以从面板编辑rotation
-    public bool scaleEditable;//是否可以从面板编辑scale
-
     public class Cost
     {
         public float cost;
@@ -38,10 +33,6 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
 
     private void Awake()
     {        
-        trianglesEditable = true;
-        positionEditable = true;
-        rotationEditable = true;
-        scaleEditable = true;
         gameObject.layer = Macro.MODEL3D_ITEM;//设置为model3dItem层
         gameObject.tag = Macro.UNSELECTED;//将tag设置为未选中
     }
@@ -75,8 +66,8 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         return triangleMultiNum;
     }
     public void SetTriangleMultiNum(float v)//设置三角形倍数
-    {
-        if (!trianglesEditable)//不可编辑triangles
+    {        
+        if (!GetComponent<ItemController>().trianglesEditable)//不可编辑triangles
             return;
         if (triangleMultiNum == v)
             return;

@@ -156,6 +156,11 @@ namespace RTEditor
             base.OnInputDeviceMoved();
             if(_isDragging && _targetObject != null && _targetOOBB != null)
             {
+                //added by me
+                var itemController = _targetObject.GetComponent<ItemController>();//位置或缩放不能修改
+                if (!itemController.positionEditable || !itemController.scaleEditable)
+                    return;
+                //
                 Vector3 targetObjScale = _targetObject.transform.lossyScale;
                 Camera camera = EditorCamera.Instance.Camera;
                 int scaleAxisIndex = _dragStartData.ScaleAxisIndex;

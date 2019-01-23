@@ -12,7 +12,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
-    public GameObject panelReferenceImage;
+    public PanelStatusController panelStatusController;//panelStatus的controller
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们
@@ -64,6 +64,8 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         go.transform.SetParent(contactPoints.transform);
         go.name = go.name + contactPointId;
         go.tag = Macro.UNSELECTED;
+        var itemController= go.AddComponent<ItemController>();
+        itemController.trianglesEditable = false;
         //var scrollViewItem = UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
         var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
         scrollViewItem.GetComponent<ScrollViewItemController>().Init(go, scrollViewContactPointsContent, Color.red);

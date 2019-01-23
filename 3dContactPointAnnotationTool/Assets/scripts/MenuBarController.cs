@@ -70,6 +70,7 @@ public class MenuBarController : MonoBehaviour {
             {
                 model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
                 item.AddComponent<Model3dItemController>();//添加该脚本
+                item.AddComponent<ItemController>();
                 //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
                 var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
                 scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);

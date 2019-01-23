@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class InputFieldOnValueChanged : MonoBehaviour {
     //public Text text;
     // Use this for initialization
+    public bool disableOnValueChanged;
     private ObjManager objManager;
     private InputField inputField;
 	void Start () {
@@ -13,7 +14,8 @@ public class InputFieldOnValueChanged : MonoBehaviour {
         inputField = gameObject.GetComponent<InputField>();
         inputField.text = 0.ToString();
         inputField.onValueChanged.AddListener(delegate { OnValueChanged(); });
-	}
+        disableOnValueChanged = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {        
@@ -21,6 +23,8 @@ public class InputFieldOnValueChanged : MonoBehaviour {
     }
     public void OnValueChanged()
     {
+        if (disableOnValueChanged)
+            return;
         float v = float.Parse(gameObject.GetComponent<InputField>().text);
         var obj = objManager.panelStatus.GetComponentInChildren<PanelStatusController>().selectedObj;//获得选中对象
         if (obj == null)//对象为空

@@ -4,3 +4,5 @@ content里放的内容是有限的
 修改script里的public变量名后记得赋值
 可以拖动组件的上沿改变其位置
 拖动status里的text可以改变对应inputField的值
+一次性缩放三个轴：按住shift
+将物体移动到另一个物体上，按住v或space、space+x、space+z

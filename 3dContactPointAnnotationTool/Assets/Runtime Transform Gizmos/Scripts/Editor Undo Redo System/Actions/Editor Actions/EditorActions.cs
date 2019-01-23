@@ -37,9 +37,16 @@ namespace RTEditor
                 List<GameObject> allSelectedObjects = new List<GameObject>(EditorObjectSelection.Instance.SelectedGameObjects);
 
                 // Loop through each selected object
-                _deletedObjects = new List<GameObject>(allSelectedObjects.Count);
+                //_deletedObjects = new List<GameObject>(allSelectedObjects.Count);
+                //added by me
+                _deletedObjects = new List<GameObject>();
+                //
                 foreach (var selectedObject in allSelectedObjects)
                 {
+                    //added by me
+                    if (!selectedObject.GetComponent<ItemController>().canDelete)//不能删
+                        continue;
+                    //
                     // Add the object to the deleted list and make it inactive
                     _deletedObjects.Add(selectedObject);
                     selectedObject.SetActive(false);

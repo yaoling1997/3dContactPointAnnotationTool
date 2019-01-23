@@ -1814,6 +1814,11 @@ namespace RTEditor
                     {
                         if (topParent != null)
                         {
+                            //added by me
+                            if (!topParent.GetComponent<ItemController>().scaleEditable)//缩放不能修改
+                                continue;
+                            //
+
                             // Cache object data
                             Transform objectTransform = topParent.transform;
 
