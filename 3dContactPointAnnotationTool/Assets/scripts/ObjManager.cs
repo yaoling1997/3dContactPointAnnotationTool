@@ -7,6 +7,7 @@ using RTEditor;
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
     public Canvas canvas;//UI的canvas    
+    public Canvas canvasBackground;//背景的canvas    
     public Camera mainCamera;//主相机
     public Camera cameraBackground;//主相机
     public GameObject panelModels;
@@ -21,20 +22,22 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public GameObject menuBar;//菜单栏
     public GameObject toolBar;//工具栏    
     public GameObject humanModel;//SMPL人体模型    
-    public Shader shaderStandard;//标准shader
-    public Shader shaderWireframe;//网格shader
+    public Material materialStandard;//标准 shader的材质
+    public Material materialUIdefault;//UIdefault shader的材质
+    public Material materialWireframe;//网格 shader的材质
     public int contactPointId;//3d接触点标号
     public int humanModelId;//人体模型标号
     public Sprite spriteTriangleUp;//向上三角形sprite
     public Sprite spriteTriangleRight;//向右三角形sprite
     public Sprite spriteTriangleDown;//向下三角形sprite
     
-    public Button buttonGCP;
-    public Toggle toggleWireframe;
+    public Button buttonGCP;    
 
     public EditorObjectSelection editorObjectSelection;
     public GameObject imageBackground;//背景图片,人和物体的交互图片作为背景
     public PanelBackgroundImageController panelBackgroundImageControllerScript;//控制背景图片的panel的script
+
+    public OperationPanelController operationPanelController;
 
     // Use this for initialization
     void Start () {

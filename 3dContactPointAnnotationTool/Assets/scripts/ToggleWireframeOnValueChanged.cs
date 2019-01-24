@@ -25,11 +25,11 @@ public class ToggleWireframeOnValueChanged : MonoBehaviour {
             var color = item.material.color;
             if (isOn)
             {
-                item.material = new Material(objManager.shaderWireframe);
+                item.material = new Material(objManager.materialWireframe);
             }
             else
             {
-                item.material = new Material(objManager.shaderStandard);
+                item.material = new Material(objManager.materialStandard);
             }
             item.material.color = color;
         }

@@ -8,10 +8,12 @@ using UnityEngine.UI;
 public class ButtonAddHumanModelOnClick : MonoBehaviour {
     public GameObject scrollViewModelsContent;//scrollViewModels的content
     private ObjManager objManager;
+    private OperationPanelController operationPanelController;
     private Dictionary<string, int> _boneNameToJointIndex;
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        operationPanelController = objManager.operationPanelController;
         _boneNameToJointIndex = new Dictionary<string, int>();
         //_boneNameToJointIndex.Add("Pelvis", 0);
         //_boneNameToJointIndex.Add("L_Hip", 1);
@@ -165,6 +167,7 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
         var model3d = objManager.model3d;
         model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d
         item.tag = Macro.UNSELECTED;//将tag设置为未选中
+        item.GetComponent<SkinnedMeshRenderer>().material = operationPanelController.GetMaterial();
         item.AddComponent<Model3dItemController>();//添加该脚本
         item.AddComponent<ItemController>();//添加该脚本
         item.GetComponent<ItemController>().trianglesEditable = false;//禁用三角形编辑
@@ -185,6 +188,10 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
             {
                 itemController.positionEditable = false;//禁用坐标编辑
                 itemController.scaleEditable = false;//禁用scale编辑
+            }
+            else//大部分数据都需要镜像对称一下,所以简单粗暴地把scaleX设置为-1,有可能会造成选项卡左右颠倒
+            {
+                o.transform.localScale = new Vector3(-o.transform.localScale.x, o.transform.localScale.y, o.transform.localScale.z);
             }
             //添加了ItemController后再添加对应的scrollViewItem
             var svi = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);//创建对应的scrollViewItem

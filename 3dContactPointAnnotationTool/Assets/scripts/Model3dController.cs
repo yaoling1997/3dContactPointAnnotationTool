@@ -22,8 +22,7 @@ public class Model3dController : MonoBehaviour {
         sonNum++;
         if (sonNum == 1)
         {
-            objManager.buttonGCP.interactable = true;
-            objManager.toggleWireframe.interactable = true;
+            objManager.buttonGCP.interactable = true;            
         }
     }
     public void RemoveSon()
@@ -32,7 +31,6 @@ public class Model3dController : MonoBehaviour {
         if (sonNum == 0)//没有模型了
         {
             objManager.buttonGCP.interactable = false;
-            objManager.toggleWireframe.interactable = false;
         }
     }
 }

@@ -7,22 +7,31 @@ using Hont;
 using System.IO;
 
 public class MenuBarController : MonoBehaviour {
-    private ObjManager objManager;
+    private ObjManager objManager;    
     private GameObject model3d;
     private GameObject scrollViewModelsContent;
     private GameObject imageBackground;
+    private Canvas canvasBackground;
+    private Camera mainCamera;
+    private Vector3 mainCameraPosition;
+    private Quaternion mainCameraRotation;
 
     public Toggle WindowModelsToggle;
     public Toggle WindowContactPointsToggle;
     public Toggle WindowStatusToggle;
     public Toggle WindowReferenceImageToggle;
 
+    public GameObject editPanel;//Edit面板
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         model3d = objManager.model3d;
         scrollViewModelsContent = objManager.scrollViewModelsContent;
         imageBackground = objManager.imageBackground;
+        canvasBackground = objManager.canvasBackground;
+        mainCamera = objManager.mainCamera;
+        mainCameraPosition = mainCamera.transform.position;//记录初始的主相机位置和旋转参数
+        mainCameraRotation = mainCamera.transform.rotation;
     }
 	
 	// Update is called once per frame
@@ -277,6 +286,33 @@ public class MenuBarController : MonoBehaviour {
         Application.Quit();
 #endif
     }
+    public void CloseEditPanel()//关闭EditPanel
+    {
+        editPanel.SetActive(false);
+    }
+    public void ButtonFixImage()//UnbindImage按钮被点击
+    {
+        canvasBackground.renderMode = RenderMode.ScreenSpaceCamera;
+        CloseEditPanel();
+    }
+    public void ButtonUnfixImage()//BindImage按钮被点击
+    {
+        canvasBackground.renderMode = RenderMode.WorldSpace;//背景图不再固定
+        CloseEditPanel();
+    }
+    public void ButtonStoreCameraValues()//StoreCameraValues按钮被点击,存储当前主相机位置和旋转
+    {
+        mainCameraPosition = mainCamera.transform.position;
+        mainCameraRotation = mainCamera.transform.rotation;
+        CloseEditPanel();
+    }
+    public void ButtonRestoreCameraValues()//RestoreCameraValues按钮被点击,恢复主相机位置和旋转
+    {
+        mainCamera.transform.position = mainCameraPosition;
+        mainCamera.transform.rotation = mainCameraRotation;
+        CloseEditPanel();
+    }
+
     public void ButtonModelsOnClick()//Models按钮被点击
     {
         var panelModels = objManager.panelModels;        

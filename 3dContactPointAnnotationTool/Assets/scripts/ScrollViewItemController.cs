@@ -48,11 +48,11 @@ public class ScrollViewItemController : MonoBehaviour {
     public void Init(GameObject item,GameObject scrollViewContent,string name=null)//初始化scrollViewItem
     {
         this.scrollViewContent = scrollViewContent;        
-
-        if (name == null)//修改选项卡名字
-            buttonModel.GetComponentInChildren<Text>().text = item.name;
-        else
-            buttonModel.GetComponentInChildren<Text>().text = name;
+        if (name==null)
+            name= item.name;
+        // 修改选项卡名字
+        gameObject.name = name;
+        buttonModel.GetComponentInChildren<Text>().text = name;
         buttonDelete.gameObject.SetActive(item.GetComponent<ItemController>().canDelete);//设置删除按钮
         model = item;//将模型赋值给item的脚本  
         if (model.GetComponent<CorrespondingScrollViewItem>()==null)
@@ -150,10 +150,14 @@ public class ScrollViewItemController : MonoBehaviour {
     }
     public void SetModelColor(Color color)//设置模型颜色
     {
-        if (model.GetComponent<SkinnedMeshRenderer>() != null)
+        if (model.GetComponent<SkinnedMeshRenderer>() != null) {
+            color.a = model.GetComponent<SkinnedMeshRenderer>().material.color.a;//保持透明度不变，只改变颜色
             model.GetComponent<SkinnedMeshRenderer>().material.color = color;
-        else if (model.GetComponent<MeshRenderer>() != null)
+        }
+        else if (model.GetComponent<MeshRenderer>() != null) {
+            color.a = model.GetComponent<MeshRenderer>().material.color.a;//保持透明度不变，只改变颜色
             model.GetComponent<MeshRenderer>().material.color = color;
+        }
 
     }
     public void SetSelected()

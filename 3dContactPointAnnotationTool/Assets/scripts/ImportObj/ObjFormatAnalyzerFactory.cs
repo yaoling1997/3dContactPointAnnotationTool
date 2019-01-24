@@ -95,7 +95,7 @@ namespace Hont
                 mesh.triangles = triangles;
 
                 skinnedMeshRenderer.sharedMesh = mesh;
-                skinnedMeshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().shaderStandard);
+                skinnedMeshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().operationPanelController.GetMaterial());
                 re.Add(go);
             }
             return re;
