@@ -8,12 +8,12 @@ using UnityEngine.UI;
 public class ButtonAddHumanModelOnClick : MonoBehaviour {
     public GameObject scrollViewModelsContent;//scrollViewModels的content
     private ObjManager objManager;
-    private OperationPanelController operationPanelController;
+    private PanelModel_PointsInformationController panelModel_PointsInformationController;
     private Dictionary<string, int> _boneNameToJointIndex;
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        operationPanelController = objManager.operationPanelController;
+        panelModel_PointsInformationController = objManager.panelModel_PointsInformationController;
         _boneNameToJointIndex = new Dictionary<string, int>();
         //_boneNameToJointIndex.Add("Pelvis", 0);
         //_boneNameToJointIndex.Add("L_Hip", 1);
@@ -167,7 +167,7 @@ public class ButtonAddHumanModelOnClick : MonoBehaviour {
         var model3d = objManager.model3d;
         model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d
         item.tag = Macro.UNSELECTED;//将tag设置为未选中
-        item.GetComponent<SkinnedMeshRenderer>().material = operationPanelController.GetMaterial();
+        item.GetComponent<SkinnedMeshRenderer>().material = panelModel_PointsInformationController.GetMaterial();
         item.AddComponent<Model3dItemController>();//添加该脚本
         item.AddComponent<ItemController>();//添加该脚本
         item.GetComponent<ItemController>().trianglesEditable = false;//禁用三角形编辑

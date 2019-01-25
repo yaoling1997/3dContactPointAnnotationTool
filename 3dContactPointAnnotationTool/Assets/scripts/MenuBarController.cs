@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Runtime.InteropServices;
 using Hont;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class MenuBarController : MonoBehaviour {
     private ObjManager objManager;    
@@ -60,6 +61,7 @@ public class MenuBarController : MonoBehaviour {
             color.a = 1;
             image.color = color;
             objManager.panelBackgroundImageControllerScript.Init();
+            objManager.referenceImageController.Init(texture);
         }
         else
         {
@@ -310,6 +312,11 @@ public class MenuBarController : MonoBehaviour {
     {
         mainCamera.transform.position = mainCameraPosition;
         mainCamera.transform.rotation = mainCameraRotation;
+        CloseEditPanel();
+    }
+    public void ButtonResetOnClick()//Reset按钮被点击,将所有内容恢复到一开始的状态
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         CloseEditPanel();
     }
 

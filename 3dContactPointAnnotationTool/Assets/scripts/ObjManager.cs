@@ -13,6 +13,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
+    public ReferenceImageController referenceImageController;//参考图片的控制器
     public PanelStatusController panelStatusController;//panelStatus的controller
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject model3d;//3d模型们
@@ -37,7 +38,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public GameObject imageBackground;//背景图片,人和物体的交互图片作为背景
     public PanelBackgroundImageController panelBackgroundImageControllerScript;//控制背景图片的panel的script
 
-    public OperationPanelController operationPanelController;
+    public PanelModel_PointsInformationController panelModel_PointsInformationController;
 
     // Use this for initialization
     void Start () {
