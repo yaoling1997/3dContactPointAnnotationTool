@@ -8194,7 +8194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44cf481acb1453349b098ea93ae1cd16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonMaterial: {fileID: 0}
+  buttonMaterial: {fileID: 992543974}
 --- !u!114 &905811161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8865,7 +8865,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 905811160}
         m_MethodName: ButtonMaterialOnClick
         m_Mode: 1
         m_Arguments:

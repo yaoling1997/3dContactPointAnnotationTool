@@ -72,39 +72,49 @@ public class PanelStatusController : MonoBehaviour {
             iovc.disableOnValueChanged = true;
             if (item.transform.parent.name.Equals("PanelStatusItemPosX"))
             {
-                item.text = obj.transform.position.x.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.position.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemPosY"))
             {
-                item.text = obj.transform.position.y.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.position.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemPosZ"))
             {
-                item.text = obj.transform.position.z.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.position.z.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotX"))
             {
-                item.text = obj.transform.eulerAngles.x.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.eulerAngles.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotY"))
             {
-                item.text = obj.transform.eulerAngles.y.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.eulerAngles.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemRotZ"))
             {
-                item.text = obj.transform.eulerAngles.z.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.eulerAngles.z.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleX"))
             {
-                item.text = obj.transform.localScale.x.ToString();
+                if (!item.isFocused)
+                    continue;
+                    item.text = obj.transform.localScale.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleY"))
             {
-                item.text = obj.transform.localScale.y.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.localScale.y.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleZ"))
             {
-                item.text = obj.transform.localScale.z.ToString();
+                if (!item.isFocused)
+                    item.text = obj.transform.localScale.z.ToString();
             }
             else
             {
