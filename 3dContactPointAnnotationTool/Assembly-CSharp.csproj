@@ -229,7 +229,6 @@
     <Compile Include="Assets\scripts\Button\ButtonClearContactPointsOnClick.cs" />
     <Compile Include="Assets\scripts\Button\ButtonGCPOnClick.cs" />
     <Compile Include="Assets\scripts\Button\ButtonIncDecController.cs" />
-    <Compile Include="Assets\scripts\ButtonTestOnClick.cs" />
     <Compile Include="Assets\scripts\CameraBackgroundController.cs" />
     <Compile Include="Assets\scripts\ContentController.cs" />
     <Compile Include="Assets\scripts\CorrespondingScrollViewItem.cs" />
@@ -246,11 +245,13 @@
     <Compile Include="Assets\scripts\Model3dItemController.cs" />
     <Compile Include="Assets\scripts\ObjManager.cs" />
     <Compile Include="Assets\scripts\OpenFile\OpenFileName.cs" />
+    <Compile Include="Assets\scripts\Panel\PanelBackgroundImageController.cs" />
     <Compile Include="Assets\scripts\Panel\PanelImageController.cs" />
+    <Compile Include="Assets\scripts\Panel\PanelItemWarehouseController.cs" />
+    <Compile Include="Assets\scripts\Panel\PanelModel_PointsInformationController.cs" />
     <Compile Include="Assets\scripts\Panel\PanelStatusController.cs" />
-    <Compile Include="Assets\scripts\PanelBackgroundImageController.cs" />
-    <Compile Include="Assets\scripts\PanelModel_PointsInformationController.cs" />
     <Compile Include="Assets\scripts\ReferenceImageController.cs" />
+    <Compile Include="Assets\scripts\ResizePanel.cs" />
     <Compile Include="Assets\scripts\ScrollViewItemController.cs" />
     <Compile Include="Assets\scripts\SliderAlphaOnValueChanged.cs" />
     <Compile Include="Assets\scripts\SliderScaleOnValueChanged.cs" />

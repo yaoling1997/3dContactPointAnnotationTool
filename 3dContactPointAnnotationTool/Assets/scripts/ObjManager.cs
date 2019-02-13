@@ -16,6 +16,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public ReferenceImageController referenceImageController;//参考图片的控制器
     public PanelStatusController panelStatusController;//panelStatus的controller
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
+    public GameObject prefabScrollViewTabItem;//scrollViewTabItem预制件
     public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们
     public GameObject scrollViewModelsContent;//模型scrollView的content

@@ -131,8 +131,8 @@ public class ScrollViewItemController : MonoBehaviour {
         rt.sizeDelta = new Vector2(prts.x+ rt.sizeDelta.y,rt.sizeDelta.y);
         var rtSvi = GetComponentInParent<RectTransform>();
         rtSvi.sizeDelta =new Vector2(item.GetComponent<RectTransform>().sizeDelta.x+ rt.sizeDelta.y, rt.sizeDelta.y);
-        var rtContent = scrollViewContent.GetComponent<RectTransform>();
-        rtContent.sizeDelta = new Vector2(Mathf.Max(rtContent.sizeDelta.x, rtSvi.sizeDelta.x), rtContent.sizeDelta.y);
+        //var rtContent = scrollViewContent.GetComponent<RectTransform>();
+        //rtContent.sizeDelta = new Vector2(Mathf.Max(rtContent.sizeDelta.x, rtSvi.sizeDelta.x), rtContent.sizeDelta.y);
     }
     public void Delete()//删除该scrollView及其子孙scrollView
     {
