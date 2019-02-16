@@ -29,7 +29,6 @@ public class ResizePanel : MonoBehaviour, IPointerDownHandler, IDragHandler {
     {
         var sizeDelta = panelRectTransform.sizeDelta;
         var tmp = sizeDelta.x / Screen.width;
-        Debug.Log("tmp: " + tmp);
         var rect = mainCamera.rect;
         rect.width = 1 - tmp;
         mainCamera.rect = rect;
