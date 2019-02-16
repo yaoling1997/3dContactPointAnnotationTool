@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RTEditor;
+using Hont;
+using System.IO;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
@@ -17,6 +19,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public PanelStatusController panelStatusController;//panelStatus的controller
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject prefabScrollViewTabItem;//scrollViewTabItem预制件
+    public GameObject prefabScrollViewItemsItem;//scrollViewItemsItem预制件
     public GameObject model3d;//3d模型们
     public GameObject contactPoints;//接触点们
     public GameObject scrollViewModelsContent;//模型scrollView的content
@@ -38,7 +41,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public EditorObjectSelection editorObjectSelection;
     public GameObject imageBackground;//背景图片,人和物体的交互图片作为背景
     public PanelBackgroundImageController panelBackgroundImageControllerScript;//控制背景图片的panel的script
-
+    public PanelItemWarehouseController panelItemWareHouseController;//控制ItemWareHouse的panel的script
     public PanelModel_PointsInformationController panelModel_PointsInformationController;
 
     // Use this for initialization
@@ -92,6 +95,57 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         foreach (var item in panelContactPoints.GetComponentsInChildren<ScrollViewItemController>())
         {
             item.SetUnselected();
+        }
+    }
+    public void LoadImage(string path)
+    {
+        WWW www = new WWW("file://" + path);
+        //yield return new WaitForSeconds(1);
+        if (www != null && string.IsNullOrEmpty(www.error)&&File.Exists(path))
+        {
+            Texture2D texture = new Texture2D(www.texture.width, www.texture.height);
+            Debug.Log("width:" + texture.width);
+            Debug.Log("height:" + texture.height);
+            texture.SetPixels(www.texture.GetPixels());
+            texture.Apply(true);
+            texture.filterMode = FilterMode.Trilinear;
+            //var image= objManager.contactPoints2d;//contactPoints2d就是那张图像，只是所有2d接触点都挂在这个图像上
+            //image.GetComponent<ImageController>().SetImage(texture);
+            imageBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(texture.width, texture.height);
+            var image = imageBackground.GetComponent<Image>();
+            image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            var color = image.color;
+            color.a = 1;
+            image.color = color;
+            panelBackgroundImageControllerScript.Init();
+            referenceImageController.Init(texture);
+        }
+        else
+        {
+            Debug.Log("no such image!");
+        }
+    }
+
+    public void LoadObj(string path)
+    {
+        Debug.Log("path:" + path);
+        //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
+        if (File.Exists(path))
+        {
+            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);
+            foreach (var item in re)
+            {
+                model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
+                item.AddComponent<Model3dItemController>();//添加该脚本
+                item.AddComponent<ItemController>();
+                //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
+                var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
+                scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
+            }
+        }
+        else
+        {
+            Debug.Log("no such model!");
         }
     }
 }

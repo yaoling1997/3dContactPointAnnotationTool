@@ -230,6 +230,7 @@
     <Compile Include="Assets\scripts\Button\ButtonGCPOnClick.cs" />
     <Compile Include="Assets\scripts\Button\ButtonIncDecController.cs" />
     <Compile Include="Assets\scripts\CameraBackgroundController.cs" />
+    <Compile Include="Assets\scripts\CameraShowItemController.cs" />
     <Compile Include="Assets\scripts\ContentController.cs" />
     <Compile Include="Assets\scripts\CorrespondingScrollViewItem.cs" />
     <Compile Include="Assets\scripts\DragChangeValue.cs" />
@@ -253,6 +254,8 @@
     <Compile Include="Assets\scripts\ReferenceImageController.cs" />
     <Compile Include="Assets\scripts\ResizePanel.cs" />
     <Compile Include="Assets\scripts\ScrollViewItemController.cs" />
+    <Compile Include="Assets\scripts\ScrollViewItemsItemController.cs" />
+    <Compile Include="Assets\scripts\ScrollViewTabItemController.cs" />
     <Compile Include="Assets\scripts\SliderAlphaOnValueChanged.cs" />
     <Compile Include="Assets\scripts\SliderScaleOnValueChanged.cs" />
     <Compile Include="Assets\scripts\SliderTrianglesController.cs" />

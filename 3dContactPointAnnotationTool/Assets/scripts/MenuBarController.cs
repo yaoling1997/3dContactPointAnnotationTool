@@ -9,8 +9,6 @@ using UnityEngine.SceneManagement;
 
 public class MenuBarController : MonoBehaviour {
     private ObjManager objManager;    
-    private GameObject model3d;
-    private GameObject scrollViewModelsContent;
     private GameObject imageBackground;
     private Canvas canvasBackground;
     private Camera mainCamera;
@@ -26,8 +24,6 @@ public class MenuBarController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        model3d = objManager.model3d;
-        scrollViewModelsContent = objManager.scrollViewModelsContent;
         imageBackground = objManager.imageBackground;
         canvasBackground = objManager.canvasBackground;
         mainCamera = objManager.mainCamera;
@@ -39,59 +35,7 @@ public class MenuBarController : MonoBehaviour {
 	void Update () {
 		
 	}
-    private void GetImage(string path)
-    {
-        WWW www = new WWW("file://" + path);
-        //yield return new WaitForSeconds(1);
-        if (www != null && string.IsNullOrEmpty(www.error))
-        {
-            Texture2D texture = new Texture2D(www.texture.width, www.texture.height);
-            Debug.Log("width:" + texture.width);
-            Debug.Log("height:" + texture.height);
-            texture.SetPixels(www.texture.GetPixels());
-            texture.Apply(true);
-            texture.filterMode = FilterMode.Trilinear;
-            //var image= objManager.contactPoints2d;//contactPoints2d就是那张图像，只是所有2d接触点都挂在这个图像上
-            //image.GetComponent<ImageController>().SetImage(texture);
-            var imageBackground = objManager.imageBackground;
-            imageBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(texture.width, texture.height);
-            var image = imageBackground.GetComponent<Image>();
-            image.sprite= Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            var color = image.color;
-            color.a = 1;
-            image.color = color;
-            objManager.panelBackgroundImageControllerScript.Init();
-            objManager.referenceImageController.Init(texture);
-        }
-        else
-        {
-            Debug.Log("no such image!");
-        }
-    }
 
-    private void GetObj(string path)
-    {
-        WWW www = new WWW("file://" + path);
-        //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
-        if (www != null && string.IsNullOrEmpty(www.error))
-        {
-            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);
-            var prefabScrollViewItem = objManager.prefabScrollViewItem;
-            foreach (var item in re)
-            {
-                model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
-                item.AddComponent<Model3dItemController>();//添加该脚本
-                item.AddComponent<ItemController>();
-                //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
-                var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
-                scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
-            }
-        }
-        else
-        {
-            Debug.Log("no such model!");
-        }
-    }
     private Vector3[] GetRealBoundsVertices(MeshFilter meshFilter)//将点变换到真实的点（应用位移、旋转、缩放变换）
     {
         Mesh mesh = meshFilter.mesh;        
@@ -237,7 +181,7 @@ public class MenuBarController : MonoBehaviour {
         {
             Debug.Log("file: " + ofn.file);
             //StartCoroutine(GetImage(ofn.file));
-            GetImage(ofn.file);
+            objManager.LoadImage(ofn.file);
         }
 
     }
@@ -257,7 +201,7 @@ public class MenuBarController : MonoBehaviour {
         {
             Debug.Log("file: " + ofn.file);
             //StartCoroutine(GetObj(ofn.file));
-            GetObj(ofn.file);
+            objManager.LoadObj(ofn.file);
         }
 
     }

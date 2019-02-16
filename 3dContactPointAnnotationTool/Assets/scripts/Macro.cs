@@ -8,6 +8,7 @@ public class Macro : MonoBehaviour {
     public static int MODEL3D_ITEM = 9;//Model3dItem layer
     public static int CONTACT_POINTS_ITEM = 10;//ContactPointsItem layer
     public static int BACKGROUND = 11;//Background layer
+    public static int SHOW_ITEM = 12;//ShowItem layer
     public static float oo = 1e18f;//最大值
     // Use this for initialization
     void Start () {
