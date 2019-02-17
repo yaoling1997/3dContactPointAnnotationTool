@@ -6,24 +6,32 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
 public class PanelItemWarehouseController : MonoBehaviour {
-    private ObjManager objManager;
-    private GameObject prefabScrollViewTabItem;
-    private GameObject prefabScrollViewItemsItem;
     public GameObject scrollViewTabContent;
     public GameObject scrollViewItemsContent;
     public ScrollRect scrollRect;//ScrollView的scrollRect组件
 
+    private ObjManager objManager;
+    private GameObject prefabScrollViewTabItem;
+    private GameObject prefabScrollViewItemsItem;
+    private Camera cameraShowItem;
+
     private Dictionary<GameObject, GameObject> tabToContent;//通过tab找到对应的Content
+    private Dictionary<GameObject, GameObject> itemToObj;//通过item找到对应的Obj
     private GameObject selectedTab;//选中的tab
     private GameObject selectedItem;//选中的selectedScrollViewItemsItem
+    private GameObject selectedItemObj;//与selectedItem对应的obj模型    
+
     // Use this for initialization
     void Start () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         prefabScrollViewTabItem = objManager.prefabScrollViewTabItem;
         prefabScrollViewItemsItem = objManager.prefabScrollViewItemsItem;
         tabToContent = new Dictionary<GameObject, GameObject>();
+        itemToObj = new Dictionary<GameObject, GameObject>();
         selectedTab = null;
         selectedItem = null;
+        selectedItemObj = null;
+        cameraShowItem = objManager.cameraShowItem;
     }
 	
 	// Update is called once per frame
@@ -148,7 +156,17 @@ public class PanelItemWarehouseController : MonoBehaviour {
     {
         if (selectedItem != null)
             selectedItem.GetComponent<Image>().color = Color.white;
+        if (selectedItemObj != null)
+            selectedItemObj.SetActive(false);
         selectedItem = item;
         selectedItem.GetComponent<Image>().color = Color.cyan;
+        if (!itemToObj.ContainsKey(item))
+        {
+            itemToObj[item] = objManager.LoadObjToShowItemView(item.GetComponent<ScrollViewItemsItemController>().objAbsolutePath);
+        }
+        selectedItemObj = itemToObj[item];
+        if (selectedItemObj!=null)
+            selectedItemObj.SetActive(true);
+        cameraShowItem.GetComponent<CameraShowItemController>().UpdateCamera(selectedItemObj);
     }
 }

@@ -253,6 +253,7 @@
     <Compile Include="Assets\scripts\Panel\PanelStatusController.cs" />
     <Compile Include="Assets\scripts\ReferenceImageController.cs" />
     <Compile Include="Assets\scripts\ResizePanel.cs" />
+    <Compile Include="Assets\scripts\Save.cs" />
     <Compile Include="Assets\scripts\ScrollViewItemController.cs" />
     <Compile Include="Assets\scripts\ScrollViewItemsItemController.cs" />
     <Compile Include="Assets\scripts\ScrollViewTabItemController.cs" />

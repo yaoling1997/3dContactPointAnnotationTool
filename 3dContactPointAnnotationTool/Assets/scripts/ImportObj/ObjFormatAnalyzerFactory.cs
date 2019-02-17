@@ -8,7 +8,7 @@ namespace Hont
 {
     public static class ObjFormatAnalyzerFactory
     {
-        public static List<GameObject> AnalyzeToGameObject(string objFilePath)
+        public static List<GameObject> AnalyzeToGameObject(string objFilePath,bool useGlobalMaterial)
         {
             if (!File.Exists(objFilePath)) return null;
 
@@ -95,7 +95,10 @@ namespace Hont
                 mesh.triangles = triangles;
 
                 skinnedMeshRenderer.sharedMesh = mesh;
-                skinnedMeshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().panelModel_PointsInformationController.GetMaterial());
+                if (useGlobalMaterial)
+                    skinnedMeshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().panelModel_PointsInformationController.GetMaterial());
+                else//使用标准material
+                    skinnedMeshRenderer.material = new Material(GameObject.Find("ObjManager").GetComponent<ObjManager>().materialStandard);
                 re.Add(go);
             }
             return re;

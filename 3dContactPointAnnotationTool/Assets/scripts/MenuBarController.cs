@@ -14,21 +14,23 @@ public class MenuBarController : MonoBehaviour {
     private Camera mainCamera;
     private Vector3 mainCameraPosition;
     private Quaternion mainCameraRotation;
+    private string saveProjectPath;//存储工程的路径
 
     public Toggle WindowModelsToggle;
     public Toggle WindowContactPointsToggle;
     public Toggle WindowStatusToggle;
-    public Toggle WindowReferenceImageToggle;
 
+    public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
-    // Use this for initialization
-    void Start () {
+    
+    void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         imageBackground = objManager.imageBackground;
         canvasBackground = objManager.canvasBackground;
         mainCamera = objManager.mainCamera;
         mainCameraPosition = mainCamera.transform.position;//记录初始的主相机位置和旋转参数
         mainCameraRotation = mainCamera.transform.rotation;
+        saveProjectPath = null;
     }
 	
 	// Update is called once per frame
@@ -93,12 +95,10 @@ public class MenuBarController : MonoBehaviour {
         center = (MinP + MaxP) / 2 + rt.sizeDelta / 2;
         d = MaxP - MinP;
     }
-
     private void Export3dContactPoints(string path)
     {
-        WWW www = new WWW("file://" + path);
         //yield return new WaitForSeconds(1);
-        if (www != null && string.IsNullOrEmpty(www.error))
+        if (File.Exists(path))
         {
             string content = "";
             var contactPoints = objManager.contactPoints;
@@ -167,6 +167,7 @@ public class MenuBarController : MonoBehaviour {
 
     public void ButtonImportImageOnClick()//ImportImage按钮被点击
     {
+        CloseFilePanel();
         OpenFileName ofn = new OpenFileName();
         ofn.structSize = Marshal.SizeOf(ofn);
         ofn.filter = "图片文件(*.jpg*.png)\0*.jpg;*.png";
@@ -187,6 +188,7 @@ public class MenuBarController : MonoBehaviour {
     }
     public void ButtonImportModelOnClick()//ImportModel按钮被点击
     {
+        CloseFilePanel();
         OpenFileName ofn = new OpenFileName();
         ofn.structSize = Marshal.SizeOf(ofn);
         ofn.filter = "3d文件(*.obj)\0*.obj";
@@ -203,10 +205,10 @@ public class MenuBarController : MonoBehaviour {
             //StartCoroutine(GetObj(ofn.file));
             objManager.LoadObj(ofn.file);
         }
-
     }
     public void ButtonExportContactPointsOnClick()//ExportContactPoints按钮被点击
     {
+        CloseFilePanel();
         OpenFileName ofn = new OpenFileName();
         ofn.structSize = Marshal.SizeOf(ofn);
         ofn.filter = "文本文件(*.txt)\0*.txt";
@@ -217,13 +219,73 @@ public class MenuBarController : MonoBehaviour {
         ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
         ofn.title = "导出接触点";
         ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
-        if (LocalDialog.GetOpenFileName(ofn))
+        if (LocalDialog.GetSaveFileName(ofn))
         {
+            if (!File.Exists(ofn.file)) {
+                ofn.file += ".txt";
+                File.Create(ofn.file);
+            }
             Debug.Log("file: " + ofn.file);
             //StartCoroutine(Export3dContactPoints(ofn.file));
             Export3dContactPoints(ofn.file);
         }
     }
+    public void ButtonOpenProjectOnClick()//OpenProject按钮被点击
+    {
+        CloseFilePanel();
+        OpenFileName ofn = new OpenFileName();
+        ofn.structSize = Marshal.SizeOf(ofn);
+        ofn.filter = "项目文件(*.proj)\0*.proj";
+        ofn.file = new string(new char[256]);
+        ofn.maxFile = ofn.file.Length;
+        ofn.fileTitle = new string(new char[64]);
+        ofn.maxFileTitle = ofn.fileTitle.Length;
+        ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
+        ofn.title = "打开项目文件";
+        ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
+        if (LocalDialog.GetOpenFileName(ofn))
+        {
+            Debug.Log("file: " + ofn.file);
+            //StartCoroutine(GetObj(ofn.file));
+            objManager.LoadObj(ofn.file);
+            Save.LoadByBin(saveProjectPath);
+        }        
+    }
+    public void ButtonSaveProjectOnClick()//SaveProject按钮被点击
+    {
+        CloseFilePanel();
+        if (saveProjectPath == null) { 
+            ButtonSaveProjectAsOnClick();
+            return;
+        }
+        Save.SaveByBin(saveProjectPath);
+    }
+    public void ButtonSaveProjectAsOnClick()//SaveProjectAs按钮被点击
+    {
+        CloseFilePanel();
+        OpenFileName ofn = new OpenFileName();
+        ofn.structSize = Marshal.SizeOf(ofn);
+        ofn.filter = "项目文件(*.proj)\0*.proj";
+        ofn.file = new string(new char[256]);
+        ofn.maxFile = ofn.file.Length;
+        ofn.fileTitle = new string(new char[64]);
+        ofn.maxFileTitle = ofn.fileTitle.Length;
+        ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
+        ofn.title = "另存为";
+        ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
+        if (LocalDialog.GetSaveFileName(ofn))
+        {
+            if (!File.Exists(ofn.file)) {
+                ofn.file += ".proj";
+                //File.Create(ofn.file);
+            }
+            Debug.Log("file: " + ofn.file);
+            //StartCoroutine(Export3dContactPoints(ofn.file));
+            saveProjectPath = ofn.file;//更新保存项目的存储路径
+            Save.SaveByBin(saveProjectPath);
+        }        
+    }
+
     public void ButtonExitOnClick()//Exit按钮被点击
     {
 #if UNITY_EDITOR
@@ -231,6 +293,10 @@ public class MenuBarController : MonoBehaviour {
 #else
         Application.Quit();
 #endif
+    }
+    public void CloseFilePanel()//关闭FilePanel
+    {
+        filePanel.SetActive(false);
     }
     public void CloseEditPanel()//关闭EditPanel
     {

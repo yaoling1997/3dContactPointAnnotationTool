@@ -103,7 +103,6 @@ public class PanelStatusController : MonoBehaviour {
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleX"))
             {
                 if (!item.isFocused)
-                    continue;
                     item.text = obj.transform.localScale.x.ToString();
             }
             else if (item.transform.parent.name.Equals("PanelStatusItemScaleY"))

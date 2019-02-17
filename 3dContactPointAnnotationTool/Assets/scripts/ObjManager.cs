@@ -11,7 +11,8 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Canvas canvas;//UI的canvas    
     public Canvas canvasBackground;//背景的canvas    
     public Camera mainCamera;//主相机
-    public Camera cameraBackground;//主相机
+    public Camera cameraBackground;//背景图片相机
+    public Camera cameraShowItem;//showItem相机
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;
@@ -128,11 +129,10 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
 
     public void LoadObj(string path)
     {
-        Debug.Log("path:" + path);
         //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
         if (File.Exists(path))
         {
-            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path);
+            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path,true);
             foreach (var item in re)
             {
                 model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
@@ -148,4 +148,22 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             Debug.Log("no such model!");
         }
     }
+    public GameObject LoadObjToShowItemView(string path)
+    {
+        //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
+        if (File.Exists(path))
+        {
+            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path, false);
+            if (re.Count == 0)
+                return null;
+            re[0].layer = Macro.SHOW_ITEM;
+            return re[0];
+        }
+        else
+        {
+            Debug.Log("no such model!");
+        }
+        return null;
+    }
+
 }
