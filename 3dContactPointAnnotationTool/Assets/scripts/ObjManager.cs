@@ -58,29 +58,31 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
 	void Update () {
 		
 	}
-    public void CreateContactPointSphere(Vector3 center, float x, float y,float z)//x半径,y半径,z半径,创建球状接触点
-    {
+    public void CreateContactPointSphere(Vector3 position, Vector3 eulerAngles, Vector3 scale) {
         contactPointId++;
         var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
         go.layer = Macro.CONTACT_POINTS_ITEM;//设置为ContactPointsItem层，实现光照等效果
 
-        go.transform.position = center;//设置球的中心位置
-        go.transform.localScale = new Vector3(2*x, 2*y, 2*z);//设置球的半径大小,scale是半径的两倍
+        go.transform.position = position;//设置球的中心位置
+        go.transform.eulerAngles = eulerAngles;//设置欧拉角
+        go.transform.localScale = scale;//设置球的半径大小
         var mr = go.GetComponent<MeshRenderer>();//获取球的meshRenderer
         mr.material.color = Color.red;//设置为红球
         //不产生阴影也不接收阴影
         mr.receiveShadows = false;
-        mr.shadowCastingMode =UnityEngine.Rendering.ShadowCastingMode.Off;
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
         go.transform.SetParent(contactPoints.transform);
         go.name = go.name + contactPointId;
         go.tag = Macro.UNSELECTED;
-        var itemController= go.AddComponent<ItemController>();
-        itemController.trianglesEditable = false;
-        //var scrollViewItem = UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;
+        go.AddComponent<ItemController>().SetModelType(ItemController.ModelType.CONTACT_POINT);        
         var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
         scrollViewItem.GetComponent<ScrollViewItemController>().Init(go, scrollViewContactPointsContent, Color.red);
+    }
+    public void CreateContactPointSphere(Vector3 center, float rx, float ry,float rz)//x半径,y半径,z半径,创建球状接触点
+    {
+        CreateContactPointSphere(center,Vector3.zero, new Vector3(2 * rx, 2 * ry, 2 * rz));//scale是半径的两倍
     }
     public void CreateContactPointSphere(Vector3 center, float radius)
     {
@@ -141,8 +143,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             {
                 model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
                 item.AddComponent<Model3dItemController>();//添加该脚本
-                item.AddComponent<ItemController>();
-                //var scrollViewItem= UnityEditor.PrefabUtility.InstantiatePrefab(prefabScrollViewItem) as GameObject;                
+                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL);                
                 var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
                 scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
             }

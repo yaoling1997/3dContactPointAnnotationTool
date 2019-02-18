@@ -150,7 +150,7 @@ namespace RTEditor
                     scrollViewItem.GetComponent<ScrollViewItemController>().Init(gameObj, scrollViewContent , Color.red);
                 //scrollViewItem.GetComponent<ScrollViewItemController>().SetSelected();
             }
-            //added by me
+            //
             if (SelectionDuplicated != null) SelectionDuplicated(new List<GameObject>(_selectedObjects), duplicatedRoots);
         }
 

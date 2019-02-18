@@ -122,6 +122,12 @@ namespace RTEditor
             cloneTransform.localScale = scale;
             cloneTransform.parent = parent;
 
+            //added by me
+            var itemController = gameObject.GetComponent<ItemController>();
+            if (itemController != null) {
+                clone.GetComponent<ItemController>().CloneAttributes(itemController);
+            }
+            //
             return clone;
         }
 

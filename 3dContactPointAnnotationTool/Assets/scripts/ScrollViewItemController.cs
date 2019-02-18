@@ -20,6 +20,9 @@ public class ScrollViewItemController : MonoBehaviour {
     private Button buttonDelete;//删除模型的按钮
     public Color selectedColor;//选中时模型的颜色
     public Color unselectedColor;//未选中时模型的颜色
+
+    public string modelType;//对应模型所属类别(相机,obj模型,smpl模型)
+
     private GameObject panelStatus;
     private PanelStatusController panelStatusController;
     private bool ifShowSons;//是否显示儿子
@@ -55,10 +58,10 @@ public class ScrollViewItemController : MonoBehaviour {
         buttonModel.GetComponentInChildren<Text>().text = name;
         buttonDelete.gameObject.SetActive(item.GetComponent<ItemController>().canDelete);//设置删除按钮
         model = item;//将模型赋值给item的脚本  
-        if (model.GetComponent<CorrespondingScrollViewItem>()==null)
+        if (model.GetComponent<CorrespondingScrollViewItem>() == null)
             model.AddComponent<CorrespondingScrollViewItem>();
         model.GetComponent<CorrespondingScrollViewItem>().sviController = this;//将scrollViewItem赋值给model
-        scrollViewContent.GetComponent<ContentController>().Add(gameObject);//将scrollViewItem添加到scrollView里 
+        gameObject.transform.SetParent(scrollViewContent.transform);//将scrollViewItem添加到scrollView里 
         NoSons();
         SetModelColor(unselectedColor);
     }

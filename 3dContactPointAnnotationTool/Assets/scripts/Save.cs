@@ -44,8 +44,65 @@ public class Save
             this.scale = scale;
         }
     }
+    [System.Serializable]
+    public class SaveContactPoint {
+        public SaveVector3 position;
+        public SaveVector3 eulerAngles;
+        public SaveVector3 scale;
+        public SaveContactPoint(Vector3 position, Vector3 eulerAngles, Vector3 scale) {
+            this.position = new SaveVector3(position.x, position.y, position.z);
+            this.eulerAngles = new SaveVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+            this.scale = new SaveVector3(scale.x, scale.y, scale.z);
+        }
+    }
+    [System.Serializable]
+    public class SaveObjModel
+    {
+        public string path;//obj文件路径
+        public SaveVector3 position;
+        public SaveVector3 eulerAngles;
+        public SaveVector3 scale;
+        public int id;//在panelModels中的序号
+        public SaveObjModel(string path,Vector3 position, Vector3 eulerAngles, Vector3 scale,int id)
+        {
+            this.path = path;
+            this.position = new SaveVector3(position.x, position.y, position.z);
+            this.eulerAngles = new SaveVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+            this.scale = new SaveVector3(scale.x, scale.y, scale.z);
+            this.id = id;
+        }
+    }
     public SaveCamera mainCamera;
     public SaveImage image;
+    public List<SaveContactPoint> contactPointList;
+    public List<SaveObjModel> objModelList;//存objModel的列表
+    public void SaveContactPointsInfo()//存储接触点信息
+    {
+        var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+
+        var scrollViewContent = objManager.panelContactPoints.GetComponent<PanelContactPointsController>().scrollViewContent;
+        contactPointList = new List<SaveContactPoint>();
+        foreach (var item in scrollViewContent.GetComponentsInChildren<ScrollViewItemController>())
+        {
+            var t = item.model.transform;
+            contactPointList.Add(new SaveContactPoint(t.position,t.eulerAngles,t.localScale));
+        }
+    }
+    public void LoadContactPoints()//还原接触点
+    {
+        var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        foreach (var item in contactPointList)
+        {
+            objManager.CreateContactPointSphere(item.position.ToVector3(), item.eulerAngles.ToVector3(), item.scale.ToVector3());
+        }
+    }
+    public void SaveObjModelsInfo() {//存储Obj模型信息
+        var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        var scrollViewContent = objManager.panelModels.GetComponent<PanelModelsController>().scrollViewContent;
+        foreach (var item in scrollViewContent.GetComponentsInChildren<ScrollViewItemController>()) {
+
+        }
+    }
     public static void SaveByBin(string path)
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();        
@@ -53,9 +110,13 @@ public class Save
 
         //创建save对象并保存当前游戏状态
         Save save = new Save();
+
         save.mainCamera = new SaveCamera(objManager.mainCamera.transform.position, objManager.mainCamera.transform.eulerAngles);//存储主相机的位置和角度
+
         var pbic = objManager.panelBackgroundImageControllerScript;
         save.image = new SaveImage(objManager.imagePath, pbic.inputFieldAlpha.text, pbic.inputFieldScale.text);//存储图片路径,透明度和缩放大小
+        
+        save.SaveContactPointsInfo();//存储接触点信息
 
         Debug.Log("SaveByBin： ");
         //创建一个二进制格式化程序
@@ -85,12 +146,23 @@ public class Save
         //加载save中的数据
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);        
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        objManager.mainCamera.transform.position = save.mainCamera.position.ToVector3();
+
+        objManager.mainCamera.transform.position = save.mainCamera.position.ToVector3();//还原主相机
         objManager.mainCamera.transform.eulerAngles = save.mainCamera.eulerAngles.ToVector3();        
-        objManager.LoadImage(save.image.path);
+
+        objManager.LoadImage(save.image.path);//还原图片
         var pbic = objManager.panelBackgroundImageControllerScript;
         pbic.inputFieldAlpha.text = save.image.alpha;
         pbic.inputFieldScale.text = save.image.scale;
+
+        var pcpc = objManager.panelContactPoints.GetComponent<PanelContactPointsController>();
+        pcpc.ButtonClearOnClick();//清空当前接触点
+        save.LoadContactPoints();//还原接触点
+
+        var pmc = objManager.panelModels.GetComponent<PanelModelsController>();
+        pmc.ButtonClearOnClick();//清空当前模型        
+
+
         Debug.Log("LoadByBin： ");
     }
 }
