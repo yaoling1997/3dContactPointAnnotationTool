@@ -30,7 +30,7 @@ public class MenuBarController : MonoBehaviour {
         mainCamera = objManager.mainCamera;
         mainCameraPosition = mainCamera.transform.position;//记录初始的主相机位置和旋转参数
         mainCameraRotation = mainCamera.transform.rotation;
-        saveProjectPath = null;
+        saveProjectPath = null;        
     }
 	
 	// Update is called once per frame
@@ -181,7 +181,6 @@ public class MenuBarController : MonoBehaviour {
         if (LocalDialog.GetOpenFileName(ofn))
         {
             Debug.Log("file: " + ofn.file);
-            //StartCoroutine(GetImage(ofn.file));
             objManager.LoadImage(ofn.file);
         }
 
@@ -202,12 +201,11 @@ public class MenuBarController : MonoBehaviour {
         if (LocalDialog.GetOpenFileName(ofn))
         {
             Debug.Log("file: " + ofn.file);
-            //StartCoroutine(GetObj(ofn.file));
             objManager.LoadObj(ofn.file);
         }
     }
     public void ButtonExportContactPointsOnClick()//ExportContactPoints按钮被点击
-    {
+    {        
         CloseFilePanel();
         OpenFileName ofn = new OpenFileName();
         ofn.structSize = Marshal.SizeOf(ofn);
@@ -226,7 +224,6 @@ public class MenuBarController : MonoBehaviour {
                 File.Create(ofn.file);
             }
             Debug.Log("file: " + ofn.file);
-            //StartCoroutine(Export3dContactPoints(ofn.file));
             Export3dContactPoints(ofn.file);
         }
     }
@@ -246,8 +243,7 @@ public class MenuBarController : MonoBehaviour {
         if (LocalDialog.GetOpenFileName(ofn))
         {
             Debug.Log("file: " + ofn.file);
-            //StartCoroutine(GetObj(ofn.file));
-            objManager.LoadObj(ofn.file);
+            saveProjectPath = ofn.file;
             Save.LoadByBin(saveProjectPath);
         }        
     }
@@ -326,7 +322,7 @@ public class MenuBarController : MonoBehaviour {
     }
     public void ButtonResetOnClick()//Reset按钮被点击,将所有内容恢复到一开始的状态
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);        
         CloseEditPanel();
     }
 

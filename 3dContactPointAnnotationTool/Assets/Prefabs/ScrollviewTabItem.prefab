@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114953119659331270}
   - component: {fileID: 114579512915615894}
   m_Layer: 5
-  m_Name: ScrollViewTabItem
+  m_Name: ScrollviewTabItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

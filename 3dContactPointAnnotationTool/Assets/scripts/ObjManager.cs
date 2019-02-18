@@ -45,10 +45,13 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public PanelItemWarehouseController panelItemWareHouseController;//控制ItemWareHouse的panel的script
     public PanelModel_PointsInformationController panelModel_PointsInformationController;
 
+    public string imagePath;//加载图片的路径
+
     // Use this for initialization
     void Start () {
         contactPointId = 0;
         humanModelId = 0;
+        imagePath = null;
     }
 	
 	// Update is called once per frame
@@ -104,6 +107,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         //yield return new WaitForSeconds(1);
         if (www != null && string.IsNullOrEmpty(www.error)&&File.Exists(path))
         {
+            imagePath = path;//存储该图片路径
             Texture2D texture = new Texture2D(www.texture.width, www.texture.height);
             Debug.Log("width:" + texture.width);
             Debug.Log("height:" + texture.height);
