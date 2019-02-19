@@ -72,14 +72,39 @@ public class Save
             this.id = id;
         }
     }
+    //[System.Serializable]
+    //public class SaveSMPLJoint//smpl模型关节点
+    //{
+    //    public SaveVector3 eulerAngles;
+    //    public SaveSMPLJoint(Vector3 eulerAngles) {
+    //        this.eulerAngles = new SaveVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+    //    }
+    //}
+    [System.Serializable]
+    public class SaveSMPL//smpl模型
+    {
+        public SaveVector3 position;
+        public SaveVector3 eulerAngles;
+        public List<float> poseParam;
+        public List<float> shapeParam;
+        public int id;
+        public SaveSMPL(Vector3 position,Vector3 eulerAngles, List<float> poseParam, List<float> shapeParam, int id)
+        {
+            this.position = new SaveVector3(position.x, position.y, position.z);
+            this.eulerAngles = new SaveVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+            this.poseParam = poseParam;
+            this.shapeParam = shapeParam;
+            this.id = id;
+        }
+    }
     public SaveCamera mainCamera;
     public SaveImage image;
     public List<SaveContactPoint> contactPointList;
     public List<SaveObjModel> objModelList;//存objModel的列表
+    public List<SaveSMPL> SMPLList;//存SMPL模型的列表
     public void SaveContactPointsInfo()//存储接触点信息
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-
         var scrollViewContent = objManager.panelContactPoints.GetComponent<PanelContactPointsController>().scrollViewContent;
         contactPointList = new List<SaveContactPoint>();
         foreach (var item in scrollViewContent.GetComponentsInChildren<ScrollViewItemController>())
@@ -96,11 +121,28 @@ public class Save
             objManager.CreateContactPointSphere(item.position.ToVector3(), item.eulerAngles.ToVector3(), item.scale.ToVector3());
         }
     }
-    public void SaveObjModelsInfo() {//存储Obj模型信息
+    public void SaveModelsInfo()//存储Obj模型和SMPL模型信息
+    {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         var scrollViewContent = objManager.panelModels.GetComponent<PanelModelsController>().scrollViewContent;
+        objModelList = new List<SaveObjModel>();
+        SMPLList = new List<SaveSMPL>();
+        int id = 0;
         foreach (var item in scrollViewContent.GetComponentsInChildren<ScrollViewItemController>()) {
-
+            var t = item.model.transform;
+            var ic = item.model.GetComponent<ItemController>();
+            if (ic.modelType.Equals(ItemController.ModelType.OBJ_MODEL))//是obj模型
+            {
+                objModelList.Add(new SaveObjModel(ic.path, t.position, t.eulerAngles, t.localScale, id));//添加到对应的list中
+            }
+            else if (ic.modelType.Equals(ItemController.ModelType.SMPL_MODEL))//是SMPL模型
+            {
+                List<float> poseParam;
+                List<float> shapeParam;                
+                objManager.panelModels.GetComponent<PanelModelsController>().GetSMPLParam(item.model,out poseParam,out shapeParam);
+                SMPLList.Add(new SaveSMPL(t.position,t.eulerAngles, poseParam,shapeParam, id));
+            }
+            id++;//第几个选项卡
         }
     }
     public static void SaveByBin(string path)
@@ -117,6 +159,8 @@ public class Save
         save.image = new SaveImage(objManager.imagePath, pbic.inputFieldAlpha.text, pbic.inputFieldScale.text);//存储图片路径,透明度和缩放大小
         
         save.SaveContactPointsInfo();//存储接触点信息
+
+        save.SaveModelsInfo();//存储Obj模型和SMPL模型信息
 
         Debug.Log("SaveByBin： ");
         //创建一个二进制格式化程序

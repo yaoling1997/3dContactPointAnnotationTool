@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 
 public class PanelModelsController : MonoBehaviour {
+    public const float SHAPE_BLENDS_SCALE = 5.0f;
     public GameObject scrollViewContent;
     private ObjManager objManager;
     private PanelModel_PointsInformationController panelModel_PointsInformationController;
@@ -102,8 +103,9 @@ public class PanelModelsController : MonoBehaviour {
         {
             item.ButtonDeleteOnClick();
         }
+        objManager.humanModelId = 0;
     }
-    public void SetParam(GameObject model, List<float> poseParam, List<float> shapeParam)//设置pose和shape参数
+    public void SetSMPLParam(GameObject model, List<float> poseParam, List<float> shapeParam)//设置pose和shape参数
     {
         var smr = model.GetComponent<SkinnedMeshRenderer>();
         var _bones = smr.bones;
@@ -129,12 +131,11 @@ public class PanelModelsController : MonoBehaviour {
                 bone.transform.localRotation = Quaternion.Euler(new Vector3(poseParam[id * 3], poseParam[id * 3 + 1], poseParam[id * 3 + 2]));
             }
 
-        }
-        float _shapeBlendsScale = 5.0f;
+        }        
         for (int i = 0; i < 10; i++)
         {
             float pos, neg;
-            float beta = shapeParam[i] / _shapeBlendsScale;
+            float beta = shapeParam[i] / SHAPE_BLENDS_SCALE;
 
             if (beta >= 0)
             {
@@ -151,6 +152,48 @@ public class PanelModelsController : MonoBehaviour {
             smr.SetBlendShapeWeight(i * 2 + 1, neg * 100.0f); // map [0, 1] space to [0, 100]
         }
     }
+    public void GetSMPLParam(GameObject model, out List<float> poseParam, out List<float> shapeParam)//设置pose和shape参数
+    {
+        var smr = model.GetComponent<SkinnedMeshRenderer>();
+        var _bones = smr.bones;
+        var _boneNamePrefix = "";
+        //poseParam = new List<float>();
+        shapeParam = new List<float>();
+        //还原姿势参数
+        foreach (Transform bone in _bones)
+        {
+            if (bone.name.EndsWith("root"))
+            {
+                int index = bone.name.IndexOf("root");
+                _boneNamePrefix = bone.name.Substring(0, index);
+                break;
+            }
+        }
+        var poseParamArray = new float[_bones.Length * 3];
+        foreach (var bone in _bones)
+        {
+            string boneName = bone.name;
+            boneName = boneName.Replace(_boneNamePrefix, "");
+            int id;
+            if (_boneNameToJointIndex.TryGetValue(boneName, out id))
+            {
+                var ea = bone.transform.eulerAngles;
+                poseParamArray[id * 3] = ea.x;
+                poseParamArray[id * 3 + 1] = ea.y;
+                poseParamArray[id * 3 + 2] = ea.z;                
+            }
+        }
+        poseParam = new List<float>(poseParamArray);
+        //还原形状参数
+        for (int i = 0; i < 10; i++)
+        {
+            var pos = smr.GetBlendShapeWeight(i * 2 + 0) / 100;
+            var neg = smr.GetBlendShapeWeight(i * 2 + 1) / 100;
+            float beta = Mathf.Abs(pos) > Mathf.Abs(neg) ? pos : -neg;
+            shapeParam.Add(beta * SHAPE_BLENDS_SCALE);
+        }
+    }
+
     private void AddMainCameraSvi()//添加与主相机对应的svi
     {
         var mainCamera = objManager.mainCamera.gameObject;//得到主相机        
@@ -216,7 +259,7 @@ public class PanelModelsController : MonoBehaviour {
                     shapeParam.Add(float.Parse(lines[i]));
             }
 
-            SetParam(item, poseParam, shapeParam);
+            SetSMPLParam(item, poseParam, shapeParam);
         }
         else
         {

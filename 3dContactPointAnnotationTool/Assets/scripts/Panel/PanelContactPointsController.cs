@@ -19,6 +19,7 @@ public class PanelContactPointsController : MonoBehaviour {
         {
             item.ButtonDeleteOnClick();
         }
+        objManager.contactPointId = 0;
     }
     public void ButtonAddSphereOnClick()
     {

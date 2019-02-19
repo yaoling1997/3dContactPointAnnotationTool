@@ -143,7 +143,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             {
                 model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
                 item.AddComponent<Model3dItemController>();//添加该脚本
-                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL);                
+                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL).path=path;//设置类型和obj文件路径                
                 var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
                 scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
             }

@@ -17,6 +17,7 @@ public class ItemController : MonoBehaviour {
     public bool rotationEditable;//是否可以从面板编辑rotation
     public bool scaleEditable;//是否可以从面板编辑scale
     public bool canDelete;//是否可以删除
+    public string path;//相关文件路径(obj文件路径)
     void Awake(){
         modelType = ModelType.OBJ_MODEL;
         trianglesEditable = true;
@@ -24,6 +25,7 @@ public class ItemController : MonoBehaviour {
         rotationEditable = true;
         scaleEditable = true;
         canDelete = true;
+        path = null;
     }
     // Use this for initialization
     void Start () {
@@ -34,7 +36,7 @@ public class ItemController : MonoBehaviour {
 	void Update () {
 		
 	}
-    public void SetModelType(ModelType modelType) {
+    public ItemController SetModelType(ModelType modelType) {
         this.modelType = modelType;
         trianglesEditable = true;
         positionEditable = true;
@@ -64,6 +66,7 @@ public class ItemController : MonoBehaviour {
                 trianglesEditable = false;
                 break;
         }
+        return this;
     }
     public void CloneAttributes(ItemController ic) {//clone 属性
         modelType = ic.modelType;
