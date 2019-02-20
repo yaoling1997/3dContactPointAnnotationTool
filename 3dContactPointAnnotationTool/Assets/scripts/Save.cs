@@ -102,7 +102,12 @@ public class Save
     public List<SaveContactPoint> contactPointList;
     public List<SaveObjModel> objModelList;//存objModel的列表
     public List<SaveSMPL> SMPLList;//存SMPL模型的列表
-    public void SaveContactPointsInfo()//存储接触点信息
+    public static void SaveCameraInfo(out SaveCamera saveCamera)//存储主相机的位置和角度
+    {
+        var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        saveCamera = new SaveCamera(objManager.mainCamera.transform.position, objManager.mainCamera.transform.eulerAngles);
+    }
+    public static void SaveContactPointsInfo(out List<SaveContactPoint> contactPointList)//存储接触点信息
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         var scrollViewContent = objManager.panelContactPoints.GetComponent<PanelContactPointsController>().scrollViewContent;
@@ -121,7 +126,7 @@ public class Save
             objManager.CreateContactPointSphere(item.position.ToVector3(), item.eulerAngles.ToVector3(), item.scale.ToVector3());
         }
     }
-    public void SaveModelsInfo()//存储Obj模型和SMPL模型信息
+    public static void SaveModelsInfo(out List<SaveObjModel> objModelList,out List<SaveSMPL> SMPLList)//存储Obj模型和SMPL模型信息
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         var scrollViewContent = objManager.panelModels.GetComponent<PanelModelsController>().scrollViewContent;
@@ -175,14 +180,14 @@ public class Save
         //创建save对象并保存当前游戏状态
         Save save = new Save();
 
-        save.mainCamera = new SaveCamera(objManager.mainCamera.transform.position, objManager.mainCamera.transform.eulerAngles);//存储主相机的位置和角度
+        SaveCameraInfo(out save.mainCamera);//存储主相机的位置和角度
 
         var pbic = objManager.panelBackgroundImageControllerScript;
         save.image = new SaveImage(objManager.imagePath, pbic.inputFieldAlpha.text, pbic.inputFieldScale.text);//存储图片路径,透明度和缩放大小
         
-        save.SaveContactPointsInfo();//存储接触点信息
+        SaveContactPointsInfo(out save.contactPointList);//存储接触点信息
 
-        save.SaveModelsInfo();//存储Obj模型和SMPL模型信息
+        SaveModelsInfo(out save.objModelList,out save.SMPLList);//存储Obj模型和SMPL模型信息
 
         Debug.Log("SaveByBin： ");
         //创建一个二进制格式化程序

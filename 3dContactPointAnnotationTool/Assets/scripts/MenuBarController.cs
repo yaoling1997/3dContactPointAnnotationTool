@@ -99,19 +99,59 @@ public class MenuBarController : MonoBehaviour {
         d = MaxP - MinP;
     }
     private void ExportCamera(string path) {
-
+        if (File.Exists(path)) {
+            Save.SaveCamera mainCamera;
+            Save.SaveCameraInfo(out mainCamera);
+            var content = "positon: " + mainCamera.position.ToVector3()+ ",";
+            content += "eulerAngles: "+mainCamera.eulerAngles.ToVector3() + "\r\n";
+            File.WriteAllText(path,content);
+        }
+        else
+        {
+            Debug.Log("no such ExportCamera txt!");
+        }
     }
-    private void ExportSMPL(string path)
+    private void ExportModels(string pathObjModel,string pathSMPL)
     {
+        if (File.Exists(pathObjModel)&&File.Exists(pathSMPL))
+        {
+            List<Save.SaveObjModel> objModelList;
+            List<Save.SaveSMPL> SMPLList;
+            Save.SaveModelsInfo(out objModelList,out SMPLList);
+            string content = "";
+            foreach (var item in objModelList) {
+                content += "path: "+item.path+",";
+                content += "position: " + item.position.ToVector3() + ",";
+                content += "eulerAngles: " + item.eulerAngles.ToVector3() + ",";
+                content += "scale: " + item.scale.ToVector3() + "\r\n";
+            }
+            File.WriteAllText(pathObjModel, content);
+            content = "";
+            foreach (var item in SMPLList) {
 
-    }
-    private void ExportObjModel(string path)
-    {
-
+                //    public SaveVector3 position;
+                //public SaveVector3 eulerAngles;
+                //public List<float> poseParam;
+                //public List<float> shapeParam;
+                content += "position: " + item.position.ToVector3() + ",";
+                content += "eulerAngles: " + item.eulerAngles.ToVector3() + ",";
+                content += "poseParam: ";
+                foreach (var p in item.poseParam)
+                    content += p + " ";
+                content += "shapeParam: ";
+                for (int i = 0; i < item.shapeParam.Count; i++) {
+                    content += item.shapeParam[i] + (i< item.shapeParam.Count-1?" ":"\r\n");
+                }
+            }
+            File.WriteAllText(pathSMPL, content);
+        }
+        else
+        {
+            Debug.Log("no such ExportModels txt!");
+        }
     }
     private void ExportContactPoints(string path)
     {
-        //yield return new WaitForSeconds(1);
         if (File.Exists(path))
         {
             string content = "";
@@ -132,15 +172,9 @@ public class MenuBarController : MonoBehaviour {
                 var p = item.position;
                 var e = item.eulerAngles;
                 var s = item.localScale;
-                content += p.x + " ";
-                content += p.y + " ";
-                content += p.z + " ";//支点
-                content += e.x + " ";
-                content += e.y + " ";
-                content += e.z + " ";//欧拉角
-                content += s.x + " ";
-                content += s.y + " ";
-                content += s.z + "\r\n";//局部轴的缩放
+                content += "position: " +p+",";//支点
+                content += "eulerAngles: " + e + ",";//欧拉角
+                content += "scale: " + s + "\r\n";//局部轴的缩放
                 //保留4位小数
                 //content += System.Math.Round(p.x,4) + " ";
                 //content += System.Math.Round(p.y,4) + " ";
@@ -148,34 +182,34 @@ public class MenuBarController : MonoBehaviour {
                 //content += System.Math.Round(s.x,4) + " ";
                 //content += System.Math.Round(s.y,4) + " ";
                 //content += System.Math.Round(s.z,4) + "\r\n";
-            }            
-            content += "2d:\r\n";
-            foreach (var item in contactPoints.GetComponentsInChildren<Transform>())
-            {
-                if (item.name.Equals(contactPoints.name))
-                    continue;
-                var vertices=GetRealBoundsVertices(item.GetComponent<MeshFilter>());
-                Vector2 p, d;
-                Get2dContactPoint(vertices,out p,out d);
-                Debug.Log("p:"+p);
-                Debug.Log("d:"+d);
-                var realPx = realWidth / nowWidth * p.x;//获得像素为单位的接触点x,y,r
-                var realPy = realHeight / nowHeight * p.y;
-                var realDx = realWidth / nowWidth * d.x;
-                var realDy = realHeight / nowHeight * d.y;
-                Debug.Log("realp:" + new Vector2(realPx, realPy));
-                Debug.Log("reald:" + new Vector2(realDx, realDy));
+            }
+            if (objManager.imagePath != null) {//图片加载了才导出2d接触点
+                content += "2d:\r\n";
+                foreach (var item in contactPoints.GetComponentsInChildren<Transform>())
+                {
+                    if (item.name.Equals(contactPoints.name))
+                        continue;
+                    var vertices=GetRealBoundsVertices(item.GetComponent<MeshFilter>());
+                    Vector2 p, d;
+                    Get2dContactPoint(vertices,out p,out d);
+                    //Debug.Log("p:"+p);
+                    //Debug.Log("d:"+d);
+                    var realPx = realWidth / nowWidth * p.x;//获得像素为单位的接触点x,y,r
+                    var realPy = realHeight / nowHeight * p.y;
+                    var realDx = realWidth / nowWidth * d.x;
+                    var realDy = realHeight / nowHeight * d.y;
+                    //Debug.Log("realp:" + new Vector2(realPx, realPy));
+                    //Debug.Log("reald:" + new Vector2(realDx, realDy));
 
-                content += realPx + " ";
-                content += realPy + " ";
-                content += realDx + " ";
-                content += realDy + "\r\n";
-            }            
+                    content += "positon: "+new Vector2(realPx,realPy) + ",";
+                    content += "scale: "+ new Vector2(realDx, realDy) + "\r\n";
+                }
+            }
             File.WriteAllText(path, content);
         }
         else
         {
-            Debug.Log("no such txt!");
+            Debug.Log("no such ExportContactPoints txt!");
         }
     }
     private void Export(string path) {//导出到path文件夹
@@ -184,19 +218,22 @@ public class MenuBarController : MonoBehaviour {
         string fullRootPath = Path.GetFullPath(path);
         if (string.IsNullOrEmpty(fullRootPath))
             return ;
+        if (!Directory.Exists(path)) {
+            Debug.Log("path is not a directory!");
+            return;
+        }
         path += @"\Export";
         Directory.CreateDirectory(path);
         var cameraFile = path + @"\camera.txt";
         var SMPLFile = path + @"\SMPL.txt";
         var objModelFile = path + @"\objModel.txt";
         var contactPointsFile = path + @"\contactPoints.txt";
-        File.Create(cameraFile);
-        File.Create(SMPLFile);
-        File.Create(objModelFile);
-        File.Create(contactPointsFile);
+        File.Create(cameraFile).Dispose();
+        File.Create(SMPLFile).Dispose();
+        File.Create(objModelFile).Dispose();
+        File.Create(contactPointsFile).Dispose();
         ExportCamera(cameraFile);
-        ExportCamera(SMPLFile);
-        ExportCamera(objModelFile);
+        ExportModels(objModelFile,SMPLFile);
         ExportContactPoints(contactPointsFile);//导出接触点
     }
     public void ButtonImportImageOnClick()//ImportImage按钮被点击
