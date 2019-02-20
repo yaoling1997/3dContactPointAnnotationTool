@@ -149,7 +149,6 @@ public class Save
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         var pmc = objManager.panelModels.GetComponent<PanelModelsController>();
-        var scrollViewContent = objManager.panelModels.GetComponent<PanelModelsController>().scrollViewContent;
         int i = 0,j = 0;
         while (i < objModelList.Count || j < SMPLList.Count) {
             if (j == SMPLList.Count || (i < objModelList.Count && objModelList[i].id < SMPLList[j].id))//加载obj
