@@ -510,6 +510,8 @@ namespace RTEditor
         private void PanCameraBasedOnUserInput()
         {
             //added by me
+            if (WereAnyUIElementsHovered())
+                return;
             var blCameraPan = _cameraPanShortcut.IsActive()||toolBarController.isPanning;
             if (_mouse.WasMouseMovedSinceLastFrame && blCameraPan)
             //
@@ -539,6 +541,8 @@ namespace RTEditor
             if (!_mouse.WasMouseMovedSinceLastFrame) return;
 
             //added by me
+            if (WereAnyUIElementsHovered())
+                return;
             bool orbit = _cameraOrbitShortcut.IsActive()||toolBarController.isOrbiting;
             //
             //bool orbit = _cameraOrbitShortcut.IsActive();
@@ -581,6 +585,10 @@ namespace RTEditor
         /// </summary>
         private void MoveCameraBasedOnUserInput()
         {
+            //added by me
+            if (WereAnyUIElementsHovered())
+                return;
+            //
             float moveAmount = _moveSettings.MoveSpeed * Time.deltaTime;
             moveAmount *= CalculateZoomFactor();
 

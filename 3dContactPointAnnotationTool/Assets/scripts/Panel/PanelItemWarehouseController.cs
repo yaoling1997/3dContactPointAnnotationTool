@@ -45,20 +45,18 @@ public class PanelItemWarehouseController : MonoBehaviour {
         //fb.RootFolder = Environment.SpecialFolder.MyComputer;  //设置默认路径
         fb.ShowNewFolderButton = false;   //创建文件夹按钮关闭
                                           //如果按下弹窗的OK按钮
-        string CompentPath="";
-        string UnityPath;
+        string path="";
         if (fb.ShowDialog() == DialogResult.OK)//接受路径
         {     
-            CompentPath = fb.SelectedPath;
+            path = fb.SelectedPath;
         }
         else//用户取消
         {
             Debug.Log("cancel!");
             return;
         }
-        //将路径中的 \ 替换成 /            由于unity路径的规范必须转
-        UnityPath = CompentPath.Replace(@"\", "/");
-        var subDirectories=GetAllLocalSubDirs(UnityPath);
+        //path = path.Replace(@"\", "/");
+        var subDirectories =GetAllLocalSubDirs(path);
         if (subDirectories == null)//路径不正确或没有文件
             return;
         foreach(var dir in subDirectories)
@@ -111,7 +109,6 @@ public class PanelItemWarehouseController : MonoBehaviour {
         string fullRootPath = Path.GetFullPath(rootPath);
         if (string.IsNullOrEmpty(fullRootPath))
             return null;
-
         string[] dirs = Directory.GetDirectories(fullRootPath);
         if ((dirs == null) || (dirs.Length <= 0))
             return null;

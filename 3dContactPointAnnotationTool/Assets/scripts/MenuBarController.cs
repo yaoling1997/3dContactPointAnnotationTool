@@ -7,6 +7,7 @@ using Hont;
 using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+//using System.Windows.Forms;
 
 public class MenuBarController : MonoBehaviour {
     private ObjManager objManager;    
@@ -38,7 +39,6 @@ public class MenuBarController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(IfMenuBarButtonSelected());
     }
 
     private Vector3[] GetRealBoundsVertices(MeshFilter meshFilter)//将点变换到真实的点（应用位移、旋转、缩放变换）
@@ -98,7 +98,18 @@ public class MenuBarController : MonoBehaviour {
         center = (MinP + MaxP) / 2 + rt.sizeDelta / 2;
         d = MaxP - MinP;
     }
-    private void Export3dContactPoints(string path)
+    private void ExportCamera(string path) {
+
+    }
+    private void ExportSMPL(string path)
+    {
+
+    }
+    private void ExportObjModel(string path)
+    {
+
+    }
+    private void ExportContactPoints(string path)
     {
         //yield return new WaitForSeconds(1);
         if (File.Exists(path))
@@ -167,7 +178,27 @@ public class MenuBarController : MonoBehaviour {
             Debug.Log("no such txt!");
         }
     }
-
+    private void Export(string path) {//导出到path文件夹
+        if (string.IsNullOrEmpty(path))
+            return ;
+        string fullRootPath = Path.GetFullPath(path);
+        if (string.IsNullOrEmpty(fullRootPath))
+            return ;
+        path += @"\Export";
+        Directory.CreateDirectory(path);
+        var cameraFile = path + @"\camera.txt";
+        var SMPLFile = path + @"\SMPL.txt";
+        var objModelFile = path + @"\objModel.txt";
+        var contactPointsFile = path + @"\contactPoints.txt";
+        File.Create(cameraFile);
+        File.Create(SMPLFile);
+        File.Create(objModelFile);
+        File.Create(contactPointsFile);
+        ExportCamera(cameraFile);
+        ExportCamera(SMPLFile);
+        ExportCamera(objModelFile);
+        ExportContactPoints(contactPointsFile);//导出接触点
+    }
     public void ButtonImportImageOnClick()//ImportImage按钮被点击
     {
         CloseFilePanel();
@@ -207,27 +238,24 @@ public class MenuBarController : MonoBehaviour {
             objManager.LoadObj(ofn.file);
         }
     }
-    public void ButtonExportContactPointsOnClick()//ExportContactPoints按钮被点击
-    {        
+    public void ButtonExportOnClick()//Export按钮被点击
+    {
         CloseFilePanel();
-        OpenFileName ofn = new OpenFileName();
-        ofn.structSize = Marshal.SizeOf(ofn);
-        ofn.filter = "文本文件(*.txt)\0*.txt";
-        ofn.file = new string(new char[256]);
-        ofn.maxFile = ofn.file.Length;
-        ofn.fileTitle = new string(new char[64]);
-        ofn.maxFileTitle = ofn.fileTitle.Length;
-        ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
-        ofn.title = "导出接触点";
-        ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
-        if (LocalDialog.GetSaveFileName(ofn))
+        System.Windows.Forms.FolderBrowserDialog fb = new System.Windows.Forms.FolderBrowserDialog();   //创建控件并实例化
+        fb.Description = "选择文件夹";
+        fb.ShowNewFolderButton = false;   //创建文件夹按钮关闭
+                                          //如果按下弹窗的OK按钮
+        string path = "";
+        if (fb.ShowDialog() == System.Windows.Forms.DialogResult.OK)//接受路径
         {
-            if (!File.Exists(ofn.file)) {
-                ofn.file += ".txt";
-                File.Create(ofn.file);
-            }
-            Debug.Log("file: " + ofn.file);
-            Export3dContactPoints(ofn.file);
+            path = fb.SelectedPath;
+            Debug.Log("path: " + path);
+            Export(path);
+        }
+        else//用户取消
+        {
+            Debug.Log("cancel!");
+            return;
         }
     }
     public void ButtonOpenProjectOnClick()//OpenProject按钮被点击

@@ -1970,7 +1970,7 @@ GameObject:
   - component: {fileID: 186232217}
   - component: {fileID: 186232220}
   m_Layer: 5
-  m_Name: ButtonExportContactPoints
+  m_Name: ButtonExport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2036,7 +2036,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1657273026}
-        m_MethodName: ButtonExportContactPointsOnClick
+        m_MethodName: ButtonExportOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10412,7 +10412,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Export Contact Points
+  m_Text: Export
 --- !u!222 &999629448
 CanvasRenderer:
   m_ObjectHideFlags: 0
