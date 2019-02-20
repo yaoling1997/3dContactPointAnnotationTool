@@ -132,18 +132,20 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             Debug.Log("no such image!");
         }
     }
-
-    public void LoadObj(string path)
+    public void LoadObj(string path,Vector3 postion,Vector3 eulerAngles,Vector3 scale)
     {
         //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
         if (File.Exists(path))
         {
-            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path,true);
+            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path, true);//默认只有一个obj对象
             foreach (var item in re)
             {
-                model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d                
+                model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d 
+                item.transform.position = postion;
+                item.transform.eulerAngles = eulerAngles;
+                item.transform.localScale = scale;
                 item.AddComponent<Model3dItemController>();//添加该脚本
-                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL).path=path;//设置类型和obj文件路径                
+                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL).path = path;//设置类型和obj文件路径                
                 var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
                 scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
             }
@@ -153,6 +155,11 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             Debug.Log("no such model!");
         }
     }
+
+    public void LoadObj(string path)
+    {
+        LoadObj(path,Vector3.zero,Vector3.zero,new Vector3(1,1,1));
+    }    
     public GameObject LoadObjToShowItemView(string path)
     {
         //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥

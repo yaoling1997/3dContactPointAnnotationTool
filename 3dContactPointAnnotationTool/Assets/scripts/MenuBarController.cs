@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Hont;
 using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class MenuBarController : MonoBehaviour {
     private ObjManager objManager;    
@@ -22,7 +23,9 @@ public class MenuBarController : MonoBehaviour {
 
     public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
-    
+
+    public List<GameObject> menuBarButtons;
+    public EventSystem eventSystem;
     void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         imageBackground = objManager.imageBackground;
@@ -35,8 +38,8 @@ public class MenuBarController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        Debug.Log(IfMenuBarButtonSelected());
+    }
 
     private Vector3[] GetRealBoundsVertices(MeshFilter meshFilter)//将点变换到真实的点（应用位移、旋转、缩放变换）
     {
@@ -346,5 +349,9 @@ public class MenuBarController : MonoBehaviour {
         var active = !panelStatus.activeSelf;
         panelStatus.SetActive(active);
         WindowStatusToggle.isOn = active;
+    }
+    public bool IfMenuBarButtonSelected() {//是否选中了menuBar上的按钮
+        var s = eventSystem.currentSelectedGameObject;
+        return s != null&& menuBarButtons.Contains(s);
     }
 }

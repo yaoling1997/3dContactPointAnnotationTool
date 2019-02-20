@@ -177,7 +177,7 @@ public class PanelModelsController : MonoBehaviour {
             int id;
             if (_boneNameToJointIndex.TryGetValue(boneName, out id))
             {
-                var ea = bone.transform.eulerAngles;
+                var ea = bone.transform.localEulerAngles;
                 poseParamArray[id * 3] = ea.x;
                 poseParamArray[id * 3 + 1] = ea.y;
                 poseParamArray[id * 3 + 2] = ea.z;                
@@ -203,7 +203,7 @@ public class PanelModelsController : MonoBehaviour {
         var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
         scrollViewItem.GetComponent<ScrollViewItemController>().Init(mainCamera, scrollViewContent, "MainCamera");
     }
-    public void AddHumanModel(string path)//点击添加一个人物模型
+    public GameObject AddHumanModel(string path)//点击添加一个人物模型
     {
         objManager.humanModelId++;
         var item = Instantiate(objManager.humanModel, new Vector3(0, 0, 0), Quaternion.identity);//实例化一个人物模型
@@ -265,6 +265,7 @@ public class PanelModelsController : MonoBehaviour {
         {
             Debug.Log("no such txt!");
         }
+        return item;
     }
 
 }

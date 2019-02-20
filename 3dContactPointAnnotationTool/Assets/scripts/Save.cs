@@ -145,6 +145,29 @@ public class Save
             id++;//第几个选项卡
         }
     }
+    public void LoadModels()//还原Obj模型和SMPL模型
+    {
+        var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        var pmc = objManager.panelModels.GetComponent<PanelModelsController>();
+        var scrollViewContent = objManager.panelModels.GetComponent<PanelModelsController>().scrollViewContent;
+        int i = 0,j = 0;
+        while (i < objModelList.Count || j < SMPLList.Count) {
+            if (j == SMPLList.Count || (i < objModelList.Count && objModelList[i].id < SMPLList[j].id))//加载obj
+            {
+                var info = objModelList[i];
+                objManager.LoadObj(info.path, info.position.ToVector3(), info.eulerAngles.ToVector3(), info.scale.ToVector3());
+                i++;
+            }
+            else {
+                var m=pmc.AddHumanModel(null);
+                var info = SMPLList[j];
+                pmc.SetSMPLParam(m, info.poseParam, info.shapeParam);
+                m.transform.position = info.position.ToVector3();
+                m.transform.eulerAngles = info.eulerAngles.ToVector3();
+                j++;
+            }
+        }
+    }
     public static void SaveByBin(string path)
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();        
@@ -205,7 +228,7 @@ public class Save
 
         var pmc = objManager.panelModels.GetComponent<PanelModelsController>();
         pmc.ButtonClearOnClick();//清空当前模型        
-
+        save.LoadModels();//还原模型
 
         Debug.Log("LoadByBin： ");
     }
