@@ -50,25 +50,25 @@ public class ToolBarController : MonoBehaviour {
 
     private void Zoom()
     {//鼠标左键实现放大缩小视角功能
-        if (Input.GetMouseButtonDown(0) && mouseStatus == 0)//0左键、1右键、2中键
+        if (Input.GetMouseButton(0) && mouseStatus == 0)//0左键、1右键、2中键
             isZooming = true;
-        else if (Input.GetMouseButtonUp(0))
+        else 
             isZooming = false;
     }
 
     private void Orbit()
     {//鼠标左键实现旋转视角功能        
-        if (Input.GetMouseButtonDown(0)&&mouseStatus==1)//0左键、1右键、2中键
+        if (Input.GetMouseButton(0)&&mouseStatus==1)//0左键、1右键、2中键
             isOrbiting = true;
-        else if (Input.GetMouseButtonUp(0))
+        else 
             isOrbiting = false;
     }
 
     private void PanView()
     {//鼠标左键实现平移视图功能     
-        if (Input.GetMouseButtonDown(0) && mouseStatus == 2)//0左键、1右键、2中键
+        if (Input.GetMouseButton(0) && mouseStatus == 2)//0左键、1右键、2中键
             isPanning = true;
-        else if (Input.GetMouseButtonUp(0))
+        else 
             isPanning = false;
     }
 
@@ -125,6 +125,7 @@ public class ToolBarController : MonoBehaviour {
         isVolumeScaling = mouseStatus == 7 ? true : false;
         ChangeStatus();        
     }
+
     public void ButtonTransformOnClick()//transform按钮被点击,更换transform gizmo的形式,global or local
     {
         SetGlobal(!isGlobal);

@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 public class PanelStatusController : MonoBehaviour {
     public GameObject selectedObj;//当前选中的对象
     public Slider sliderTriangles;//控制三角形数量的slider
+    public GameObject panelEditStatus;//另一个编辑status的面板
+
     private EventSystem eventSystem;
     private Dictionary<int, GameObject> dicInputFields;//面板上所有inputFields
     private int dicId;//选中字典中第几个对象
@@ -189,4 +191,46 @@ public class PanelStatusController : MonoBehaviour {
         }
         UpdateInputFieldValues();
     }
+    public void ButtonResetOnClick()//Reset按钮被点击
+    {
+        panelEditStatus.SetActive(false);
+        if (selectedObj == null)
+            return;
+        ButtonResetPositionOnClick();
+        ButtonResetRotationOnClick();
+        ButtonResetScaleOnClick();
+    }
+    public void ButtonResetPositionOnClick()//ResetPosition按钮被点击
+    {
+        panelEditStatus.SetActive(false);
+        if (selectedObj == null)
+            return;
+        //foreach (var i in new string[] {"X","Y","Z" }) {
+        //    transform.Find("PanelStatusItemPos"+i).GetComponentInChildren<InputField>().text="0";
+        //}
+        selectedObj.transform.position = Vector3.zero;
+    }
+    public void ButtonResetRotationOnClick()//ResetRotation按钮被点击
+    {
+        panelEditStatus.SetActive(false);
+        if (selectedObj == null)
+            return;
+        //foreach (var i in new string[] { "X", "Y", "Z" })
+        //{
+        //    transform.Find("PanelStatusItemRot" + i).GetComponentInChildren<InputField>().text = "0";
+        //}
+        selectedObj.transform.eulerAngles = Vector3.zero;
+    }
+    public void ButtonResetScaleOnClick()//ResetScale按钮被点击
+    {
+        panelEditStatus.SetActive(false);
+        if (selectedObj == null)
+            return;
+        //foreach (var i in new string[] { "X", "Y", "Z" })
+        //{
+        //    transform.Find("PanelStatusItemScale" + i).GetComponentInChildren<InputField>().text = "1";
+        //}
+        selectedObj.transform.localScale = new Vector3(1,1,1);
+    }
+
 }
