@@ -17,6 +17,7 @@ public class MenuBarController : MonoBehaviour {
     private Vector3 mainCameraPosition;
     private Quaternion mainCameraRotation;
     private string saveProjectPath;//存储工程的路径
+    private int exportPrecision;//导出的数据精确到小数点后几位
 
     public Toggle WindowModelsToggle;
     public Toggle WindowContactPointsToggle;
@@ -26,6 +27,7 @@ public class MenuBarController : MonoBehaviour {
     public GameObject editPanel;//Edit面板
 
     public List<GameObject> menuBarButtons;
+    public Dropdown dropdownExportPrecision;//导出的数据精确到小数点后几位
     public EventSystem eventSystem;
     void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
@@ -93,17 +95,29 @@ public class MenuBarController : MonoBehaviour {
             MinP = GetMinVector2(MinP, lp);
             MaxP = GetMaxVector2(MaxP, lp);
         }
-        Debug.Log("MinP:"+MinP);
-        Debug.Log("MaxP:" + MaxP);
+        //Debug.Log("MinP:"+MinP);
+        //Debug.Log("MaxP:" + MaxP);
         center = (MinP + MaxP) / 2 + rt.sizeDelta / 2;
         d = MaxP - MinP;
+    }
+    public string FloatToString(float v, int precision) {
+        return System.Math.Round(v,precision).ToString();
+    }
+    public string Vector2ToString(Vector2 v, int precision)
+    {//将Vector3转化为string基于精度
+        var re = string.Format("({0}, {1})", FloatToString(v.x, precision), FloatToString(v.y, precision));
+        return re;
+    }
+    public string Vector3ToString(Vector3 v,int precision) {//将Vector3转化为string基于精度
+        var re = string.Format("({0}, {1}, {2})", FloatToString(v.x, precision), FloatToString(v.y, precision), FloatToString(v.z, precision));
+        return re;
     }
     private void ExportCamera(string path) {
         if (File.Exists(path)) {
             Save.SaveCamera mainCamera;
             Save.SaveCameraInfo(out mainCamera);
-            var content = "positon: " + mainCamera.position.ToVector3()+ ",";
-            content += "eulerAngles: "+mainCamera.eulerAngles.ToVector3() + "\r\n";
+            var content = "positon: " + Vector3ToString(mainCamera.position.ToVector3(),exportPrecision)+ ", ";
+            content += "eulerAngles: "+ Vector3ToString(mainCamera.eulerAngles.ToVector3(), exportPrecision) + "\r\n";
             File.WriteAllText(path,content);
         }
         else
@@ -120,27 +134,22 @@ public class MenuBarController : MonoBehaviour {
             Save.SaveModelsInfo(out objModelList,out SMPLList);
             string content = "";
             foreach (var item in objModelList) {
-                content += "path: "+item.path+",";
-                content += "position: " + item.position.ToVector3() + ",";
-                content += "eulerAngles: " + item.eulerAngles.ToVector3() + ",";
-                content += "scale: " + item.scale.ToVector3() + "\r\n";
+                content += "path: "+item.path+", ";
+                content += "position: " + Vector3ToString(item.position.ToVector3(), exportPrecision) + ", ";
+                content += "eulerAngles: " + Vector3ToString(item.eulerAngles.ToVector3(), exportPrecision) + ", ";
+                content += "scale: " + Vector3ToString(item.scale.ToVector3(), exportPrecision) + "\r\n";
             }
             File.WriteAllText(pathObjModel, content);
             content = "";
             foreach (var item in SMPLList) {
-
-                //    public SaveVector3 position;
-                //public SaveVector3 eulerAngles;
-                //public List<float> poseParam;
-                //public List<float> shapeParam;
-                content += "position: " + item.position.ToVector3() + ",";
-                content += "eulerAngles: " + item.eulerAngles.ToVector3() + ",";
-                content += "poseParam: ";
+                content += "position: " + Vector3ToString(item.position.ToVector3(), exportPrecision) + ", ";
+                content += "eulerAngles: " + Vector3ToString(item.eulerAngles.ToVector3(), exportPrecision) + ", ";
+                content += "poseParam(localEulerAngles): ";
                 foreach (var p in item.poseParam)
-                    content += p + " ";
-                content += "shapeParam: ";
+                    content += FloatToString(p,exportPrecision) + " ";
+                content += ", shapeParam: ";
                 for (int i = 0; i < item.shapeParam.Count; i++) {
-                    content += item.shapeParam[i] + (i< item.shapeParam.Count-1?" ":"\r\n");
+                    content += FloatToString(item.shapeParam[i], exportPrecision) + (i< item.shapeParam.Count-1?" ":"\r\n");
                 }
             }
             File.WriteAllText(pathSMPL, content);
@@ -172,16 +181,9 @@ public class MenuBarController : MonoBehaviour {
                 var p = item.position;
                 var e = item.eulerAngles;
                 var s = item.localScale;
-                content += "position: " +p+",";//支点
-                content += "eulerAngles: " + e + ",";//欧拉角
-                content += "scale: " + s + "\r\n";//局部轴的缩放
-                //保留4位小数
-                //content += System.Math.Round(p.x,4) + " ";
-                //content += System.Math.Round(p.y,4) + " ";
-                //content += System.Math.Round(p.z,4) + " ";
-                //content += System.Math.Round(s.x,4) + " ";
-                //content += System.Math.Round(s.y,4) + " ";
-                //content += System.Math.Round(s.z,4) + "\r\n";
+                content += "position: " +Vector3ToString(p,exportPrecision)+", ";//支点
+                content += "eulerAngles: " + Vector3ToString(e, exportPrecision) + ", ";//欧拉角
+                content += "scale: " + Vector3ToString(s, exportPrecision) + "\r\n";//局部轴的缩放
             }
             if (objManager.imagePath != null) {//图片加载了才导出2d接触点
                 content += "2d:\r\n";
@@ -201,8 +203,8 @@ public class MenuBarController : MonoBehaviour {
                     //Debug.Log("realp:" + new Vector2(realPx, realPy));
                     //Debug.Log("reald:" + new Vector2(realDx, realDy));
 
-                    content += "positon: "+new Vector2(realPx,realPy) + ",";
-                    content += "scale: "+ new Vector2(realDx, realDy) + "\r\n";
+                    content += "positon: "+Vector2ToString(new Vector2(realPx,realPy),exportPrecision) + ", ";
+                    content += "scale: "+ Vector2ToString(new Vector2(realDx, realDy),exportPrecision) + "\r\n";
                 }
             }
             File.WriteAllText(path, content);
@@ -349,7 +351,9 @@ public class MenuBarController : MonoBehaviour {
             Save.SaveByBin(saveProjectPath);
         }        
     }
-
+    public void DropdownExportPrecisionOnValueChanged() {
+        exportPrecision = dropdownExportPrecision.value;//第几项就是精确到第几位
+    }
     public void ButtonExitOnClick()//Exit按钮被点击
     {
 #if UNITY_EDITOR
