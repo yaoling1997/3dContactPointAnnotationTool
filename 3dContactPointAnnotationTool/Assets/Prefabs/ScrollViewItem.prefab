@@ -223,6 +223,7 @@ MonoBehaviour:
   par: {fileID: 0}
   selectedColor: {r: 0, g: 0, b: 0, a: 0}
   unselectedColor: {r: 0, g: 0, b: 0, a: 0}
+  modelType: 
 --- !u!114 &114585782623344304
 MonoBehaviour:
   m_ObjectHideFlags: 1

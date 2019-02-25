@@ -233,11 +233,28 @@ public class PanelModelsController : MonoBehaviour {
             }
             else//大部分数据都需要镜像对称一下,所以简单粗暴地把scaleX设置为-1,有可能会造成选项卡左右颠倒
             {
-                o.transform.localScale = new Vector3(-o.transform.localScale.x, o.transform.localScale.y, o.transform.localScale.z);
+                o.transform.localScale = new Vector3(-o.transform.localScale.x, o.transform.localScale.y, o.transform.localScale.z);                
+            }
+            var sviName = "";//设置svi显示的名字,仅仅是显示的
+            for (int i = 6; i < o.name.Length; i++)
+            {
+                sviName += o.name[i];//只取m_avg_后面的部分显示
+            }
+            if (sviName[0] == 'L')
+            {
+                var a = sviName.ToCharArray();
+                a[0] = 'R';
+                sviName = new string(a);
+            }
+            else if (sviName[0] == 'R')
+            {
+                var a = sviName.ToCharArray();
+                a[0] = 'L';
+                sviName = new string(a);
             }
             //添加了ItemController后再添加对应的scrollViewItem
             var svi = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);//创建对应的scrollViewItem
-            svi.GetComponent<ScrollViewItemController>().Init(o.gameObject, scrollViewContent);
+            svi.GetComponent<ScrollViewItemController>().Init(o.gameObject, scrollViewContent, sviName);
             while (par.GetComponent<ScrollViewItemController>().model != o.parent.gameObject)
             {
                 par = par.GetComponent<ScrollViewItemController>().par;
@@ -249,16 +266,18 @@ public class PanelModelsController : MonoBehaviour {
         if (File.Exists(path))
         {
             var lines = File.ReadAllLines(path);
+            var cameraPos = new Vector3(float.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
+            objManager.mainCamera.transform.position = cameraPos;
+            objManager.mainCamera.transform.LookAt(Vector3.zero);
+            objManager.mainCamera.transform.position = objManager.mainCamera.transform.position + objManager.mainCamera.transform.forward * 30;
             var poseParam = new List<float>();
             var shapeParam = new List<float>();
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 3; i < 75; i++)
             {
-                if (i < 72)
                     poseParam.Add(float.Parse(lines[i]) / Mathf.PI * 180);
-                else
-                    shapeParam.Add(float.Parse(lines[i]));
             }
-
+            for (int i = 75 ; i < 85 ; i++)
+                shapeParam.Add(float.Parse(lines[i]));
             SetSMPLParam(item, poseParam, shapeParam);
         }
         else

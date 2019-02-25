@@ -208,7 +208,10 @@ public class PanelStatusController : MonoBehaviour {
         //foreach (var i in new string[] {"X","Y","Z" }) {
         //    transform.Find("PanelStatusItemPos"+i).GetComponentInChildren<InputField>().text="0";
         //}
-        selectedObj.transform.position = Vector3.zero;
+        if (selectedObj.GetComponent<Camera>() != null)
+            selectedObj.transform.position = new Vector3(0,0,-10);
+        else 
+            selectedObj.transform.position = Vector3.zero;
     }
     public void ButtonResetRotationOnClick()//ResetRotation按钮被点击
     {
