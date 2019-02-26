@@ -78,7 +78,9 @@ namespace Hont
                 }
                 else if (currentLine.Contains("f "))
                 {
+                    //Debug.Log("currentLine:"+ currentLine);
                     var splitInfo = currentLine.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    //Debug.Log("splitInfo length:"+splitInfo.Length);                    
                     var isQuad = splitInfo.Length > 4;
                     var face1 = splitInfo[1].Split('/');
                     var face2 = splitInfo[2].Split('/');
@@ -86,10 +88,10 @@ namespace Hont
                     var face4 = isQuad ? splitInfo[4].Split('/') : null;
                     var face = new Face();
                     face.Points = new FacePoint[4];
-                    face.Points[0] = new FacePoint() { VertexIndex = int.Parse(face1[0]), TextureIndex = 1 < face1.Length?int.Parse(face1[1]):0, NormalIndex = 2 < face1.Length ? int.Parse(face1[2]):0 };
-                    face.Points[1] = new FacePoint() { VertexIndex = int.Parse(face2[0]), TextureIndex = 1 < face2.Length?int.Parse(face2[1]):0, NormalIndex = 2 < face2.Length ? int.Parse(face2[2]):0 };
-                    face.Points[2] = new FacePoint() { VertexIndex = int.Parse(face3[0]), TextureIndex = 1 < face3.Length?int.Parse(face3[1]):0, NormalIndex = 2 < face3.Length ? int.Parse(face3[2]):0 };
-                    face.Points[3] = isQuad ? new FacePoint() { VertexIndex = int.Parse(face4[0]), TextureIndex = 1 < face4.Length ? int.Parse(face4[1]):0, NormalIndex = 2 < face4.Length ? int.Parse(face4[2]):0 } : default(FacePoint);
+                    face.Points[0] = new FacePoint() { VertexIndex = StringToInt(face1[0]), TextureIndex = 1 < face1.Length? StringToInt(face1[1]):0, NormalIndex = 2 < face1.Length ? StringToInt(face1[2]):0 };
+                    face.Points[1] = new FacePoint() { VertexIndex = StringToInt(face2[0]), TextureIndex = 1 < face2.Length? StringToInt(face2[1]):0, NormalIndex = 2 < face2.Length ? StringToInt(face2[2]):0 };
+                    face.Points[2] = new FacePoint() { VertexIndex = StringToInt(face3[0]), TextureIndex = 1 < face3.Length? StringToInt(face3[1]):0, NormalIndex = 2 < face3.Length ? StringToInt(face3[2]):0 };
+                    face.Points[3] = isQuad ? new FacePoint() { VertexIndex = StringToInt(face4[0]), TextureIndex = 1 < face4.Length ? StringToInt(face4[1]):0, NormalIndex = 2 < face4.Length ? StringToInt(face4[2]):0 } : default(FacePoint);
                     face.IsQuad = isQuad;
 
                     faceList.Add(face);
@@ -135,16 +137,29 @@ namespace Hont
             VertexNormalArr = vertexNormalList.ToArray();
             VertexTextureArr = vertexTextureList.ToArray();
             FaceArr = faceList.ToArray();
-            //把整个obj文件当做单个对象
-            var fbl = new List<int>();
-            var nl = new List<string>();
-            fbl.Add(objFaceBeginList[0]);
-            nl.Add(objNameList[objNameList.Count-1]);
-            ObjFaceBeginArr = fbl.ToArray();
-            ObjNameArr = nl.ToArray();
-            //
-            //ObjFaceBeginArr = objFaceBeginList.ToArray();
-            //ObjNameArr = objNameList.ToArray();
+            ////把整个obj文件当做单个对象
+            //var fbl = new List<int>();
+            //var nl = new List<string>();
+            //fbl.Add(objFaceBeginList[0]);
+            //nl.Add(objNameList[objNameList.Count-1]);
+            //ObjFaceBeginArr = fbl.ToArray();
+            //ObjNameArr = nl.ToArray();
+            ////
+            ObjFaceBeginArr = objFaceBeginList.ToArray();
+            ObjNameArr = objNameList.ToArray();
+        }
+        public int StringToInt(string s) {
+            if (s == null || s.Length == 0)
+                return 0;
+            int re = 0;
+            try
+            {
+                re= int.Parse(s);
+            }
+            catch {
+                return 0;
+            }
+            return re;
         }
     }
 }

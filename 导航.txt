@@ -136,3 +136,6 @@ https://www.cnblogs.com/yoyocool/p/8527111.html
 
 system.io
 https://docs.microsoft.com/zh-cn/dotnet/api/system.io.directory?redirectedfrom=MSDN&view=netframework-4.7.2
+
+C#中Convert.ToInt32、int.TryParse、(int)和int.Parse四者的区别
+https://www.cnblogs.com/walle2014/p/3662865.html

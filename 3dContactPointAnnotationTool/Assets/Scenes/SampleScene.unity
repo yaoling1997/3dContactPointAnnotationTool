@@ -6409,6 +6409,8 @@ MonoBehaviour:
   panelBackgroundImageControllerScript: {fileID: 1268355501}
   panelItemWareHouseController: {fileID: 393727112}
   panelModel_PointsInformationController: {fileID: 905811160}
+  emptyGameObject: {fileID: 1937882135960868, guid: aef926fc012e533479f24d1886cca676,
+    type: 2}
   imagePath: 
 --- !u!4 &478237358
 Transform:

@@ -166,11 +166,15 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
         if (File.Exists(path))
         {
-            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path, false);
-            if (re.Count == 0)
+            var objs = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path, false);
+            if (objs.Count == 0)
                 return null;
-            re[0].layer = Macro.SHOW_ITEM;
-            return re[0];
+            var re= new GameObject();
+            foreach (var item in objs) {
+                item.transform.SetParent(re.transform);
+                item.layer = Macro.SHOW_ITEM;
+            }            
+            return re;
         }
         else
         {

@@ -21,7 +21,9 @@ namespace Hont
             var sourceVertexNormalArr = objFormatAnalyzer.VertexNormalArr;
             var sourceUVArr = objFormatAnalyzer.VertexTextureArr;
             var faceArr = objFormatAnalyzer.FaceArr;
-
+            Debug.Log("vertex num:"+ sourceVertexArr.Length);
+            Debug.Log("face num:" + faceArr.Length);
+            Debug.Log("length:" + length);
             for (int objId = 0; objId < length; objId++)
             {
                 var go = new GameObject();
@@ -38,6 +40,8 @@ namespace Hont
                 int faceEndId = faceArr.Length;//左闭右开
                 if (objId < length - 1)
                     faceEndId = objFormatAnalyzer.ObjFaceBeginArr[objId + 1];
+                Debug.Log("faceBeginId: "+faceBeginId);
+                Debug.Log("faceEndId: " + faceEndId);
                 int triangleNum = 0;
                 for (int i = faceBeginId; i < faceEndId; i++)
                     if (faceArr[i].IsQuad)

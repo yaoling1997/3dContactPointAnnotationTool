@@ -6,3 +6,4 @@ content里放的内容是有限的
 拖动status里的text可以改变对应inputField的值
 一次性缩放三个轴：按住shift
 将物体移动到另一个物体上，按住v或space、space+x、space+z
+一个obj模型的部件的点数和面数不宜过多，否则会加载不全
