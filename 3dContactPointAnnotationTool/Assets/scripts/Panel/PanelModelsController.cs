@@ -269,7 +269,7 @@ public class PanelModelsController : MonoBehaviour {
             var cameraPos = new Vector3(float.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
             objManager.mainCamera.transform.position = cameraPos;
             objManager.mainCamera.transform.LookAt(Vector3.zero);
-            objManager.mainCamera.transform.position = objManager.mainCamera.transform.position + objManager.mainCamera.transform.forward * 30;
+            objManager.mainCamera.transform.position = objManager.mainCamera.transform.position + objManager.mainCamera.transform.forward * 20;
             var poseParam = new List<float>();
             var shapeParam = new List<float>();
             for (int i = 3; i < 75; i++)

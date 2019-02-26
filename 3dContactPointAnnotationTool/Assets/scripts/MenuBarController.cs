@@ -22,6 +22,7 @@ public class MenuBarController : MonoBehaviour {
     public Toggle WindowModelsToggle;
     public Toggle WindowContactPointsToggle;
     public Toggle WindowStatusToggle;
+    public Toggle WindowXZGridToggle;
 
     public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
@@ -418,6 +419,13 @@ public class MenuBarController : MonoBehaviour {
         var active = !panelStatus.activeSelf;
         panelStatus.SetActive(active);
         WindowStatusToggle.isOn = active;
+    }
+    public void ButtonXZGridOnClick()//Status按钮被点击
+    {
+        var XZGrid = objManager.runtimeEditorApplication.XZGrid;
+        var active = !XZGrid.IsVisible;
+        XZGrid.IsVisible=active;
+        WindowXZGridToggle.isOn = active;
     }
     public bool IfMenuBarButtonSelected() {//是否选中了menuBar上的按钮
         var s = eventSystem.currentSelectedGameObject;

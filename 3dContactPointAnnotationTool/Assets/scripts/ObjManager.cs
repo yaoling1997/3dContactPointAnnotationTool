@@ -37,8 +37,9 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Sprite spriteTriangleRight;//向右三角形sprite
     public Sprite spriteTriangleDown;//向下三角形sprite
     
-    public Button buttonGCP;    
+    public Button buttonGCP;
 
+    public RuntimeEditorApplication runtimeEditorApplication;
     public EditorObjectSelection editorObjectSelection;
     public GameObject imageBackground;//背景图片,人和物体的交互图片作为背景
     public PanelBackgroundImageController panelBackgroundImageControllerScript;//控制背景图片的panel的script
