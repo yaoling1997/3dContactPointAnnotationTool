@@ -147,10 +147,23 @@ public class ScrollViewItemController : MonoBehaviour {
         }
         if (model.transform.parent==objManager.model3d)
             objManager.model3d.GetComponent<Model3dController>().RemoveSon();//删除一个大模型
-        if (par != null)//有父亲
-            par.GetComponent<ScrollViewItemController>().RemoveSon(gameObject);
-        Destroy(model);//删除item对应模型
-        Destroy(gameObject);//删除ScrollViewItem
+        //if (par != null)//有父亲
+        //    par.GetComponent<ScrollViewItemController>().RemoveSon(gameObject);
+        //Destroy(model);//删除item对应模型
+        //Destroy(gameObject);//删除ScrollViewItem
+        model.SetActive(false);//删除item对应模型
+        gameObject.SetActive(false);//删除ScrollViewItem
+    }
+    public void Restore() {//恢复该scrollView及其子孙scrollView
+        var sonsCopy = new List<GameObject>(sons);
+        foreach (var item in sonsCopy)
+        {
+            item.GetComponent<ScrollViewItemController>().Restore();
+        }
+        if (model.transform.parent == objManager.model3d)
+            objManager.model3d.GetComponent<Model3dController>().AddSon(model);//添加一个大模型
+        model.SetActive(true);//恢复item对应模型
+        gameObject.SetActive(true);//恢复ScrollViewItem
     }
     public void SetModelColor(Color color)//设置模型颜色
     {

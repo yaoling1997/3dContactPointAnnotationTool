@@ -42,11 +42,14 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Button buttonGCP;
 
     public RuntimeEditorApplication runtimeEditorApplication;
+    public EditorGizmoSystem editorGizmoSystem;
     public EditorObjectSelection editorObjectSelection;
+    public EditorUndoRedoSystem editorUndoRedoSystem;
     public GameObject imageBackground;//背景图片,人和物体的交互图片作为背景
     public PanelBackgroundImageController panelBackgroundImageControllerScript;//控制背景图片的panel的script
     public PanelItemWarehouseController panelItemWareHouseController;//控制ItemWareHouse的panel的script
     public PanelModel_PointsInformationController panelModel_PointsInformationController;
+    public PanelSettingController panelSettingController;
 
     public string imagePath;//加载图片的路径
 
@@ -242,5 +245,15 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         }
         return new Bounds((MinP + MaxP) / 2, MaxP - MinP);
     }
-
+    public float StringToFloat(string s) {
+        float re = 0;
+        try
+        {
+            re = float.Parse(s);
+        }
+        catch {
+            return 0;
+        }
+        return re;
+    }
 }

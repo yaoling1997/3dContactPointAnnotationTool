@@ -245,6 +245,7 @@
      <Compile Include="Assets\scripts\Panel\PanelStatusController.cs" />
      <Compile Include="Assets\scripts\PanelCameraController.cs" />
      <Compile Include="Assets\scripts\PanelCameraControllerDragChangeValue.cs" />
+     <Compile Include="Assets\scripts\PanelSettingController.cs" />
      <Compile Include="Assets\scripts\ReferenceImageController.cs" />
      <Compile Include="Assets\scripts\ResizePanel.cs" />
      <Compile Include="Assets\scripts\Save.cs" />

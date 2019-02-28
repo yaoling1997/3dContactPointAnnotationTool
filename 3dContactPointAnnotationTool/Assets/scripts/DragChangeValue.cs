@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IDragHandler
+public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     public float speed = 0.1f;//改变值的速率
     public InputField inputField;
@@ -15,13 +15,49 @@ public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IDragHandler
     int secondScreenWidth = 0;//副屏宽
     int secondScreenHeight = 0;//副屏高
 
+    private ObjManager objManager;
+    private float pointerDownValue;//鼠标按下时InputField的值
+    private float pointerUpValue;//鼠标抬起时InputField的值
+
     void Awake()
     {
+        objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         SetScreenSize();
     }
     public void OnPointerDown(PointerEventData data)
     {
-        //rectTransformPanel.SetAsLastSibling();//把该组件放到UI最前面
+        pointerDownValue=objManager.StringToFloat(inputField.text);        
+    }
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        pointerUpValue = objManager.StringToFloat(inputField.text);
+        var v = pointerUpValue - pointerDownValue;
+        var panelStatusItemName = inputField.transform.parent.name;
+        inputField.text = pointerDownValue.ToString();//还原位置
+        if (panelStatusItemName.Equals("PanelStatusItemPosX"))
+        {
+            objManager.editorGizmoSystem.TranslationGizmo.TranslateControlledObjects(Vector3.right*v);
+        }
+        else if (panelStatusItemName.Equals("PanelStatusItemPosY"))
+        {
+            objManager.editorGizmoSystem.TranslationGizmo.TranslateControlledObjects(Vector3.up * v);
+        }
+        else if (panelStatusItemName.Equals("PanelStatusItemPosZ"))
+        {
+            objManager.editorGizmoSystem.TranslationGizmo.TranslateControlledObjects(Vector3.forward * v);
+        }
+        else if (panelStatusItemName.Equals("PanelStatusItemRotX"))
+        {
+        }
+        else if (panelStatusItemName.Equals("PanelStatusItemRotY"))
+        {
+        }
+        else if (panelStatusItemName.Equals("PanelStatusItemRotZ"))
+        {
+        }
+        else if (panelStatusItemName.Equals("PanelStatusItemScaleX"))
+        {
+        }
     }
 
     public void OnDrag(PointerEventData data)
@@ -33,8 +69,8 @@ public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IDragHandler
         //Debug.Log("axisY: " + axisY);
         if (inputField.interactable)
             inputField.text = (float.Parse(inputField.text) + (axisX + axisY) * speed).ToString();
-        Debug.Log("ScreenSize: " + new Vector2(primaryScreenWidth, primaryScreenHeight));
-        Debug.Log("mouse pos: " + Input.mousePosition);
+        //Debug.Log("ScreenSize: " + new Vector2(primaryScreenWidth, primaryScreenHeight));
+        //Debug.Log("mouse pos: " + Input.mousePosition);
         SetScreenState();//
         UpdateCursorPos();
     }
@@ -116,4 +152,5 @@ public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IDragHandler
                 SetCursorPos(primaryScreenWidth + 11, posY);
         }
     }
+
 }

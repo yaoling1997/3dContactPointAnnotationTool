@@ -79,7 +79,12 @@ namespace RTEditor
                 // Enable the objects
                 foreach (var deletedObject in _deletedObjects)
                 {
-                    deletedObject.SetActive(true);
+                    //deletedObject.SetActive(true);
+                    //added by me
+                    var c = deletedObject.GetComponent<CorrespondingScrollViewItem>();
+                    if (c != null && c.sviController != null)
+                        c.sviController.Restore();
+                    //
                 }
 
                 // Inform the selection about the Undo event
@@ -98,7 +103,13 @@ namespace RTEditor
                 // Disable the objects
                 foreach (var deletedObject in _deletedObjects)
                 {
-                    deletedObject.SetActive(false);
+                    //deletedObject.SetActive(false);
+                    //added by me
+                    var c = deletedObject.GetComponent<CorrespondingScrollViewItem>();
+                    if (c != null && c.sviController != null)
+                        c.sviController.Delete();
+                    //
+
                 }
 
                 // Inform the selection about the Redo event

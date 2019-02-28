@@ -1860,7 +1860,11 @@ namespace RTEditor
         /// <summary>
         /// Translates all controlled objects using the specified translation vector.
         /// </summary>
-        private void TranslateControlledObjects(Vector3 translationVector)
+        /// 
+        //added by me
+        public void TranslateControlledObjects(Vector3 translationVector)
+        //
+        //private void TranslateControlledObjects(Vector3 translationVector)
         {
             if (ControlledObjects != null)
             {

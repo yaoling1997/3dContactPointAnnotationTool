@@ -16,8 +16,7 @@ public class MenuBarController : MonoBehaviour {
     private Camera mainCamera;
     private Vector3 mainCameraPosition;
     private Quaternion mainCameraRotation;
-    private string saveProjectPath;//存储工程的路径
-    private int exportPrecision;//导出的数据精确到小数点后几位
+    private string saveProjectPath;//存储工程的路径    
 
     public Toggle WindowXZGridToggle;
     public Toggle WindowCameraControllerToggle;
@@ -25,8 +24,7 @@ public class MenuBarController : MonoBehaviour {
     public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
 
-    public List<GameObject> menuBarButtons;
-    public Dropdown dropdownExportPrecision;//导出的数据精确到小数点后几位
+    public List<GameObject> menuBarButtons;    
     public EventSystem eventSystem;
     void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
@@ -117,6 +115,7 @@ public class MenuBarController : MonoBehaviour {
         if (File.Exists(path)) {
             Save.SaveCamera mainCamera;
             Save.SaveCameraInfo(out mainCamera);
+            var exportPrecision=objManager.panelSettingController.exportPrecision;
             var content = "positon: " + Vector3ToString(mainCamera.position.ToVector3(),exportPrecision)+ ", ";
             content += "eulerAngles: "+ Vector3ToString(mainCamera.eulerAngles.ToVector3(), exportPrecision) + "\r\n";
             File.WriteAllText(path,content);
@@ -133,6 +132,7 @@ public class MenuBarController : MonoBehaviour {
             List<Save.SaveObjModel> objModelList;
             List<Save.SaveSMPL> SMPLList;
             Save.SaveModelsInfo(out objModelList,out SMPLList);
+            var exportPrecision = objManager.panelSettingController.exportPrecision;
             string content = "";
             foreach (var item in objModelList) {
                 content += "path: "+item.path+ "\r\n";
@@ -175,6 +175,7 @@ public class MenuBarController : MonoBehaviour {
             var realHeight = image.mainTexture.height;//真实图像像素高
             var nowWidth = imageRt.x;//工具中显示的图像的宽
             var nowHeight = imageRt.y;//工具中显示的图像的高
+            var exportPrecision = objManager.panelSettingController.exportPrecision;
             Debug.Log("width:" + realWidth);
             Debug.Log("height:" + realHeight);
             content += "3d:\r\n";
@@ -354,9 +355,6 @@ public class MenuBarController : MonoBehaviour {
             saveProjectPath = ofn.file;//更新保存项目的存储路径
             Save.SaveByBin(saveProjectPath);
         }        
-    }
-    public void DropdownExportPrecisionOnValueChanged() {
-        exportPrecision = dropdownExportPrecision.value;//第几项就是精确到第几位
     }
     public void ButtonExitOnClick()//Exit按钮被点击
     {

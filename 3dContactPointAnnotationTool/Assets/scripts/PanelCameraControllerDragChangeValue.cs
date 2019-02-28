@@ -29,7 +29,7 @@ public class PanelCameraControllerDragChangeValue : MonoBehaviour, IPointerDownH
     {
         //Debug.Log("on drag");
         var axisX = Input.GetAxis("Mouse X");
-        var axisY = Input.GetAxis("Mouse Y");
+        //var axisY = Input.GetAxis("Mouse Y");
         //Debug.Log("axisX: "+axisX);
         //Debug.Log("axisY: " + axisY);
         var t = objManager.mainCamera.transform;
