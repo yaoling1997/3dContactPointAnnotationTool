@@ -19,10 +19,8 @@ public class MenuBarController : MonoBehaviour {
     private string saveProjectPath;//存储工程的路径
     private int exportPrecision;//导出的数据精确到小数点后几位
 
-    public Toggle WindowModelsToggle;
-    public Toggle WindowContactPointsToggle;
-    public Toggle WindowStatusToggle;
     public Toggle WindowXZGridToggle;
+    public Toggle WindowCameraControllerToggle;
 
     public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
@@ -37,7 +35,9 @@ public class MenuBarController : MonoBehaviour {
         mainCamera = objManager.mainCamera;
         mainCameraPosition = mainCamera.transform.position;//记录初始的主相机位置和旋转参数
         mainCameraRotation = mainCamera.transform.rotation;
-        saveProjectPath = null;        
+        saveProjectPath = null;
+        WindowXZGridToggle.isOn = objManager.runtimeEditorApplication.XZGrid.IsVisible;
+        WindowCameraControllerToggle.isOn = objManager.panelCameraController.activeSelf;
     }
 	
 	// Update is called once per frame
@@ -135,10 +135,13 @@ public class MenuBarController : MonoBehaviour {
             Save.SaveModelsInfo(out objModelList,out SMPLList);
             string content = "";
             foreach (var item in objModelList) {
-                content += "path: "+item.path+", ";
-                content += "position: " + Vector3ToString(item.position.ToVector3(), exportPrecision) + ", ";
-                content += "eulerAngles: " + Vector3ToString(item.eulerAngles.ToVector3(), exportPrecision) + ", ";
-                content += "scale: " + Vector3ToString(item.scale.ToVector3(), exportPrecision) + "\r\n";
+                content += "path: "+item.path+ "\r\n";
+                var len = item.position.Count;
+                for (int i = 0; i < len; i++) {
+                    content += "position: " + Vector3ToString(item.position[i].ToVector3(), exportPrecision) + "\r\n";
+                    content += "eulerAngles: " + Vector3ToString(item.eulerAngles[i].ToVector3(), exportPrecision) + "\r\n";
+                    content += "scale: " + Vector3ToString(item.scale[i].ToVector3(), exportPrecision) + "\r\n";
+                }
             }
             File.WriteAllText(pathObjModel, content);
             content = "";
@@ -399,33 +402,19 @@ public class MenuBarController : MonoBehaviour {
         CloseEditPanel();
     }
 
-    public void ButtonModelsOnClick()//Models按钮被点击
-    {
-        var panelModels = objManager.panelModels;        
-        var active = !panelModels.activeSelf;
-        panelModels.SetActive(active);
-        WindowModelsToggle.isOn = active;
-    }
-    public void ButtonContactPointsOnClick()//ContactPoints按钮被点击
-    {
-        var panelContactPoints = objManager.panelContactPoints;        
-        var active = !panelContactPoints.activeSelf;
-        panelContactPoints.SetActive(active);
-        WindowContactPointsToggle.isOn = active;
-    }
-    public void ButtonStatusOnClick()//Status按钮被点击
-    {
-        var panelStatus = objManager.panelStatus;
-        var active = !panelStatus.activeSelf;
-        panelStatus.SetActive(active);
-        WindowStatusToggle.isOn = active;
-    }
-    public void ButtonXZGridOnClick()//Status按钮被点击
+    public void ButtonXZGridOnClick()//XZGrid按钮被点击
     {
         var XZGrid = objManager.runtimeEditorApplication.XZGrid;
         var active = !XZGrid.IsVisible;
         XZGrid.IsVisible=active;
         WindowXZGridToggle.isOn = active;
+    }
+    public void ButtonCameraControllerOnClick()//CameraController按钮被点击
+    {
+        var panelCameraController = objManager.panelCameraController;
+        var active = !panelCameraController.activeSelf;
+        panelCameraController.SetActive(active);
+        WindowCameraControllerToggle.isOn = active;
     }
     public bool IfMenuBarButtonSelected() {//是否选中了menuBar上的按钮
         var s = eventSystem.currentSelectedGameObject;

@@ -7,7 +7,8 @@ public class ItemController : MonoBehaviour {
     {//关联model所属类型
         MAIN_CAMERA,
         OBJ_MODEL,
-        SMPL_MODEL,
+        OBJ_MODEL_ROOT,//管理所有objModel部件的根
+        SMPL_MODEL,//objModel的部件
         SMPL_MODEL_JOINT,
         CONTACT_POINT
     }
@@ -19,7 +20,7 @@ public class ItemController : MonoBehaviour {
     public bool canDelete;//是否可以删除
     public string path;//相关文件路径(obj文件路径)
     void Awake(){
-        modelType = ModelType.OBJ_MODEL;
+        modelType = ModelType.OBJ_MODEL_ROOT;
         trianglesEditable = true;
         positionEditable = true;
         rotationEditable = true;
@@ -51,6 +52,10 @@ public class ItemController : MonoBehaviour {
                 canDelete = false;//主相机不能删除
                 break;
             case ModelType.OBJ_MODEL:
+                canDelete = false;
+                break;
+            case ModelType.OBJ_MODEL_ROOT:
+                trianglesEditable = false;
                 break;
             case ModelType.SMPL_MODEL:
                 trianglesEditable = false;

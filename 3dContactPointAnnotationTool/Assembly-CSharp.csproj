@@ -221,6 +221,7 @@
      <Compile Include="Assets\scripts\CameraBackgroundController.cs" />
      <Compile Include="Assets\scripts\CameraShowItemController.cs" />
      <Compile Include="Assets\scripts\CorrespondingScrollViewItem.cs" />
+     <Compile Include="Assets\scripts\DontDestroyController.cs" />
      <Compile Include="Assets\scripts\DragChangeValue.cs" />
      <Compile Include="Assets\scripts\DragPanel.cs" />
      <Compile Include="Assets\scripts\ImageController.cs" />
@@ -242,6 +243,8 @@
      <Compile Include="Assets\scripts\Panel\PanelModel_PointsInformationController.cs" />
      <Compile Include="Assets\scripts\Panel\PanelModelsController.cs" />
      <Compile Include="Assets\scripts\Panel\PanelStatusController.cs" />
+     <Compile Include="Assets\scripts\PanelCameraController.cs" />
+     <Compile Include="Assets\scripts\PanelCameraControllerDragChangeValue.cs" />
      <Compile Include="Assets\scripts\ReferenceImageController.cs" />
      <Compile Include="Assets\scripts\ResizePanel.cs" />
      <Compile Include="Assets\scripts\Save.cs" />

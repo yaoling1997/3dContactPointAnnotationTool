@@ -22,12 +22,18 @@ public class CameraShowItemController : MonoBehaviour {
     {
         if (o == null)
             return;        
-        var smr = o.GetComponent<SkinnedMeshRenderer>();
-        if (smr == null)
+        var smrs = o.GetComponentsInChildren<SkinnedMeshRenderer>();
+        if (smrs == null)
             return;
-        center = smr.bounds.center;
-        var r = (smr.sharedMesh.bounds.max - smr.sharedMesh.bounds.min).magnitude / 2;
-        transform.position = new Vector3(0, smr.sharedMesh.bounds.center.y , 2*r);
+        var vList = new List<Vector3>();
+        foreach (var smr in smrs) {
+            vList.Add(smr.sharedMesh.bounds.max);
+            vList.Add(smr.sharedMesh.bounds.min);
+        }
+        var bigBound = ObjManager.GetBoundsOfVector3Array(vList.ToArray());
+        center = bigBound.center;
+        var r = (bigBound.max - bigBound.min).magnitude / 2;
+        transform.position = new Vector3(0, bigBound.center.y , 2*r);
         transform.forward = center - transform.position;
     }
 }

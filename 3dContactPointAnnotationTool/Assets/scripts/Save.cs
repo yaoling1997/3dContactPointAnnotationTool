@@ -59,16 +59,16 @@ public class Save
     public class SaveObjModel
     {
         public string path;//obj文件路径
-        public SaveVector3 position;
-        public SaveVector3 eulerAngles;
-        public SaveVector3 scale;
+        public List<SaveVector3> position;//列表中第一个存的是obj_model_root的信息
+        public List<SaveVector3> eulerAngles;
+        public List<SaveVector3> scale;
         public int id;//在panelModels中的序号
-        public SaveObjModel(string path,Vector3 position, Vector3 eulerAngles, Vector3 scale,int id)
+        public SaveObjModel(string path,List<Vector3> position, List<Vector3> eulerAngles, List<Vector3> scale,int id)
         {
             this.path = path;
-            this.position = new SaveVector3(position.x, position.y, position.z);
-            this.eulerAngles = new SaveVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z);
-            this.scale = new SaveVector3(scale.x, scale.y, scale.z);
+            this.position = Vector3ToSaveVector3(position);
+            this.eulerAngles = Vector3ToSaveVector3(eulerAngles);
+            this.scale = Vector3ToSaveVector3(scale);
             this.id = id;
         }
     }
@@ -97,11 +97,39 @@ public class Save
             this.id = id;
         }
     }
+    [System.Serializable]
+    public class SaveItemWarehouse//ItemWarehouse的路径
+    {
+        public string path;
+        public SaveItemWarehouse(string path) {
+            this.path = path;
+        }
+    }
     public SaveCamera mainCamera;
     public SaveImage image;
     public List<SaveContactPoint> contactPointList;
     public List<SaveObjModel> objModelList;//存objModel的列表
     public List<SaveSMPL> SMPLList;//存SMPL模型的列表
+    public SaveItemWarehouse itemWarehouse;
+    public static SaveVector3 Vector3ToSaveVector3(Vector3 v) {
+        return new SaveVector3(v.x,v.y,v.z);
+    }
+    public static List<SaveVector3> Vector3ToSaveVector3(List<Vector3> v){
+        var re= new List<SaveVector3>();
+        foreach (var item in v) {
+            re.Add(Vector3ToSaveVector3(item));
+        }
+        return re;
+    }
+    public static List<Vector3> SaveVector3ToVector3(List<SaveVector3> v)
+    {
+        var re = new List<Vector3>();
+        foreach (var item in v)
+        {
+            re.Add(item.ToVector3());
+        }
+        return re;
+    }
     public static void SaveCameraInfo(out SaveCamera saveCamera)//存储主相机的位置和角度
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
@@ -136,9 +164,21 @@ public class Save
         foreach (var item in scrollViewContent.GetComponentsInChildren<ScrollViewItemController>()) {
             var t = item.model.transform;
             var ic = item.model.GetComponent<ItemController>();
-            if (ic.modelType.Equals(ItemController.ModelType.OBJ_MODEL))//是obj模型
+            if (ic.modelType.Equals(ItemController.ModelType.OBJ_MODEL_ROOT))//是obj模型的root
             {
-                objModelList.Add(new SaveObjModel(ic.path, t.position, t.eulerAngles, t.localScale, id));//添加到对应的list中
+                var position = new List<Vector3>();
+                var eulerAngles = new List<Vector3>();
+                var scale = new List<Vector3>();
+                position.Add(t.position);
+                eulerAngles.Add(t.eulerAngles);
+                scale.Add(t.localScale);
+                foreach (var s in item.GetSons()) {
+                    var st = s.GetComponent<ScrollViewItemController>().model.transform;
+                    position.Add(st.position);
+                    eulerAngles.Add(st.eulerAngles);
+                    scale.Add(st.localScale);
+                }
+                objModelList.Add(new SaveObjModel(ic.path,position,eulerAngles,scale, id));
             }
             else if (ic.modelType.Equals(ItemController.ModelType.SMPL_MODEL))//是SMPL模型
             {
@@ -154,12 +194,14 @@ public class Save
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         var pmc = objManager.panelModels.GetComponent<PanelModelsController>();
+        Debug.Log("objModelList.Count:"+ objModelList.Count);
         int i = 0,j = 0;
         while (i < objModelList.Count || j < SMPLList.Count) {
             if (j == SMPLList.Count || (i < objModelList.Count && objModelList[i].id < SMPLList[j].id))//加载obj
             {
                 var info = objModelList[i];
-                objManager.LoadObj(info.path, info.position.ToVector3(), info.eulerAngles.ToVector3(), info.scale.ToVector3());
+                Debug.Log("info.path:" + info.path);
+                objManager.LoadObj(info.path, SaveVector3ToVector3(info.position), SaveVector3ToVector3(info.eulerAngles), SaveVector3ToVector3(info.scale));
                 i++;
             }
             else {
@@ -189,6 +231,8 @@ public class Save
 
         SaveModelsInfo(out save.objModelList,out save.SMPLList);//存储Obj模型和SMPL模型信息
 
+        save.itemWarehouse = new SaveItemWarehouse(objManager.dontDestroyController.itemWarehousePath);//存储ItemWarehouse路径
+
         Debug.Log("SaveByBin： ");
         //创建一个二进制格式化程序
         BinaryFormatter bf = new BinaryFormatter();
@@ -199,6 +243,7 @@ public class Save
         bf.Serialize(fileStream, save);
         //关闭流
         fileStream.Close();
+        Debug.Log("Save succeed!");
     }
     public static void LoadByBin(string path)
     {
@@ -233,6 +278,8 @@ public class Save
         var pmc = objManager.panelModels.GetComponent<PanelModelsController>();
         pmc.ButtonClearOnClick();//清空当前模型        
         save.LoadModels();//还原模型
+
+        objManager.panelItemWareHouseController.AddItemWarehouse(save.itemWarehouse.path);//加载ItemWarehouse
 
         Debug.Log("LoadByBin： ");
     }

@@ -81,32 +81,6 @@ public class ButtonGCPOnClick : MonoBehaviour {
             return 0;
         return x < 0 ? -1 : 1;
     }
-    private Vector3 GetMinVector3(Vector3 a,Vector3 b)//每一维取最小的
-    {
-        var re = new Vector3(0, 0, 0);
-        re.x = Mathf.Min(a.x, b.x);
-        re.y = Mathf.Min(a.y, b.y);
-        re.z = Mathf.Min(a.z, b.z);
-        return re;
-    }
-    private Vector3 GetMaxVector3(Vector3 a, Vector3 b)//每一维取最大的
-    {
-        var re = new Vector3(0, 0, 0);
-        re.x = Mathf.Max(a.x, b.x);
-        re.y = Mathf.Max(a.y, b.y);
-        re.z = Mathf.Max(a.z, b.z);
-        return re;
-    }
-    private Bounds GetBoundsOfVector3Array(Vector3 []v)//根据vector3的数组获得他们的包围盒bounds
-    {
-        var MinP = new Vector3(oo, oo, oo);
-        var MaxP = new Vector3(-oo, -oo, -oo);
-        foreach (var i in v){
-            MinP = GetMinVector3(MinP, i);
-            MaxP = GetMaxVector3(MaxP, i);
-        }
-        return new Bounds((MinP+MaxP)/2,MaxP-MinP);
-    }
     private IEnumerator SolveContactPoints()//对选中的模型计算接触点
     {
         yield return new WaitForSeconds(0);
@@ -117,62 +91,75 @@ public class ButtonGCPOnClick : MonoBehaviour {
         sliderGCP.value = 0;//进度条归零
         var selectedObjList = new List<ListNode>();//选中对象们
         var unselectedObjList = new List<ListNode>();//未选中对象们        
+        int totalSelectedObjVerticeNum = 0;//总的选中物体顶点数
+        int totalUnselectedObjVerticeNum = 0;//总的未选中物体顶点数
         int totalSelectedObjTriangleNum = 0;//总的选中物体三角面片数,用来控制进度条显示
+        int totalUnselectedObjTriangleNum = 0;//总的未选中物体三角面片数
         yield return new WaitForSeconds(0);
         foreach (var item in model3d.GetComponentsInChildren<SkinnedMeshRenderer>())//获得所有物体每个三角面片包围盒
         {
             var vertices = GetRealVertices(item);
             var triangles = item.sharedMesh.triangles;
             var boundsList = new List<Bounds>();
-            var objBounds = GetBoundsOfVector3Array(vertices);
+            var objBounds =  ObjManager.GetBoundsOfVector3Array(vertices);
+
             if (item.tag.Equals(Macro.SELECTED))
-            {                
+            {
                 for (int i = 0; i < triangles.Length; i += 3)
                 {
-                    Vector3 []tmp = { vertices[triangles[i]], vertices[triangles[i + 1]], vertices[triangles[i + 2]] };
-                    boundsList.Add(GetBoundsOfVector3Array(tmp));
+                    Vector3[] tmp = { vertices[triangles[i]], vertices[triangles[i + 1]], vertices[triangles[i + 2]] };
+                    boundsList.Add(ObjManager.GetBoundsOfVector3Array(tmp));
                 }
                 selectedObjList.Add(new ListNode(objBounds, boundsList));
-                totalSelectedObjTriangleNum += boundsList.Count;
+                totalSelectedObjVerticeNum += vertices.Length;
+                totalSelectedObjTriangleNum += triangles.Length;
             }
             else if (item.tag.Equals(Macro.UNSELECTED))
             {
                 for (int i = 0; i < triangles.Length; i += 3)
                 {
                     Vector3[] tmp = { vertices[triangles[i]], vertices[triangles[i + 1]], vertices[triangles[i + 2]] };
-                    boundsList.Add(GetBoundsOfVector3Array(tmp));
+                    boundsList.Add(ObjManager.GetBoundsOfVector3Array(tmp));
                 }
                 unselectedObjList.Add(new ListNode(objBounds, boundsList));
+                totalUnselectedObjVerticeNum += vertices.Length;
+                totalUnselectedObjTriangleNum += triangles.Length;
             }
         }
         yield return new WaitForSeconds(0);
         Debug.Log("selectedObjNum: " + selectedObjList.Count);
-        Debug.Log("unselectedObjNum: " + unselectedObjList.Count);        
-        float sliderValueFz=0;//slider value的分子
+        Debug.Log("unselectedObjNum: " + unselectedObjList.Count);
+        Debug.Log("totalSelectedObjVerticeNum: " + totalSelectedObjVerticeNum);
+        Debug.Log("totalSelectedObjVerticeNum: " + totalUnselectedObjVerticeNum);
+        Debug.Log("totalSelectedObjTriangleNum: " + totalSelectedObjTriangleNum);
+        Debug.Log("totalUnselectedObjTriangleNum: " + totalUnselectedObjTriangleNum);
+        float sliderValueFz = 0;//slider value的分子
         var xjBoundsList = new List<Bounds>();//不同物体相交的区域 
 
         foreach (var so in selectedObjList)//求交
         {
-            foreach (var uso in unselectedObjList) {
-                if (!DealBoundsIntersection(so.objBounds, uso.objBounds,false, xjBoundsList))//两物体的包围盒不相交
+            foreach (var uso in unselectedObjList)
+            {
+                if (!DealBoundsIntersection(so.objBounds, uso.objBounds, false, xjBoundsList))//两物体的包围盒不相交
                 {
                     sliderValueFz += so.triangleBoundsList.Count;
                     continue;
                 }
-                foreach(var sotb in so.triangleBoundsList)
+                foreach (var sotb in so.triangleBoundsList)
                 {
                     sliderValueFz++;
-                    if (!DealBoundsIntersection(sotb, uso.objBounds,false, xjBoundsList))//选中物体三角面片包围盒不与未选中物体包围盒相交
+                    if (!DealBoundsIntersection(sotb, uso.objBounds, false, xjBoundsList))//选中物体三角面片包围盒不与未选中物体包围盒相交
                         continue;
-                    foreach(var usotb in uso.triangleBoundsList)
+                    foreach (var usotb in uso.triangleBoundsList)
                     {
-                        if (DealBoundsIntersection(sotb, usotb,true, xjBoundsList))
+                        if (DealBoundsIntersection(sotb, usotb, true, xjBoundsList))
                         {
-                            
+
                         }
                     }
-                    var tmpV = sliderValueFz / (unselectedObjList.Count * totalSelectedObjTriangleNum);
-                    if (tmpV- sliderGCP.value >= 0.05) {
+                    var tmpV = sliderValueFz*3 / (unselectedObjList.Count * totalSelectedObjTriangleNum);
+                    if (tmpV - sliderGCP.value >= 0.05)
+                    {
                         sliderGCP.value = tmpV;//更新进度条的值
                         yield return new WaitForSeconds(0);
                     }
@@ -180,9 +167,9 @@ public class ButtonGCPOnClick : MonoBehaviour {
             }
         }
 
-        var contactPointNum= CreateContactPoints(xjBoundsList);//显示接触点
+        var contactPointNum = CreateContactPoints(xjBoundsList);//显示接触点
         sliderGCP.value = 1;//计算完毕，进度条的值置为1
-        Debug.Log("contactPointNum: "+ contactPointNum);        
+        Debug.Log("contactPointNum: " + contactPointNum);
         buttonGCP.interactable = true;//计算完成可以点击按钮        
         sw.Stop();
         ShowTime(sw.Elapsed.TotalSeconds);
@@ -202,9 +189,11 @@ public class ButtonGCPOnClick : MonoBehaviour {
         skinnedMeshRenderer.BakeMesh(mesh);
         var len = mesh.vertices.Length;
         var vertices = new Vector3[len];
+
         var transform = skinnedMeshRenderer.transform;
         Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
         Matrix4x4 m = Matrix4x4.TRS(transform.position,rotation,transform.localScale);
+        
         for (int i = 0; i < len; i++)
         {
             vertices[i] = m.MultiplyPoint3x4(mesh.vertices[i]);
@@ -217,8 +206,8 @@ public class ButtonGCPOnClick : MonoBehaviour {
     }
     private bool DealBoundsIntersection(Bounds a,Bounds b,bool ifCreateXjBounds,List<Bounds> xjBoundsList)//是否创建对应相交长方体
     {
-        var minP = GetMaxVector3(a.min, b.min);
-        var maxP = GetMinVector3(a.max, b.max);
+        var minP = ObjManager.GetMaxVector3(a.min, b.min);
+        var maxP = ObjManager.GetMinVector3(a.max, b.max);
         if (!Vector3xydy(minP, maxP))
             return false;
         if (ifCreateXjBounds)
@@ -239,7 +228,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
             var tmp = item.center - bounds.center;
             if (Dcmp(tmp.x) == 0 && Dcmp(tmp.y) == 0 && Dcmp(tmp.z) == 0)
             {
-                bounds.extents = GetMaxVector3(bounds.extents, item.extents);
+                bounds.extents = ObjManager.GetMaxVector3(bounds.extents, item.extents);
             }
             else
             {
@@ -288,7 +277,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
             var u = boundsList[pair[0]];
             var v = boundsList[pair[1]];
             var vector3s = new Vector3[] { u.max,u.min,v.max,v.min };
-            var newBounds = GetBoundsOfVector3Array(vector3s);
+            var newBounds = ObjManager.GetBoundsOfVector3Array(vector3s);
             boundsList.Add(newBounds);
             f[pair[0]] = f.Count;//合并老点
             f[pair[1]] = f.Count;

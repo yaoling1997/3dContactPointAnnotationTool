@@ -8,6 +8,7 @@ using System.IO;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
 {
+    public const float oo= 1e18f;
     public Canvas canvas;//UI的canvas    
     public Canvas canvasBackground;//背景的canvas    
     public Camera mainCamera;//主相机
@@ -18,6 +19,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public GameObject panelStatus;
     public ReferenceImageController referenceImageController;//参考图片的控制器
     public PanelStatusController panelStatusController;//panelStatus的controller
+    public GameObject panelCameraController;//控制相机的panel
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject prefabScrollViewTabItem;//scrollViewTabItem预制件
     public GameObject prefabScrollViewItemsItem;//scrollViewItemsItem预制件
@@ -27,7 +29,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public GameObject scrollViewContactPointsContent;//接触点scrollView的content
     public GameObject menuBar;//菜单栏
     public GameObject toolBar;//工具栏    
-    public GameObject humanModel;//SMPL人体模型    
+    public GameObject humanModel;//SMPL人体模型     
     public Material materialStandard;//标准 shader的材质
     public Material materialUIdefault;//UIdefault shader的材质
     public Material materialWireframe;//网格 shader的材质
@@ -48,11 +50,18 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
 
     public string imagePath;//加载图片的路径
 
-    // Use this for initialization
-    void Start () {
+    public DontDestroyController dontDestroyController;    
+    void Awake() {
         contactPointId = 0;
         humanModelId = 0;
         imagePath = null;
+        dontDestroyController = GameObject.Find("DontDestroy").GetComponent<DontDestroyController>();
+    }
+    // Use this for initialization
+    void Start () {        
+        if (dontDestroyController.itemWarehousePath != null) {
+            panelItemWareHouseController.AddItemWarehouse(dontDestroyController.itemWarehousePath);
+        }
     }
 	
 	// Update is called once per frame
@@ -133,22 +142,46 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             Debug.Log("no such image!");
         }
     }
-    public void LoadObj(string path,Vector3 postion,Vector3 eulerAngles,Vector3 scale)
+    public void SetTransform(GameObject o,Vector3 position,Vector3 eulerAngles,Vector3 scale) {
+        o.transform.position = position;
+        o.transform.eulerAngles = eulerAngles;
+        o.transform.localScale = scale;
+    }
+    public void LoadObj(string path,List<Vector3> postion, List<Vector3> eulerAngles, List<Vector3> scale)
     {
         //yield return new WaitForSeconds(1);//改成0s可能造成UI不稳定，不知道为啥
         if (File.Exists(path))
         {
-            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path, true);//默认只有一个obj对象
+            var tmp = path.Split(new char[] { '.','/','\\'});
+            var name = tmp[tmp.Length - 2];
+            var obj = new GameObject(name);
+            model3d.GetComponent<Model3dController>().AddSon(obj);//将obj的父亲设置为model3d 
+            obj.tag = Macro.UNSELECTED;//将tag设置为未选中
+            //obj.GetComponent<SkinnedMeshRenderer>().material = panelModel_PointsInformationController.GetMaterial();
+            obj.AddComponent<Model3dItemController>();//添加该脚本
+            obj.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL_ROOT).path = path;//添加该脚本
+            if (postion!=null&&eulerAngles!=null&&scale!=null)
+                SetTransform(obj,postion[0],eulerAngles[0],scale[0]);
+            var rootSvi=Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
+            rootSvi.GetComponent<ScrollViewItemController>().Init(obj, scrollViewModelsContent, name);
+            int i = 1;
+            var re = ObjFormatAnalyzerFactory.AnalyzeToGameObject(path, true);
             foreach (var item in re)
             {
-                model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d 
-                item.transform.position = postion;
-                item.transform.eulerAngles = eulerAngles;
-                item.transform.localScale = scale;
+                //model3d.GetComponent<Model3dController>().AddSon(item);//将解析出来的obj的父亲设置为model3d 
+                //item.transform.position = postion;
+                //item.transform.eulerAngles = eulerAngles;
+                //item.transform.localScale = scale;
                 item.AddComponent<Model3dItemController>();//添加该脚本
-                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL).path = path;//设置类型和obj文件路径                
+                item.AddComponent<ItemController>().SetModelType(ItemController.ModelType.OBJ_MODEL);//设置类型和obj文件路径   
+                item.transform.SetParent(obj.transform);
+                if (postion != null && eulerAngles != null && scale != null) {
+                    SetTransform(item, postion[i], eulerAngles[i], scale[i]);
+                    i++;
+                }
                 var scrollViewItem = Instantiate(prefabScrollViewItem, new Vector3(0, 0, 0), Quaternion.identity);
                 scrollViewItem.GetComponent<ScrollViewItemController>().Init(item, scrollViewModelsContent);
+                rootSvi.GetComponent<ScrollViewItemController>().AddSon(scrollViewItem);
             }
         }
         else
@@ -159,7 +192,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
 
     public void LoadObj(string path)
     {
-        LoadObj(path,Vector3.zero,Vector3.zero,new Vector3(1,1,1));
+        LoadObj(path,null,null,null);
     }    
     public GameObject LoadObjToShowItemView(string path)
     {
@@ -181,6 +214,33 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             Debug.Log("no such model!");
         }
         return null;
+    }
+    public static Vector3 GetMinVector3(Vector3 a, Vector3 b)//每一维取最小的
+    {
+        var re = new Vector3(0, 0, 0);
+        re.x = Mathf.Min(a.x, b.x);
+        re.y = Mathf.Min(a.y, b.y);
+        re.z = Mathf.Min(a.z, b.z);
+        return re;
+    }
+    public static Vector3 GetMaxVector3(Vector3 a, Vector3 b)//每一维取最大的
+    {
+        var re = new Vector3(0, 0, 0);
+        re.x = Mathf.Max(a.x, b.x);
+        re.y = Mathf.Max(a.y, b.y);
+        re.z = Mathf.Max(a.z, b.z);
+        return re;
+    }
+    public static Bounds GetBoundsOfVector3Array(Vector3[] v)//根据vector3的数组获得他们的包围盒bounds
+    {
+        var MinP = new Vector3(oo, oo, oo);
+        var MaxP = new Vector3(-oo, -oo, -oo);
+        foreach (var i in v)
+        {
+            MinP = GetMinVector3(MinP, i);
+            MaxP = GetMaxVector3(MaxP, i);
+        }
+        return new Bounds((MinP + MaxP) / 2, MaxP - MinP);
     }
 
 }

@@ -89,6 +89,9 @@ public class ScrollViewItemController : MonoBehaviour {
             item.SetActive(false);
         }
     }
+    public List<GameObject> GetSons() {//获得所有儿子
+        return sons;
+    }
     public void ButtonShowSonsOnClick()//按钮被点击
     {
         ifShowSons = !ifShowSons;

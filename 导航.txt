@@ -139,3 +139,9 @@ https://docs.microsoft.com/zh-cn/dotnet/api/system.io.directory?redirectedfrom=M
 
 C#中Convert.ToInt32、int.TryParse、(int)和int.Parse四者的区别
 https://www.cnblogs.com/walle2014/p/3662865.html
+
+GetComponentsInChildren<Transform>()
+它自己和它所有激活的儿子和孙子算，孙子的父亲没激活孙子不算
+
+Unity 如何在场景间传递数据？
+https://jingyan.baidu.com/article/3a2f7c2e20591c26aed61173.html
