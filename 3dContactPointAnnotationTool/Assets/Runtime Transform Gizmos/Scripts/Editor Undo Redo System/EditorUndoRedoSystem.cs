@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+//added by me
+using UnityEngine.EventSystems;
+//
 namespace RTEditor
 {
     /// <summary>
@@ -126,6 +128,10 @@ namespace RTEditor
         /// </summary>
         private void Undo()
         {
+            //added by me
+            EventSystem.current.SetSelectedGameObject(null);
+            //
+
             // Nothing to undo?
             if (_actionStack.Count == 0 || _actionStackPointer < 0) return;
 
@@ -146,6 +152,9 @@ namespace RTEditor
         /// </summary>
         private void Redo()
         {
+            //added by me
+            EventSystem.current.SetSelectedGameObject(null);
+            //
             // Nothing to redo?
             if (_actionStack.Count == 0 || _actionStackPointer == _actionStack.Count - 1) return;
 

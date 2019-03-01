@@ -9,12 +9,14 @@ public class InputFieldOnValueChanged : MonoBehaviour {
     public bool disableOnValueChanged;
     private ObjManager objManager;
     private InputField inputField;
+    private bool ifValueChanged;
 	void Start () {
         objManager= GameObject.Find("ObjManager").GetComponent<ObjManager>();
         inputField = gameObject.GetComponent<InputField>();
         inputField.text = 0.ToString();
         inputField.onValueChanged.AddListener(delegate { OnValueChanged(); });
         disableOnValueChanged = false;
+        ifValueChanged = false;
     }
 	
 	// Update is called once per frame
@@ -29,6 +31,7 @@ public class InputFieldOnValueChanged : MonoBehaviour {
         var obj = objManager.panelStatus.GetComponentInChildren<PanelStatusController>().selectedObj;//获得选中对象
         if (obj == null)//对象为空
             return;
+        ifValueChanged = true;
         var p = obj.transform.position;
         var r = obj.transform.eulerAngles;
         var s = obj.transform.localScale;
@@ -80,6 +83,17 @@ public class InputFieldOnValueChanged : MonoBehaviour {
         else
         {
             Debug.Log("statusPanelController:can not find correct parent!");
+        }        
+    }
+    public void Select() {
+        ifValueChanged = false;
+        objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();
+    }
+    public void Deselect()
+    {
+        if (ifValueChanged) {//只有值修改了才存一个撤销
+            Debug.Log("save");
+            objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
         }
     }
 }

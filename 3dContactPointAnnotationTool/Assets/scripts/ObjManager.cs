@@ -14,6 +14,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Camera mainCamera;//主相机
     public Camera cameraBackground;//背景图片相机
     public Camera cameraShowItem;//showItem相机
+    
     public GameObject panelModels;
     public GameObject panelContactPoints;
     public GameObject panelStatus;

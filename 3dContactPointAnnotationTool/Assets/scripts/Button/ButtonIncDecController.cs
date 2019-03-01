@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class ButtonIncDecController : MonoBehaviour {
     public InputField inputField;
     public float speed = 0.1f;
+    private ObjManager objManager;
     private bool ifPointerDown;//鼠标是否按下
     void Awake()
     {
+        objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         ifPointerDown = false;
     }
 
@@ -32,9 +34,11 @@ public class ButtonIncDecController : MonoBehaviour {
     public void PointerDown()
     {
         ifPointerDown = true;
+        objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();//随便用哪个非null的gizmo都可以，因为都是存的position,rotation和localscale的信息，但是要保证前后一致
     }
     public void PointerUp()
     {
         ifPointerDown = false;
+        objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
     }
 }

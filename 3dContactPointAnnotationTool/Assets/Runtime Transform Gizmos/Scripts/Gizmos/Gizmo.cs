@@ -889,5 +889,16 @@ namespace RTEditor
             }
         }
         #endregion
+        //added by me
+        public void StorePreTransform() {
+            TakeObjectTransformSnapshots(out _preTransformObjectSnapshots);
+        }
+        public void StoreObjectsTransform() {//pre+post构成一组撤销
+            TakeObjectTransformSnapshots(out _postTransformObjectSnapshots);
+            // Execute a post gizmo transformed objects action
+            var action = new PostGizmoTransformedObjectsAction(_preTransformObjectSnapshots, _postTransformObjectSnapshots, this);
+            action.Execute();
+        }
+        //
     }
 }

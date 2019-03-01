@@ -16,8 +16,6 @@ public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     int secondScreenHeight = 0;//副屏高
 
     private ObjManager objManager;
-    private float pointerDownValue;//鼠标按下时InputField的值
-    private float pointerUpValue;//鼠标抬起时InputField的值
 
     void Awake()
     {
@@ -26,40 +24,13 @@ public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     }
     public void OnPointerDown(PointerEventData data)
     {
-        pointerDownValue=objManager.StringToFloat(inputField.text);        
+        Debug.Log("OnPointerDown");
+        objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();//随便用哪个非null的gizmo都可以，因为都是存的position,rotation和localscale的信息，但是要保证前后一致
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        pointerUpValue = objManager.StringToFloat(inputField.text);
-        var v = pointerUpValue - pointerDownValue;
-        var panelStatusItemName = inputField.transform.parent.name;
-        inputField.text = pointerDownValue.ToString();//还原位置
-        if (panelStatusItemName.Equals("PanelStatusItemPosX"))
-        {
-            objManager.editorGizmoSystem.TranslationGizmo.TranslateControlledObjects(Vector3.right*v);
-        }
-        else if (panelStatusItemName.Equals("PanelStatusItemPosY"))
-        {
-            objManager.editorGizmoSystem.TranslationGizmo.TranslateControlledObjects(Vector3.up * v);
-        }
-        else if (panelStatusItemName.Equals("PanelStatusItemPosZ"))
-        {
-            objManager.editorGizmoSystem.TranslationGizmo.TranslateControlledObjects(Vector3.forward * v);
-        }
-        else if (panelStatusItemName.Equals("PanelStatusItemRotX"))
-        {
-        }
-        else if (panelStatusItemName.Equals("PanelStatusItemRotY"))
-        {
-        }
-        else if (panelStatusItemName.Equals("PanelStatusItemRotZ"))
-        {
-        }
-        else if (panelStatusItemName.Equals("PanelStatusItemScaleX"))
-        {
-        }
+        objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
     }
-
     public void OnDrag(PointerEventData data)
     {
         //Debug.Log("on drag");
