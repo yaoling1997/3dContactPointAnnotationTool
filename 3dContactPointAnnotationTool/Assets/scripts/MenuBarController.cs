@@ -52,7 +52,7 @@ public class MenuBarController : MonoBehaviour {
         var y = bounds.extents.y;
         var z = bounds.extents.z;
         Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
-        Matrix4x4 m = Matrix4x4.TRS(transform.position, rotation, transform.localScale);
+        Matrix4x4 m = Matrix4x4.TRS(transform.position, rotation, transform.lossyScale);
         vertices[0] = m.MultiplyPoint3x4(bounds.center + new Vector3(x, y, z));
         vertices[1] = m.MultiplyPoint3x4(bounds.center + new Vector3(-x, y, z));
         vertices[2] = m.MultiplyPoint3x4(bounds.center + new Vector3(x, -y, z));
@@ -185,7 +185,7 @@ public class MenuBarController : MonoBehaviour {
                     continue;
                 var p = item.position;
                 var e = item.eulerAngles;
-                var s = item.localScale;
+                var s = item.lossyScale;
                 content += "position: " +Vector3ToString(p,exportPrecision)+", ";//支点
                 content += "eulerAngles: " + Vector3ToString(e, exportPrecision) + ", ";//欧拉角
                 content += "scale: " + Vector3ToString(s, exportPrecision) + "\r\n";//局部轴的缩放

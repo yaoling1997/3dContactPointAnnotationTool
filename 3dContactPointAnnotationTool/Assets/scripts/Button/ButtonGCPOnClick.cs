@@ -192,7 +192,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
 
         var transform = skinnedMeshRenderer.transform;
         Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
-        Matrix4x4 m = Matrix4x4.TRS(transform.position,rotation,transform.localScale);
+        Matrix4x4 m = Matrix4x4.TRS(transform.position,rotation,transform.lossyScale);
         
         for (int i = 0; i < len; i++)
         {
@@ -299,7 +299,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
     private int CreateContactPoints(List<Bounds> xjBoundsList)//创建接触点，把中心相同的接触点合并
     {
         var boundsList = MergeSameCenterBounds(xjBoundsList);
-        //boundsList = MergeContactPointsToMaxNum(boundsList);
+        boundsList = MergeContactPointsToMaxNum(boundsList);
         foreach (var item in boundsList) {
             objManager.CreateContactPointSphere(item.center,item.extents);
         }
