@@ -679,7 +679,10 @@ namespace RTEditor
             }
 
             // Duplicate objects if needed
-            if(_duplicateSelectionShortcut.IsActiveInCurrentFrame())
+            //added by me
+            if (false)
+            //禁用复制功能，因为还没有集成好
+            //if(_duplicateSelectionShortcut.IsActiveInCurrentFrame())
             {
                 // Gather all selected objects which can be duplicated
                 List<GameObject> objectsToDuplicate = new List<GameObject>(EditorObjectSelection.Instance.SelectedGameObjects);
