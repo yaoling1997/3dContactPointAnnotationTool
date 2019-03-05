@@ -679,19 +679,19 @@ namespace RTEditor
             }
 
             // Duplicate objects if needed
-            //added by me
-            if (false)
-            //禁用复制功能，因为还没有集成好
-            //if(_duplicateSelectionShortcut.IsActiveInCurrentFrame())
-            {
-                // Gather all selected objects which can be duplicated
-                List<GameObject> objectsToDuplicate = new List<GameObject>(EditorObjectSelection.Instance.SelectedGameObjects);
-                objectsToDuplicate.RemoveAll(item => !CanObjectBeDuplicated(item));
+            ////added by me
+            //if (false)
+            ////禁用复制功能，因为还没有集成好
+            ////if(_duplicateSelectionShortcut.IsActiveInCurrentFrame())
+            //{
+            //    // Gather all selected objects which can be duplicated
+            //    List<GameObject> objectsToDuplicate = new List<GameObject>(EditorObjectSelection.Instance.SelectedGameObjects);
+            //    objectsToDuplicate.RemoveAll(item => !CanObjectBeDuplicated(item));
 
-                // Duplicate objects
-                var action = new ObjectDuplicationAction(objectsToDuplicate);
-                action.Execute();
-            }
+            //    // Duplicate objects
+            //    var action = new ObjectDuplicationAction(objectsToDuplicate);
+            //    action.Execute();
+            //}
 
             // If no UI elements were hovered, we will analyze the input device's (mouse or touch) activity
             if (!WereAnyUIElementsHovered())

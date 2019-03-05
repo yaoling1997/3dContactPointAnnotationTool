@@ -26,6 +26,21 @@ namespace RTEditor
             // Make sure the camera looks at the orbit point
             cameraTransform.LookAt(orbitPoint, cameraTransform.up);
         }
+        //added by me
+        public static void OrbitCameraBaseOnSelected(Camera camera, float degreesCameraRight, float degreesGlobalUp, Vector3 orbitPoint)
+        {
+            // If the camera is too close to the orbit point, there is nothing to do
+            Transform cameraTransform = camera.transform;
+            if ((cameraTransform.position - orbitPoint).magnitude < 1e-5f) return;
+
+            // Rotate the camera position and orientation
+            cameraTransform.RotateAround(orbitPoint, Vector3.up, degreesGlobalUp);
+            cameraTransform.RotateAround(orbitPoint, cameraTransform.right, degreesCameraRight);
+
+            // Make sure the camera looks at the orbit point
+            //cameraTransform.LookAt(orbitPoint, cameraTransform.up);
+        }
+        //
         #endregion
     }
 }

@@ -544,11 +544,15 @@ namespace RTEditor
             if (WereAnyUIElementsHovered())
                 return;
             bool orbit = _cameraOrbitShortcut.IsActive()||toolBarController.isOrbiting;
+            bool orbitSelected = toolBarController.isOrbitingSelected;
             //
             //bool orbit = _cameraOrbitShortcut.IsActive();
             bool lookAround = !orbit && _cameraLookAroundShortcut.IsActive();
 
-            if (orbit || lookAround)
+            //if (orbit || lookAround)
+            //added by me
+            if (orbit || lookAround|| orbitSelected)
+            //
             {
                 // Make sure all coroutines are stopped to avoid any conflicts
                 StopAllCoroutines();
@@ -559,6 +563,16 @@ namespace RTEditor
                 // Rotate based on the type of rotation we are dealing with.
                 // Note: Even if the rotation mode is set to orbit, we will still perform a 'LookAround' rotation
                 //       if the camera hasn't been focused.
+                //added by me
+                if (orbitSelected) {//围绕选中物体旋转
+                    Transform cameraTransform = Camera.transform;                    
+
+                    EditorCameraOrbit.OrbitCameraBaseOnSelected(Camera,
+                                                    -_mouse.CursorOffsetSinceLastFrame.y * rotationSpeedTimesDeltaTime,
+                                                    _mouse.CursorOffsetSinceLastFrame.x * rotationSpeedTimesDeltaTime, EditorCameraFocus.GetFocusOperationInfo(Camera, _focusSettings).FocusPoint);
+                }
+                else
+                //
                 if (lookAround || !_wasFocused)
                 {
                     EditorCameraRotation.RotateCamera(Camera,
