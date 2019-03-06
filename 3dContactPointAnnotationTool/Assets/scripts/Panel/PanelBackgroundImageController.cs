@@ -9,11 +9,7 @@ public class PanelBackgroundImageController : MonoBehaviour {
 
     private ObjManager objManager;
     private GameObject imageBackground;
-    private bool changeAlpha;//alpha是否正在被改变
-    private bool changeScale;//scale是否正在被改变
     void Awake() {
-        changeAlpha = false;
-        changeScale = false;
     }
     // Use this for initialization
     void Start () {
@@ -23,8 +19,16 @@ public class PanelBackgroundImageController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        UpdateInputFieldValues();
+    }
+    public void UpdateInputFieldValues() {
+        if (!inputFieldAlpha.isFocused) {
+            inputFieldAlpha.text = imageBackground.GetComponent<Image>().color.a.ToString();//修正inputField的text的值
+        }
+        if (!inputFieldScale.isFocused) {
+            inputFieldScale.text = (imageBackground.GetComponent<RectTransform>().sizeDelta.x / imageBackground.GetComponent<Image>().mainTexture.width).ToString();//修正inputField的text的值
+        }
+    }
     public void Init()//导入图片调用初始化函数
     {        
         inputFieldAlpha.interactable = true;
@@ -34,31 +38,21 @@ public class PanelBackgroundImageController : MonoBehaviour {
     }
     public void AlphaOnValueChanged()
     {
-        if (changeAlpha)//避免修改text的时候该函数被反复调用
-            return;
-        changeAlpha = true;
-        float v = float.Parse(inputFieldAlpha.text);
+        float v = ObjManager.StringToFloat(inputFieldAlpha.text);
         v = Mathf.Clamp(v,0, 1);
         var image = imageBackground.GetComponent<Image>();
         var color = image.color;
         color.a = v;
-        image.color = color;
-        inputFieldAlpha.text = v.ToString();//修正inputField的text的值
-        changeAlpha = false;
+        image.color = color;        
     }
     public void ScaleOnValueChanged()
     {
-        if (changeScale)//避免修改text的时候该函数被反复调用
-            return;
-        changeScale = true;
-        float v = float.Parse(inputFieldScale.text);
+        float v = ObjManager.StringToFloat(inputFieldScale.text);
         v = Mathf.Max(v,0);
         var rt = imageBackground.GetComponent<RectTransform>();
         var texture = imageBackground.GetComponent<Image>().mainTexture;
         //Debug.Log("width:"+texture.width+" height:"+texture.height);
-        rt.sizeDelta = new Vector2(texture.width*v, texture.height*v);
-        inputFieldScale.text = v.ToString();//修正inputField的text的值
-        changeScale = false;
+        rt.sizeDelta = new Vector2(texture.width*v, texture.height*v);        
     }
 }
 

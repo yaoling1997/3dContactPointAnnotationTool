@@ -8677,12 +8677,11 @@ Prefab:
         type: 2}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 114876911162890114, guid: 2120efc722eb2b348b683a17c989cbf9,
-        type: 2}
+      objectReference: {fileID: 1268355501}
     - target: {fileID: 114640309435024706, guid: 2120efc722eb2b348b683a17c989cbf9,
         type: 2}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnEndEdit
+      value: AlphaOnEndEdit
       objectReference: {fileID: 0}
     - target: {fileID: 114640309435024706, guid: 2120efc722eb2b348b683a17c989cbf9,
         type: 2}
@@ -10735,12 +10734,11 @@ Prefab:
         type: 2}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 114876911162890114, guid: 2120efc722eb2b348b683a17c989cbf9,
-        type: 2}
+      objectReference: {fileID: 1268355501}
     - target: {fileID: 114640309435024706, guid: 2120efc722eb2b348b683a17c989cbf9,
         type: 2}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnEndEdit
+      value: ScaleOnEndEdit
       objectReference: {fileID: 0}
     - target: {fileID: 114640309435024706, guid: 2120efc722eb2b348b683a17c989cbf9,
         type: 2}
