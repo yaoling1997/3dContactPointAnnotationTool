@@ -87,13 +87,17 @@ public class InputFieldOnValueChanged : MonoBehaviour {
     }
     public void Select() {
         ifValueChanged = false;
-        objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();
+        Debug.Log("name:"+transform.name);
+        if (transform.parent.name.StartsWith("PanelStatusItem")) {
+            Debug.Log("fa: "+ transform.parent.name);
+            objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();
+        }
     }
     public void Deselect()
     {
         if (ifValueChanged) {//只有值修改了才存一个撤销
-            Debug.Log("save");
-            objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
+            if (transform.parent.name.StartsWith("PanelStatusItem"))
+                objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
         }
     }
 }

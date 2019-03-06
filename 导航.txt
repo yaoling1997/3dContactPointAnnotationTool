@@ -145,3 +145,12 @@ GetComponentsInChildren<Transform>()
 
 Unity 如何在场景间传递数据？
 https://jingyan.baidu.com/article/3a2f7c2e20591c26aed61173.html
+
+Unity3D开发之获取物体的尺寸
+https://blog.csdn.net/qq_33994566/article/details/77163153
+
+Unity Texture2D缩放
+https://blog.csdn.net/congcongjoy/article/details/45716185
+
+UNITY存储图片到本地
+https://blog.csdn.net/zl814981463/article/details/78576133

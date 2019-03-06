@@ -246,7 +246,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         }
         return new Bounds((MinP + MaxP) / 2, MaxP - MinP);
     }
-    public float StringToFloat(string s) {
+    public static float StringToFloat(string s) {
         float re = 0;
         try
         {
@@ -255,6 +255,30 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         catch {
             return 0;
         }
+        return re;
+    }
+    public static int StringToInt(string s)
+    {
+        int re = 0;
+        try
+        {
+            re = int.Parse(s);
+        }
+        catch
+        {
+            return 0;
+        }
+        return re;
+    }
+    public static Texture2D GetModifiedTexture2D(Texture2D source,int newWidth,int newHeight,float alpha) {
+        var re = new Texture2D(newWidth,newHeight,source.format,false);
+        for (int i = 0; i < newWidth; i++)
+            for (int j = 0; j < newHeight; j++) {
+                var nc = source.GetPixelBilinear((float)i/(float)newWidth,(float)j/(float)newHeight);
+                nc.a = alpha;
+                re.SetPixel(i, j, nc);
+            }
+        re.Apply();
         return re;
     }
 }

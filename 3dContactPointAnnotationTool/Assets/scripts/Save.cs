@@ -28,9 +28,11 @@ public class Save
     public class SaveCamera {
         public SaveVector3 position;//相机位置
         public SaveVector3 eulerAngles;//欧拉角
-        public SaveCamera(Vector3 position,Vector3 eulerAngles) {
+        public float fieldOfView;//视口角度大小
+        public SaveCamera(Vector3 position,Vector3 eulerAngles,float fieldOfView) {
             this.position = new SaveVector3(position.x, position.y, position.z);
             this.eulerAngles = new SaveVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+            this.fieldOfView = fieldOfView;
         }
     }
     [System.Serializable]
@@ -133,7 +135,13 @@ public class Save
     public static void SaveCameraInfo(out SaveCamera saveCamera)//存储主相机的位置和角度
     {
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
-        saveCamera = new SaveCamera(objManager.mainCamera.transform.position, objManager.mainCamera.transform.eulerAngles);
+        var mainCamera = objManager.mainCamera;
+        saveCamera = new SaveCamera(mainCamera.transform.position, mainCamera.transform.eulerAngles, mainCamera.fieldOfView);
+    }
+    public static void SaveBackgroundImageInfo(out SaveImage saveImage) {
+        var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        var pbic = objManager.panelBackgroundImageControllerScript;
+        saveImage = new SaveImage(objManager.imagePath, pbic.inputFieldAlpha.text, pbic.inputFieldScale.text);//存储图片路径,透明度和缩放大小
     }
     public static void SaveContactPointsInfo(out List<SaveContactPoint> contactPointList)//存储接触点信息
     {
@@ -224,8 +232,7 @@ public class Save
 
         SaveCameraInfo(out save.mainCamera);//存储主相机的位置和角度
 
-        var pbic = objManager.panelBackgroundImageControllerScript;
-        save.image = new SaveImage(objManager.imagePath, pbic.inputFieldAlpha.text, pbic.inputFieldScale.text);//存储图片路径,透明度和缩放大小
+        SaveBackgroundImageInfo(out save.image);
         
         SaveContactPointsInfo(out save.contactPointList);//存储接触点信息
 
@@ -264,7 +271,8 @@ public class Save
         var objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
 
         objManager.mainCamera.transform.position = save.mainCamera.position.ToVector3();//还原主相机
-        objManager.mainCamera.transform.eulerAngles = save.mainCamera.eulerAngles.ToVector3();        
+        objManager.mainCamera.transform.eulerAngles = save.mainCamera.eulerAngles.ToVector3();
+        objManager.mainCamera.fieldOfView = save.mainCamera.fieldOfView;
 
         objManager.LoadImage(save.image.path);//还原图片
         var pbic = objManager.panelBackgroundImageControllerScript;

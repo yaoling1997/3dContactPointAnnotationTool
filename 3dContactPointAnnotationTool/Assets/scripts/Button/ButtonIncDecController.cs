@@ -34,11 +34,13 @@ public class ButtonIncDecController : MonoBehaviour {
     public void PointerDown()
     {
         ifPointerDown = true;
-        objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();//随便用哪个非null的gizmo都可以，因为都是存的position,rotation和localscale的信息，但是要保证前后一致
+        if (transform.parent.name.StartsWith("PanelStatusItem"))
+            objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();//随便用哪个非null的gizmo都可以，因为都是存的position,rotation和localscale的信息，但是要保证前后一致
     }
     public void PointerUp()
     {
         ifPointerDown = false;
-        objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
+        if (transform.parent.name.StartsWith("PanelStatusItem"))
+            objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
     }
 }

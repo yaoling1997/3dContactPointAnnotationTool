@@ -16,5 +16,6 @@ public class CameraBackgroundController : MonoBehaviour {
         //使渲染背景图的相机和主相机的位置角度一致
         transform.position = mainCamera.transform.position;
         transform.rotation = mainCamera.transform.rotation;
+        GetComponent<Camera>().fieldOfView = mainCamera.fieldOfView;
     }
 }

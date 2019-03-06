@@ -23,13 +23,14 @@ public class DragChangeValue : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         SetScreenSize();
     }
     public void OnPointerDown(PointerEventData data)
-    {
-        Debug.Log("OnPointerDown");
-        objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();//随便用哪个非null的gizmo都可以，因为都是存的position,rotation和localscale的信息，但是要保证前后一致
+    {        
+        if (transform.parent.name.StartsWith("PanelStatusItem"))
+            objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();//随便用哪个非null的gizmo都可以，因为都是存的position,rotation和localscale的信息，但是要保证前后一致
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
+        if (transform.parent.name.StartsWith("PanelStatusItem"))
+            objManager.editorGizmoSystem.TranslationGizmo.StoreObjectsTransform();
     }
     public void OnDrag(PointerEventData data)
     {

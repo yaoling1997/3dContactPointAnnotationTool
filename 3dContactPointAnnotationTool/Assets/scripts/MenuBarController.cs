@@ -111,13 +111,14 @@ public class MenuBarController : MonoBehaviour {
         var re = string.Format("({0}, {1}, {2})", FloatToString(v.x, precision), FloatToString(v.y, precision), FloatToString(v.z, precision));
         return re;
     }
-    private void ExportCamera(string path) {
+    private void ExportCamera(string path) {//导出相机参数
         if (File.Exists(path)) {
             Save.SaveCamera mainCamera;
             Save.SaveCameraInfo(out mainCamera);
             var exportPrecision=objManager.panelSettingController.exportPrecision;
             var content = "positon: " + Vector3ToString(mainCamera.position.ToVector3(),exportPrecision)+ ", ";
-            content += "eulerAngles: "+ Vector3ToString(mainCamera.eulerAngles.ToVector3(), exportPrecision) + "\r\n";
+            content += "eulerAngles: "+ Vector3ToString(mainCamera.eulerAngles.ToVector3(), exportPrecision) + ", ";
+            content += "fieldOfView: " + FloatToString(mainCamera.fieldOfView,exportPrecision) + "\r\n";
             File.WriteAllText(path,content);
         }
         else
@@ -125,7 +126,7 @@ public class MenuBarController : MonoBehaviour {
             Debug.Log("no such ExportCamera txt!");
         }
     }
-    private void ExportModels(string pathObjModel,string pathSMPL)
+    private void ExportModels(string pathObjModel,string pathSMPL)//导出obj模型和smpl模型的参数
     {
         if (File.Exists(pathObjModel)&&File.Exists(pathSMPL))
         {
@@ -163,7 +164,7 @@ public class MenuBarController : MonoBehaviour {
             Debug.Log("no such ExportModels txt!");
         }
     }
-    private void ExportContactPoints(string path)
+    private void ExportContactPoints(string path)//导出接触点参数
     {
         if (File.Exists(path))
         {
@@ -219,6 +220,24 @@ public class MenuBarController : MonoBehaviour {
             Debug.Log("no such ExportContactPoints txt!");
         }
     }
+    private void ExportBackgroundImage(string path)//导出参考图像参数
+    {
+        if (File.Exists(path))
+        {
+            Save.SaveImage imageInfo;
+            Save.SaveBackgroundImageInfo(out imageInfo);
+            var texture = Instantiate(objManager.imageBackground.GetComponent<Image>().mainTexture) as Texture2D;
+            var s = ObjManager.StringToFloat(imageInfo.scale);
+            var a= ObjManager.StringToFloat(imageInfo.alpha);
+            var nt = ObjManager.GetModifiedTexture2D(texture, (int)(s*texture.width), (int)(s * texture.height), a);
+            var bytes= nt.EncodeToPNG();
+            File.WriteAllBytes(path,bytes);            
+        }
+        else
+        {
+            Debug.Log("no such ExportBackgroundImage file!");
+        }
+    }
     private void Export(string path) {//导出到path文件夹
         if (string.IsNullOrEmpty(path))
             return ;
@@ -235,13 +254,16 @@ public class MenuBarController : MonoBehaviour {
         var SMPLFile = path + @"\SMPL.txt";
         var objModelFile = path + @"\objModel.txt";
         var contactPointsFile = path + @"\contactPoints.txt";
+        var backgroundImageFile = path + @"\referenceImage.png";
         File.Create(cameraFile).Dispose();
         File.Create(SMPLFile).Dispose();
         File.Create(objModelFile).Dispose();
         File.Create(contactPointsFile).Dispose();
+        File.Create(backgroundImageFile).Dispose();
         ExportCamera(cameraFile);
         ExportModels(objModelFile,SMPLFile);
         ExportContactPoints(contactPointsFile);//导出接触点
+        ExportBackgroundImage(backgroundImageFile);
     }
     public void ButtonImportImageOnClick()//ImportImage按钮被点击
     {
