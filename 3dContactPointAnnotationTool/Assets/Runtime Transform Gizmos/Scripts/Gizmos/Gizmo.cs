@@ -896,8 +896,10 @@ namespace RTEditor
         public void StoreObjectsTransform() {//pre+post构成一组撤销
             TakeObjectTransformSnapshots(out _postTransformObjectSnapshots);
             // Execute a post gizmo transformed objects action
-            var action = new PostGizmoTransformedObjectsAction(_preTransformObjectSnapshots, _postTransformObjectSnapshots, this);
-            action.Execute();
+            if (_preTransformObjectSnapshots != null && _postTransformObjectSnapshots != null) {
+                var action = new PostGizmoTransformedObjectsAction(_preTransformObjectSnapshots, _postTransformObjectSnapshots, this);
+                action.Execute();
+            }
         }
         //
     }

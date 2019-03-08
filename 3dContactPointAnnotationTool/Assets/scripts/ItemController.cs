@@ -6,9 +6,9 @@ public class ItemController : MonoBehaviour {
     public enum ModelType
     {//关联model所属类型
         MAIN_CAMERA,
-        OBJ_MODEL,
+        OBJ_MODEL,//objModel的部件
         OBJ_MODEL_ROOT,//管理所有objModel部件的根
-        SMPL_MODEL,//objModel的部件
+        SMPL_MODEL,
         SMPL_MODEL_JOINT,
         CONTACT_POINT
     }

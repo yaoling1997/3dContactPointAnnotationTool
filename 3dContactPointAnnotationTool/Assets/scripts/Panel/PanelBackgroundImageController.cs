@@ -19,7 +19,8 @@ public class PanelBackgroundImageController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        UpdateInputFieldValues();
+        if (objManager.imagePath!=null)
+            UpdateInputFieldValues();
     }
     public void UpdateInputFieldValues() {
         if (!inputFieldAlpha.isFocused) {
