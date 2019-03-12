@@ -98,7 +98,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
         yield return new WaitForSeconds(0);
         foreach (var item in model3d.GetComponentsInChildren<SkinnedMeshRenderer>())//获得所有物体每个三角面片包围盒
         {
-            var vertices = GetRealVertices(item);
+            var vertices = ObjManager.GetRealVertices(item);
             var triangles = item.sharedMesh.triangles;
             var boundsList = new List<Bounds>();
             var objBounds =  ObjManager.GetBoundsOfVector3Array(vertices);
@@ -182,23 +182,6 @@ public class ButtonGCPOnClick : MonoBehaviour {
         if (minuteCost > 0)
             textTimeCost.text += minuteCost + "′";
         textTimeCost.text +=  secondCost + "″";
-    }
-    private Vector3[] GetRealVertices(SkinnedMeshRenderer skinnedMeshRenderer)//将点变换到真实的点（应用位移、旋转、缩放变换）
-    {
-        Mesh mesh = new Mesh();
-        skinnedMeshRenderer.BakeMesh(mesh);
-        var len = mesh.vertices.Length;
-        var vertices = new Vector3[len];
-
-        var transform = skinnedMeshRenderer.transform;
-        Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
-        Matrix4x4 m = Matrix4x4.TRS(transform.position,rotation,transform.lossyScale);
-        
-        for (int i = 0; i < len; i++)
-        {
-            vertices[i] = m.MultiplyPoint3x4(mesh.vertices[i]);
-        }
-        return vertices;
     }
     public void Click()//按钮点击会调用
     {

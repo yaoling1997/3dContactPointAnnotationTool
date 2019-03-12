@@ -93,9 +93,11 @@ namespace Hont
                     j += 3;
                 }
 
-                mesh.vertices = vertexList.ToArray();                
-                mesh.normals = sourceVertexNormalArr.Length==0 ? null:vertexNormalList.ToArray();
-                mesh.uv = sourceUVArr.Length==0 ? null:uvList.ToArray();
+                mesh.vertices = vertexList.ToArray();
+                //mesh.normals = sourceVertexNormalArr.Length==0 ? null:vertexNormalList.ToArray();
+                //mesh.uv = sourceUVArr.Length==0 ? null:uvList.ToArray();
+                mesh.normals= vertexNormalList.ToArray();
+                mesh.uv = uvList.ToArray();
                 mesh.triangles = triangles;
 
                 skinnedMeshRenderer.sharedMesh = mesh;

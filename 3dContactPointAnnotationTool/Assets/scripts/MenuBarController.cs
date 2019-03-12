@@ -7,6 +7,7 @@ using Hont;
 using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Text;
 //using System.Windows.Forms;
 
 public class MenuBarController : MonoBehaviour {
@@ -27,6 +28,11 @@ public class MenuBarController : MonoBehaviour {
 
     public List<GameObject> menuBarButtons;    
     public EventSystem eventSystem;
+
+    private int vertexOffset = 0;
+    private int normalOffset = 0;
+    private int uvOffset = 0;
+
     void Awake () {
         objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
         imageBackground = objManager.imageBackground;
@@ -267,6 +273,70 @@ public class MenuBarController : MonoBehaviour {
         ExportContactPoints(contactPointsFile);//导出接触点
         ExportBackgroundImage(backgroundImageFile);
     }
+    public string SmrToObjString(SkinnedMeshRenderer smr) {
+        StringBuilder re = new StringBuilder();
+        var mesh = new Mesh();
+        smr.BakeMesh(mesh);
+        //var vertices = ObjManager.GetRealVertices(smr);
+        foreach (var V in mesh.vertices) {
+            var v = smr.transform.TransformPoint(V);
+            re.Append(string.Format("v {0} {1} {2}\r\n", v.x, v.y, v.z));
+        }
+        re.Append("\r\n");
+        foreach (var VN in mesh.normals) {
+            var vn = smr.transform.TransformDirection(VN);
+            re.Append(string.Format("vn {0} {1} {2}\r\n",vn.x, vn.y, vn.z));
+        }
+        re.Append("\r\n");
+        foreach (var vt in mesh.uv)
+        {
+            re.Append(string.Format("vt {0} {1}\r\n", vt.x, vt.y));
+        }
+        re.Append("\r\n");
+        re.Append("o " +smr.name+"\r\n");
+        re.Append("\r\n");
+        var triangles = mesh.triangles;
+        for (int i = 0; i < triangles.Length; i += 3) {
+            //string uv0 = "";
+            //string uv1 = "";
+            //string uv2 = "";
+            //string normal0 = "";
+            //string normal1 = "";
+            //string normal2 = "";
+            //if (mesh.uv.Length != 0) {
+            //    uv0 = (triangles[i] + uvOffset+1).ToString();
+            //    uv1 = (triangles[i+1] + uvOffset + 1).ToString();
+            //    uv2 = (triangles[i+2] + uvOffset + 1).ToString();                
+            //}
+            //if (mesh.normals.Length != 0) {
+            //    normal0 = (triangles[i]+normalOffset + 1).ToString();
+            //    normal1 = (triangles[i+1] + normalOffset + 1).ToString();
+            //    normal2 = (triangles[i+2] + normalOffset + 1).ToString();
+            //}
+            //re.Append(string.Format("f {0}/{1}/{2} ",triangles[i+1]+vertexOffset+1, uv0,normal0));
+            //re.Append(string.Format(" {0}/{1}/{2} ", triangles[i] + vertexOffset+1, uv1, normal1));
+            //re.Append(string.Format(" {0}/{1}/{2}\r\n", triangles[i + 2] + vertexOffset+1, uv2, normal2));
+            re.Append(string.Format("f {1}/{1}/{1} {0}/{0}/{0} {2}/{2}/{2}\r\n", triangles[i] + 1 + vertexOffset, triangles[i + 1] + 1 + normalOffset, triangles[i + 2] + 1 + uvOffset));
+        }
+        vertexOffset += mesh.vertices.Length;
+        normalOffset += mesh.normals.Length;
+        uvOffset += mesh.uv.Length;        
+        return re.ToString();
+    }
+    public void ExportSceneToObj(string path) {
+        File.Create(path);
+        if (File.Exists(path))
+        {
+            vertexOffset = 0;
+            normalOffset = 0;
+            uvOffset = 0;
+            var content = "";
+            foreach (var smr in objManager.model3d.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                content += SmrToObjString(smr);
+            }
+            File.WriteAllText(path,content);
+        }
+    }
     public void ButtonImportImageOnClick()//ImportImage按钮被点击
     {
         CloseFilePanel();
@@ -324,6 +394,30 @@ public class MenuBarController : MonoBehaviour {
         {
             Debug.Log("cancel!");
             return;
+        }
+    }
+    public void ButtonExportScene()//导出场景到obj
+    {
+        CloseFilePanel();
+        OpenFileName ofn = new OpenFileName();
+        ofn.structSize = Marshal.SizeOf(ofn);
+        ofn.filter = "Obj文件(*.obj)\0*.obj";
+        ofn.file = new string(new char[256]);
+        ofn.maxFile = ofn.file.Length;
+        ofn.fileTitle = new string(new char[64]);
+        ofn.maxFileTitle = ofn.fileTitle.Length;
+        ofn.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
+        ofn.title = "导出场景到obj";
+        ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
+        if (LocalDialog.GetSaveFileName(ofn))
+        {
+            if (!File.Exists(ofn.file))
+            {
+                ofn.file += ".obj";
+                //File.Create(ofn.file);
+            }
+            Debug.Log("file: " + ofn.file);
+            ExportSceneToObj(ofn.file);
         }
     }
     public void ButtonOpenProjectOnClick()//OpenProject按钮被点击

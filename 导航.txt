@@ -154,3 +154,6 @@ https://blog.csdn.net/congcongjoy/article/details/45716185
 
 UNITY存储图片到本地
 https://blog.csdn.net/zl814981463/article/details/78576133
+
+将导出的Unity3D的场景文件保存为*.Obj模型
+http://www.manew.com/3827.html

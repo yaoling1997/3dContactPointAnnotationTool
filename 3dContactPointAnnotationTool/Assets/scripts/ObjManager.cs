@@ -282,4 +282,22 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         re.Apply();
         return re;
     }
+    public static Vector3[] GetRealVertices(SkinnedMeshRenderer skinnedMeshRenderer)//将点变换到真实的点（应用位移、旋转、缩放变换）
+    {
+        Mesh mesh = new Mesh();
+        skinnedMeshRenderer.BakeMesh(mesh);
+        var len = mesh.vertices.Length;
+        var vertices = new Vector3[len];
+
+        var transform = skinnedMeshRenderer.transform;
+        Quaternion rotation = Quaternion.Euler(transform.eulerAngles);
+        Matrix4x4 m = Matrix4x4.TRS(transform.position, rotation, transform.lossyScale);
+
+        for (int i = 0; i < len; i++)
+        {
+            vertices[i] = m.MultiplyPoint3x4(mesh.vertices[i]);
+        }
+        return vertices;
+    }
+
 }
