@@ -296,27 +296,41 @@ public class MenuBarController : MonoBehaviour {
         re.Append("o " +smr.name+"\r\n");
         re.Append("\r\n");
         var triangles = mesh.triangles;
+        string uv0 = "";
+        string uv1 = "";
+        string uv2 = "";
+        string normal0 = "";
+        string normal1 = "";
+        string normal2 = "";
+        Debug.Log("mesh.uv.length: "+mesh.uv.Length);
+        Debug.Log("mesh.normals.length: " + mesh.normals.Length);
         for (int i = 0; i < triangles.Length; i += 3) {
-            //string uv0 = "";
-            //string uv1 = "";
-            //string uv2 = "";
-            //string normal0 = "";
-            //string normal1 = "";
-            //string normal2 = "";
-            //if (mesh.uv.Length != 0) {
-            //    uv0 = (triangles[i] + uvOffset+1).ToString();
-            //    uv1 = (triangles[i+1] + uvOffset + 1).ToString();
-            //    uv2 = (triangles[i+2] + uvOffset + 1).ToString();                
-            //}
-            //if (mesh.normals.Length != 0) {
-            //    normal0 = (triangles[i]+normalOffset + 1).ToString();
-            //    normal1 = (triangles[i+1] + normalOffset + 1).ToString();
-            //    normal2 = (triangles[i+2] + normalOffset + 1).ToString();
-            //}
-            //re.Append(string.Format("f {0}/{1}/{2} ",triangles[i+1]+vertexOffset+1, uv0,normal0));
-            //re.Append(string.Format(" {0}/{1}/{2} ", triangles[i] + vertexOffset+1, uv1, normal1));
-            //re.Append(string.Format(" {0}/{1}/{2}\r\n", triangles[i + 2] + vertexOffset+1, uv2, normal2));
-            re.Append(string.Format("f {1}/{1}/{1} {0}/{0}/{0} {2}/{2}/{2}\r\n", triangles[i] + 1 + vertexOffset, triangles[i + 1] + 1 + normalOffset, triangles[i + 2] + 1 + uvOffset));
+            if (mesh.uv.Length != 0)
+            {
+                uv0 = (triangles[i] + uvOffset + 1).ToString();
+                uv1 = (triangles[i + 1] + uvOffset + 1).ToString();
+                uv2 = (triangles[i + 2] + uvOffset + 1).ToString();
+            }
+            else {
+                uv0 = "";
+                uv1 = "";
+                uv2 = "";
+            }
+            if (mesh.normals.Length != 0)
+            {
+                normal0 = (triangles[i] + normalOffset + 1).ToString();
+                normal1 = (triangles[i + 1] + normalOffset + 1).ToString();
+                normal2 = (triangles[i + 2] + normalOffset + 1).ToString();
+            }
+            else {
+                normal0 = "";
+                normal1 = "";
+                normal2 = "";
+            }
+            re.Append(string.Format("f {0}/{1}/{2} ", triangles[i + 1] + vertexOffset + 1, uv1, normal1));
+            re.Append(string.Format(" {0}/{1}/{2} ", triangles[i] + vertexOffset + 1, uv0, normal0));
+            re.Append(string.Format(" {0}/{1}/{2}\r\n", triangles[i + 2] + vertexOffset + 1, uv2, normal2));
+            //re.Append(string.Format("f {1}/{1}/{1} {0}/{0}/{0} {2}/{2}/{2}\r\n", triangles[i] + 1 + vertexOffset, triangles[i + 1] + 1 + normalOffset, triangles[i + 2] + 1 + uvOffset));
         }
         vertexOffset += mesh.vertices.Length;
         normalOffset += mesh.normals.Length;

@@ -48,6 +48,8 @@ namespace Hont
                         triangleNum += 6;
                     else triangleNum += 3;
                 var triangles = new int[triangleNum];
+                int nNum = 0;
+                int tNum = 0;
                 for (int i = faceBeginId, j = 0; i < faceEndId; i++)
                 {
                     var currentFace = faceArr[i];
@@ -61,10 +63,21 @@ namespace Hont
                         var nId = currentFace.Points[k].NormalIndex - 1;
                         var tId = currentFace.Points[k].TextureIndex - 1;
                         var vec = sourceVertexArr[vId];
+
                         vertexList.Add(new Vector3(vec.X, vec.Y, vec.Z));
-                        vec = nId!=-1?sourceVertexNormalArr[nId]: defaultVec;
+                        vec = defaultVec;
+                        if (nId != -1)
+                        {
+                            vec = sourceVertexNormalArr[nId];
+                            nNum++;
+                        }
                         vertexNormalList.Add(new Vector3(vec.X, vec.Y, vec.Z));
-                        var uv = tId!=-1? sourceUVArr[tId] : defaultVec;
+                        var uv = defaultVec;
+                        if (tId != -1)
+                        {
+                            uv = sourceUVArr[tId];
+                            tNum++;
+                        }                        
                         uvList.Add(new Vector2(uv.X, uv.Y));
                     }
 
@@ -94,10 +107,24 @@ namespace Hont
                 }
 
                 mesh.vertices = vertexList.ToArray();
-                //mesh.normals = sourceVertexNormalArr.Length==0 ? null:vertexNormalList.ToArray();
-                //mesh.uv = sourceUVArr.Length==0 ? null:uvList.ToArray();
-                mesh.normals= vertexNormalList.ToArray();
-                mesh.uv = uvList.ToArray();
+                if (nNum == 0)
+                {
+                    mesh.normals = null;
+                }
+                else {
+                    mesh.normals = vertexNormalList.ToArray();
+                }                
+                if (tNum == 0)
+                {
+                    mesh.uv = null;
+                }
+                else {
+                    mesh.uv = uvList.ToArray();
+                }
+                Debug.Log("mesh.normals.length: " + mesh.normals.Length);
+                Debug.Log("mesh.uv.length: "+mesh.uv.Length);
+                //mesh.normals= vertexNormalList.ToArray();
+                //mesh.uv = uvList.ToArray();
                 mesh.triangles = triangles;
 
                 skinnedMeshRenderer.sharedMesh = mesh;
