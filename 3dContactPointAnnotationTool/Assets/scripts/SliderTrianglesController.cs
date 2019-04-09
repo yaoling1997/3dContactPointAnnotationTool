@@ -20,7 +20,7 @@ public class SliderTrianglesController : MonoBehaviour {
         var triangleNum = ValueToTriangleNum(GetComponent<Slider>().value);
         textTriangles.text = "Triangles: x" + System.Math.Round(triangleNum, 2);
         var obj = panelStatusController.selectedObj;
-        if (obj != null && obj.transform.parent.name.Equals("Model3d")) {
+        if (obj != null && obj.GetComponent<Model3dItemController>()!=null) {
             obj.GetComponent<Model3dItemController>().SetTriangleMultiNum(triangleNum);
         }
     }

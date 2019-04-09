@@ -26,13 +26,17 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
                 return -1;
         }
     }
+    private ObjManager objManager;
+    private PanelStatusController panelStatusController;
     private float triangleMultiNum;//三角面片倍数
     private Mesh oldMesh;//最初的网格
     private bool haveNormals;
     private bool haveUv;
 
     private void Awake()
-    {        
+    {
+        objManager = GameObject.Find("ObjManager").GetComponent<ObjManager>();
+        panelStatusController = objManager.panelStatusController;
         gameObject.layer = Macro.MODEL3D_ITEM;//设置为model3dItem层
         gameObject.tag = Macro.UNSELECTED;//将tag设置为未选中
     }
@@ -172,6 +176,7 @@ public class Model3dItemController : MonoBehaviour//model3d的每一个儿子都
         if (haveUv)
             mesh.uv = uvList.ToArray();
         mesh.triangles = trianglesList.ToArray();
+        panelStatusController.UpdateTextTriangleNum();
     }
     private float DivideTriangle(int []triangle,out int []outTriangle,List<Vector3> vertices)//切割三角形
     {

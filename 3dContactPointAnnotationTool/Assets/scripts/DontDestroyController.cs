@@ -6,7 +6,7 @@ public class DontDestroyController : MonoBehaviour {
     public string itemWarehousePath;
     void Awake() {
         itemWarehousePath = null;
-        Debug.Log("DontDestroy.Awake()");
+        //Debug.Log("DontDestroy.Awake()");
     }
 	// Use this for initialization
 	void Start () {

@@ -282,7 +282,8 @@ public class ButtonGCPOnClick : MonoBehaviour {
     private int CreateContactPoints(List<Bounds> xjBoundsList)//创建接触点，把中心相同的接触点合并
     {
         var boundsList = MergeSameCenterBounds(xjBoundsList);
-        boundsList = MergeContactPointsToMaxNum(boundsList);
+        //boundsList = MergeContactPointsToMaxNum(boundsList);
+        objManager.Log("contactPoint Num:"+ boundsList.Count);
         foreach (var item in boundsList) {
             objManager.CreateContactPointSphere(item.center,item.extents);
         }

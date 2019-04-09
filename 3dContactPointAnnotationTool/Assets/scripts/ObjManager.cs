@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using RTEditor;
 using Hont;
+using System;
 using System.IO;
 
 public class ObjManager : MonoBehaviour//管理对象，避免找不到active为false的对象的尴尬
@@ -22,6 +23,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public PanelStatusController panelStatusController;//panelStatus的controller
     public GameObject panelCameraController;//控制相机的panel
     public GameObject panelSMPLController;//控制SMPL的panel
+    public GameObject panelConsole;//控制Console显示的panel
     public GameObject prefabScrollViewItem;//scrollViewItem预制件
     public GameObject prefabScrollViewTabItem;//scrollViewTabItem预制件
     public GameObject prefabScrollViewItemsItem;//scrollViewItemsItem预制件
@@ -35,6 +37,8 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
     public Material materialStandard;//标准 shader的材质
     public Material materialUIdefault;//UIdefault shader的材质
     public Material materialWireframe;//网格 shader的材质
+    public Slider sliderTriangles;//修改三角面片数的slider
+    public Text textConsoleContent;//console的内容
     public int contactPointId;//3d接触点标号
     public int humanModelId;//人体模型标号
     public Sprite spriteTriangleUp;//向上三角形sprite
@@ -141,6 +145,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
             image.color = color;
             panelBackgroundImageControllerScript.Init();
             referenceImageController.Init(texture);
+            //Log("Load Image succeed!");
         }
         else
         {
@@ -299,5 +304,7 @@ public class ObjManager : MonoBehaviour//管理对象，避免找不到active为
         }
         return vertices;
     }
-
+    public void Log(string s) {//将s显示到console中
+        textConsoleContent.text = textConsoleContent.text + " "+DateTime.Now.ToString("T")+"\n"+" "+s+"\n";        
+    }
 }

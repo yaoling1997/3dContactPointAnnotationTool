@@ -22,6 +22,7 @@ public class MenuBarController : MonoBehaviour {
     public Toggle WindowXZGridToggle;
     public Toggle WindowCameraControllerToggle;
     public Toggle WindowSMPLControllerToggle;
+    public Toggle WindowConsoleToggle;
 
     public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
@@ -44,6 +45,7 @@ public class MenuBarController : MonoBehaviour {
         WindowXZGridToggle.isOn = objManager.runtimeEditorApplication.XZGrid.IsVisible;
         WindowCameraControllerToggle.isOn = objManager.panelCameraController.activeSelf;
         WindowSMPLControllerToggle.isOn = objManager.panelSMPLController.activeSelf;
+        WindowConsoleToggle.isOn = objManager.panelConsole.activeSelf;
     }
 	
 	// Update is called once per frame
@@ -552,6 +554,13 @@ public class MenuBarController : MonoBehaviour {
         var active = !panelSMPLController.activeSelf;
         panelSMPLController.SetActive(active);
         WindowSMPLControllerToggle.isOn = active;
+    }
+    public void ButtonConsoleOnClick()//Console按钮被点击
+    {
+        var panelConsole = objManager.panelConsole;
+        var active = !panelConsole.activeSelf;
+        panelConsole.SetActive(active);
+        WindowConsoleToggle.isOn = active;
     }
     public bool IfMenuBarButtonSelected() {//是否选中了menuBar上的按钮
         var s = eventSystem.currentSelectedGameObject;

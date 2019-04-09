@@ -8,6 +8,7 @@ public class PanelStatusController : MonoBehaviour {
     public GameObject selectedObj;//当前选中的对象
     public Slider sliderTriangles;//控制三角形数量的slider
     public GameObject panelEditStatus;//另一个编辑status的面板
+    public Text textTriangleNum;//显示当前选择的对象有多少三角面片
 
     private EventSystem eventSystem;
     private Dictionary<int, GameObject> dicInputFields;//面板上所有inputFields
@@ -16,6 +17,7 @@ public class PanelStatusController : MonoBehaviour {
     // Use this for initialization
     void Awake () {
         selectedObj = null;
+        textTriangleNum.text = "";
     }
     private void Start()
     {
@@ -124,6 +126,23 @@ public class PanelStatusController : MonoBehaviour {
             iovc.disableOnValueChanged = false;
         }
     }
+    public void UpdateTextTriangleNum() {
+        if (selectedObj == null) {
+            textTriangleNum.text = "";
+            return;
+        }
+        var smrs = selectedObj.GetComponentsInChildren<SkinnedMeshRenderer>();
+        if (smrs != null && smrs.Length != 0)
+        {
+            int triNum = 0;
+            foreach (var smr in smrs)
+                triNum += smr.sharedMesh.triangles.Length / 3;
+            textTriangleNum.text = "triNum:" + triNum;
+        }
+        else {
+            textTriangleNum.text = "";
+        }
+    }
     public void SetSelectedObj(GameObject obj)
     {
         selectedObj = obj;
@@ -134,8 +153,10 @@ public class PanelStatusController : MonoBehaviour {
                 item.interactable = false;
                 item.text = 0.ToString();
             }
+            UpdateTextTriangleNum();
             return;
         }
+        UpdateTextTriangleNum();
         var itemController = obj.GetComponent<ItemController>();
         if (itemController.trianglesEditable)//修改三角形slider
         {

@@ -87,9 +87,9 @@ public class InputFieldOnValueChanged : MonoBehaviour {
     }
     public void Select() {
         ifValueChanged = false;
-        Debug.Log("name:"+transform.name);
+        //Debug.Log("name:"+transform.name);
         if (transform.parent.name.StartsWith("PanelStatusItem")) {
-            Debug.Log("fa: "+ transform.parent.name);
+            //Debug.Log("fa: "+ transform.parent.name);
             objManager.editorGizmoSystem.TranslationGizmo.StorePreTransform();
         }
     }
