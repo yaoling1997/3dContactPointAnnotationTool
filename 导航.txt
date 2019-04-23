@@ -76,6 +76,9 @@ https://blog.csdn.net/weixin_38472903/article/details/78204366
 Unity 实用教程 之 调用系统窗口选择文件或路径
 https://jingyan.baidu.com/article/380abd0a265fb71d90192c83.html
 
+openfilename structure (windows)
+https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&rsv_idx=2&tn=baiduhome_pg&wd=OpenFileName&rsv_spt=1&oq=ofn.filter&rsv_pq=cfe299ba0000e0f8&rsv_t=417fcoKVOqHpWdcygcw46UUG449Mm11B6jSk6eHS5gwzkoyovZvsr%2FAvu497PKPRTb4W&rqlang=cn&rsv_enter=0&inputT=1147&rsv_n=2&rsv_sug3=45&bs=ofn.filter
+
 Matrix4x4.TRS Creates a translation, rotation and scaling matrix
 https://docs.unity3d.com/ScriptReference/Matrix4x4.TRS.html
 
@@ -160,3 +163,6 @@ http://www.manew.com/3827.html
 
 C# DateTime日期格式化
 https://www.cnblogs.com/arxive/p/6415312.html
+
+Unity将RenderTexture转化为Texture2D
+https://blog.csdn.net/alayeshi/article/details/52576747
