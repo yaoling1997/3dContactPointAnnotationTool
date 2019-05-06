@@ -232,7 +232,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
         return re;
     }
     private float BoundsToBoundsCost(Bounds u,Bounds v) {
-        return (u.center - v.center).magnitude - u.extents.magnitude - v.extents.magnitude;//包围盒外接球球心距离减去半径距离
+        return ((u.center - v.center).magnitude - u.extents.magnitude - v.extents.magnitude)/(u.extents.magnitude + v.extents.magnitude);//包围盒外接球球心距离减去半径距离
     }
     private List<Bounds> MergeContactPointsToMaxNum(List<Bounds> boundsList) {//将接触点限制到最大数量内
         if (boundsList.Count <= MAX_CONTACT_POINT_NUM)//未达到数量直接返回
@@ -267,7 +267,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
             for (int i = 0; i < f.Count; i++) {//计算与其它球的cost
                 if (f[i] != i)
                     continue;
-                var cost = BoundsToBoundsCost(boundsList[i],newBounds);//包围盒外接球球心距离减去半径距离
+                var cost = BoundsToBoundsCost(boundsList[i],newBounds);//包围盒外接球球心距离减去半径距离除以两球半径和，尽量先合并小的球
                 sd.Add(new Cost(cost, ++id), new int[] { i, f.Count });
             }
             f.Add(f.Count);//创建新点            
@@ -282,7 +282,7 @@ public class ButtonGCPOnClick : MonoBehaviour {
     private int CreateContactPoints(List<Bounds> xjBoundsList)//创建接触点，把中心相同的接触点合并
     {
         var boundsList = MergeSameCenterBounds(xjBoundsList);
-        //boundsList = MergeContactPointsToMaxNum(boundsList);
+        boundsList = MergeContactPointsToMaxNum(boundsList);
         objManager.Log("contactPoint Num:"+ boundsList.Count);
         foreach (var item in boundsList) {
             objManager.CreateContactPointSphere(item.center,item.extents);

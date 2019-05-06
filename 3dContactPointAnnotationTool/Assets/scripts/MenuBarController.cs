@@ -23,6 +23,7 @@ public class MenuBarController : MonoBehaviour {
     public Toggle WindowCameraControllerToggle;
     public Toggle WindowSMPLControllerToggle;
     public Toggle WindowConsoleToggle;
+    public Toggle WindowDrawMapControllerToggle;
 
     public GameObject filePanel;//File面板
     public GameObject editPanel;//Edit面板
@@ -46,6 +47,7 @@ public class MenuBarController : MonoBehaviour {
         WindowCameraControllerToggle.isOn = objManager.panelCameraController.activeSelf;
         WindowSMPLControllerToggle.isOn = objManager.panelSMPLController.activeSelf;
         WindowConsoleToggle.isOn = objManager.panelConsole.activeSelf;
+        WindowDrawMapControllerToggle.isOn= objManager.panelDrawMapController.activeSelf;
     }
 	
 	// Update is called once per frame
@@ -358,7 +360,7 @@ public class MenuBarController : MonoBehaviour {
         CloseFilePanel();
         OpenFileName ofn = new OpenFileName();
         ofn.structSize = Marshal.SizeOf(ofn);
-        ofn.filter = "图片文件(*.jpg*.png)\0*.jpg;*.png";
+        ofn.filter = "图片文件(*.jpg*.jpeg*.png)\0*.jpg;*.png;*.jpeg";
         ofn.file = new string(new char[256]);
         ofn.maxFile = ofn.file.Length;
         ofn.fileTitle = new string(new char[64]);
@@ -561,6 +563,13 @@ public class MenuBarController : MonoBehaviour {
         var active = !panelConsole.activeSelf;
         panelConsole.SetActive(active);
         WindowConsoleToggle.isOn = active;
+    }
+    public void ButtonDrawMapControllerOnClick()//DrawMapController按钮被点击
+    {
+        var panelDrawMapController = objManager.panelDrawMapController;
+        var active = !panelDrawMapController.activeSelf;
+        panelDrawMapController.SetActive(active);
+        WindowDrawMapControllerToggle.isOn = active;
     }
     public bool IfMenuBarButtonSelected() {//是否选中了menuBar上的按钮
         var s = eventSystem.currentSelectedGameObject;

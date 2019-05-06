@@ -166,3 +166,9 @@ https://www.cnblogs.com/arxive/p/6415312.html
 
 Unity将RenderTexture转化为Texture2D
 https://blog.csdn.net/alayeshi/article/details/52576747
+
+3d模型素材库
+https://3dsky.org
+
+3d模型,怎样减少其面数
+https://zhidao.baidu.com/question/69136763.html?qbl=relate_question_2&word=3d%20ma%20%BC%F5%C9%D9%C4%A3%D0%CD%C3%E6%CA%FD

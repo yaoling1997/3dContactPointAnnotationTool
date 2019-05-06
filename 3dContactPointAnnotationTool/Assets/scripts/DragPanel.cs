@@ -22,7 +22,6 @@ public class DragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler
 
     public void OnDrag(PointerEventData data)
     {
-        Debug.Log("on drag");
         Vector2 localPointerPosition;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             rectTransformCanvas, data.position, data.pressEventCamera, out localPointerPosition))

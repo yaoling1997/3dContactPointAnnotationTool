@@ -52,7 +52,7 @@ public class ItemController : MonoBehaviour {
                 canDelete = false;//主相机不能删除
                 break;
             case ModelType.OBJ_MODEL:
-                canDelete = false;
+                //canDelete = false;
                 break;
             case ModelType.OBJ_MODEL_ROOT:
                 trianglesEditable = false;
